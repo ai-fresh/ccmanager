@@ -123,19 +123,6 @@ The hook is installed and managed entirely through the app UI. No manual config.
 
 </details>
 
-### Build from Source
-
-```bash
-git clone https://github.com/ai-fresh/ccgate-source.git
-cd ccgate-source
-./build_app.sh
-xattr -cr "CC Gate.app"
-open "CC Gate.app"
-```
-
-> [!NOTE]
-> Requires macOS 13.0+ and Swift 5.9. Uses Swift Package Manager — no Xcode project needed.
-
 ## Quick Start
 
 1. **Click the terminal icon** in your menu bar to open CC Gate
