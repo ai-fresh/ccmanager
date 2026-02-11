@@ -1,2 +1,103 @@
+# ============================================
+# Public Repo .gitignore
+# This repo should ONLY contain:
+# - Landing page (HTML/CSS/JS)
+# - Release testing scripts
+# - SEO files
+# NO SOURCE CODE should be committed!
+# ============================================
+
+# Swift Source Code (BLOCK EVERYTHING)
+*.swift
+CCManager/
+Tests/
+Package.swift
+Package.resolved
+*.swiftmodule
+*.swiftdoc
+*.swiftsourceinfo
+
+# Build Artifacts
+.build/
+*.app
+*.dSYM
+*.dmg
+*.pkg
+DerivedData/
+build/
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+*.xcuserstate
+*.xcscheme
+.swiftpm/
+xcuserdata/
+
+# Build Scripts (these are for development only)
+build_app.sh
+create_dmg.sh
+create_pkg.sh
+create_release.sh
+debug_log.sh
+verify_fixes.sh
+test_scanner.swift
+
+# Development Documentation
+CLAUDE.md
+
+# Firebase/Secrets
+firebase/
+GoogleService-Info.plist
+Secrets.swift
+Secrets.swift.example
+
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+Icon
 ._*
+
+# Temporary files
+*.log
+*.tmp
+*.bak
+*~
+.*.swp
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Release artifacts (built locally, uploaded manually)
+CC?Gate*.dmg
+CC?Gate*.pkg
+CCManager*.dmg
+CCManager*.pkg
+
+# Test files
+demo_*.txt
+test_*.txt
+
+# Backup files
+*.bck
+*.backup
+*-old.*
+
+# ============================================
+# ALLOWED FILES (explicitly):
+# - index.html
+# - README.md
+# - LICENSE
+# - assets/
+# - robots.txt
+# - sitemap.xml
+# - llms.txt
+# - test_release.py
+# - quick_verify.sh
+# - update_landing_page.sh
+# - TESTING.md
+# - .github/workflows/
+# ============================================
