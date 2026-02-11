@@ -1,0 +1,114 @@
+name: Verify Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:  # Manual trigger
+    inputs:
+      version:
+        description: 'Version to test (e.g., 2.8.2)'
+        required: false
+
+jobs:
+  verify-landing-page:
+    name: Verify Landing Page Sync
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Wait for GitHub Pages deployment
+        run: |
+          echo "⏳ Waiting 30s for GitHub Pages to rebuild..."
+          sleep 30
+
+      - name: Run verification tests
+        run: |
+          chmod +x test_release.py
+          if [ -n "${{ inputs.version }}" ]; then
+            python3 test_release.py --version "${{ inputs.version }}"
+          else
+            python3 test_release.py
+          fi
+
+      - name: Quick bash verification
+        if: success() || failure()  # Run even if Python tests fail
+        run: |
+          chmod +x quick_verify.sh
+          ./quick_verify.sh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment on release (if failed)
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tagName = context.payload.release?.tag_name || 'latest';
+            const releases = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            const release = releases.data.find(r => r.tag_name === tagName);
+
+            if (release) {
+              await github.rest.repos.createReleaseComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.id,
+                body: `⚠️ **Landing page verification failed!**\n\nThe landing page may not be synchronized with this release. Check the [workflow run](${context.payload.repository.html_url}/actions/runs/${context.runId}) for details.`
+              });
+            }
+
+  verify-downloads:
+    name: Test Download Links
+    runs-on: macos-latest
+    needs: verify-landing-page
+
+    steps:
+      - name: Get latest release info
+        id: release
+        run: |
+          LATEST=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name')
+          echo "tag=$LATEST" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download PKG asset
+        run: |
+          PKG_URL=$(gh api repos/${{ github.repository }}/releases/latest --jq '.assets[] | select(.name | endswith(".pkg")) | .browser_download_url')
+          echo "📦 Downloading PKG from: $PKG_URL"
+          curl -LO "$PKG_URL"
+          ls -lh *.pkg
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify PKG signature (if signed)
+        run: |
+          PKG_FILE=$(ls *.pkg)
+          echo "🔍 Checking PKG: $PKG_FILE"
+          pkgutil --check-signature "$PKG_FILE" || echo "⚠️ PKG not signed (expected for unsigned builds)"
+
+      - name: Download DMG asset (if exists)
+        continue-on-error: true
+        run: |
+          DMG_URL=$(gh api repos/${{ github.repository }}/releases/latest --jq '.assets[] | select(.name | endswith(".dmg")) | .browser_download_url')
+          if [ -n "$DMG_URL" ]; then
+            echo "📦 Downloading DMG from: $DMG_URL"
+            curl -LO "$DMG_URL"
+            ls -lh *.dmg
+          else
+            echo "ℹ️ No DMG asset found"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

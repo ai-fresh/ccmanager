@@ -1,0 +1,45 @@
+# CC Gate
+
+> CC Gate is a free, open-source macOS menu bar application for monitoring and managing Claude Code sessions. It provides 4-tier auto-accept permissions (Read, Write, Execute, Plan), live session status tracking, and a native question management UI — so Claude Code can keep working while you focus on what matters.
+
+## Overview
+
+- [Homepage](https://ai-fresh.github.io/ccgate/): Landing page with features and download
+- [GitHub Repository](https://github.com/ai-fresh/ccgate): Releases, issues, and documentation
+- [Latest Release](https://github.com/ai-fresh/ccgate/releases/latest): Download the latest PKG installer or DMG
+
+## Features
+
+- [Live Session Monitoring](https://github.com/ai-fresh/ccgate#live-session-monitoring): Real-time status for all Claude Code projects — active, waiting, or idle
+- [4-Tier Auto-Accept](https://github.com/ai-fresh/ccgate#auto-accept-tiers): Granular permission control — Read, Write, Execute, Plan — each independently toggleable
+- [Question Management](https://github.com/ai-fresh/ccgate#question-management): Review and respond to Claude's permission requests from a native macOS UI
+- [Hook-Based Architecture](https://github.com/ai-fresh/ccgate#hook-based-architecture): Integrates via Claude Code's native PermissionRequest hook — no hacks, no terminal scraping
+
+## Installation
+
+- [Download PKG](https://github.com/ai-fresh/ccgate/releases/latest): Recommended — PKG installer handles everything automatically (no Gatekeeper workaround needed)
+- [Download DMG](https://github.com/ai-fresh/ccgate/releases/latest): Alternative — traditional drag-to-Applications
+- [Build from Source](https://github.com/ai-fresh/ccgate#build-from-source): Clone and build with Swift Package Manager
+
+## Technical Details
+
+- **Platform:** macOS 13.0+ (Ventura or later)
+- **Language:** Swift 5.9, SwiftUI
+- **Build System:** Swift Package Manager (no Xcode project needed)
+- **Architecture:** MVVM + Services, MenuBarExtra-based menu bar app
+- **Integration:** Claude Code PermissionRequest hook system
+- **License:** MIT
+
+## Auto-Accept Permission Tiers
+
+| Tier | Tools | Risk Level |
+|------|-------|------------|
+| Read | Read, Glob, Grep, WebSearch, WebFetch | Minimal — read-only operations |
+| Write | Edit, Write, MultiEdit, NotebookEdit | Low — reversible with git |
+| Execute | Bash (all terminal commands) | High — full shell access |
+| Plan | ExitPlanMode | Minimal — approves plans |
+
+## Community
+
+- [Issues](https://github.com/ai-fresh/ccgate/issues): Report bugs or request features
+- [Source Code](https://github.com/ai-fresh/ccgate-source): Full source repository (Swift/SwiftUI)
