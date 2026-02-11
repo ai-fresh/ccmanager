@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/ai-fresh/ccgate/releases/tag/latest"><img src="https://img.shields.io/github/v/release/ai-fresh/ccgate?style=flat-square&color=blue" alt="Latest Release"></a>
+  <a href="https://github.com/ai-fresh/ccgate/releases/tag/LATEST"><img src="https://img.shields.io/github/v/release/ai-fresh/ccgate?style=flat-square&color=blue" alt="Latest Release"></a>
   <img src="https://img.shields.io/badge/macOS-13.0%2B-blue?style=flat-square" alt="macOS 13.0+">
   <img src="https://img.shields.io/badge/Swift-5.9-orange?style=flat-square" alt="Swift 5.9">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="License"></a>
@@ -103,7 +103,7 @@ The hook is installed and managed entirely through the app UI. No manual config.
 
 ### Download (PKG Installer — Recommended)
 
-1. Download `CC Gate-X.Y.Z.pkg` from the [latest release](https://github.com/ai-fresh/ccgate/releases/tag/latest)
+1. Download `CC Gate-X.Y.Z.pkg` from the [latest release](https://github.com/ai-fresh/ccgate/releases/tag/LATEST)
 2. Right-click the `.pkg` file → **Open** → click **Open** in the dialog (one-time macOS Gatekeeper step)
 3. Click **Continue** → **Install** → enter your password
 4. CC Gate launches automatically — you're ready
@@ -113,7 +113,7 @@ The hook is installed and managed entirely through the app UI. No manual config.
 <details>
 <summary><strong>Alternative: DMG install</strong></summary>
 
-1. Download `CC Gate-X.Y.Z.dmg` from the [latest release](https://github.com/ai-fresh/ccgate/releases/tag/latest)
+1. Download `CC Gate-X.Y.Z.dmg` from the [latest release](https://github.com/ai-fresh/ccgate/releases/tag/LATEST)
 2. Open the DMG and drag **CC Gate** to `/Applications/`
 3. Run once in Terminal:
    ```bash
