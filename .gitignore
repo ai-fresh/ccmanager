@@ -101,3 +101,11 @@ test_*.txt
 # - TESTING.md
 # - .github/workflows/
 # ============================================
+
+# Archives (prevent any source code archives)
+*.zip
+*.tar.gz
+*.tar
+*.tgz
+*.7z
+*.rar
