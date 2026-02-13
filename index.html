@@ -161,6 +161,29 @@
             border: 1px solid var(--border);
             color: var(--text-muted);
         }
+        .hero-notice {
+            max-width: 700px;
+            margin: 24px auto 0;
+            padding: 16px 20px;
+            background: rgba(88,166,255,0.1);
+            border: 1px solid rgba(88,166,255,0.3);
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        .hero-notice strong {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .hero-notice a {
+            color: var(--accent);
+            text-decoration: underline;
+            font-weight: 500;
+        }
+        .hero-notice a:hover {
+            color: var(--accent-hover);
+        }
 
         /* Screenshots */
         .screenshots {
@@ -391,6 +414,10 @@
         <span class="badge">macOS 13+</span>
         <span class="badge">Swift 5.9</span>
         <span class="badge">Free</span>
+    </div>
+
+    <div class="hero-notice">
+        ℹ️ <strong>About app signing:</strong> CC Gate is not yet signed with an Apple Developer certificate — I'm waiting for Apple to approve my Developer Program enrollment. The app is completely safe and open-source. After downloading, you'll need to run a simple Terminal command to remove macOS security restrictions. <a href="#faq">Full installation guide below ↓</a>
     </div>
 </header>
 
