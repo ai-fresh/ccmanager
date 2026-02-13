@@ -184,6 +184,32 @@
         .hero-notice a:hover {
             color: var(--accent-hover);
         }
+        .code-block-wrapper {
+            position: relative;
+            margin: 12px 0 8px;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(88,166,255,0.15);
+            border: 1px solid rgba(88,166,255,0.4);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+        }
+        .copy-btn:hover {
+            background: rgba(88,166,255,0.25);
+            border-color: var(--accent);
+        }
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
 
         /* Screenshots */
         .screenshots {
@@ -418,7 +444,10 @@
 
     <div class="hero-notice">
         ℹ️ <strong>Installation note:</strong> This app isn't signed with Apple Developer certificate yet (waiting for approval). It's completely safe and free. After copying to Applications folder, open Terminal and run:
-        <pre style="margin: 12px 0 8px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px;"><code>xattr -cr "/Applications/CC Gate.app"</code></pre>
+        <div class="code-block-wrapper">
+            <pre style="background: rgba(0,0,0,0.3); padding: 10px 10px 10px 10px; border-radius: 6px; margin: 0;"><code>xattr -cr "/Applications/CC Gate.app"</code></pre>
+            <button class="copy-btn" onclick="copyInstallCommand(this)">📋 Copy</button>
+        </div>
         <a href="#faq">Why is this needed? Learn more ↓</a>
     </div>
 </header>
@@ -655,6 +684,36 @@
       // Graceful fallback - links still work via /releases/latest redirect
     });
 })();
+</script>
+
+<!-- Copy to Clipboard -->
+<script>
+function copyInstallCommand(button) {
+  const command = 'xattr -cr "/Applications/CC Gate.app"';
+
+  navigator.clipboard.writeText(command).then(() => {
+    // Success feedback
+    const originalText = button.textContent;
+    button.textContent = '✓ Copied!';
+    button.style.background = 'rgba(63,185,80,0.2)';
+    button.style.borderColor = 'var(--green)';
+    button.style.color = 'var(--green)';
+
+    // Reset after 2 seconds
+    setTimeout(() => {
+      button.textContent = originalText;
+      button.style.background = '';
+      button.style.borderColor = '';
+      button.style.color = '';
+    }, 2000);
+  }).catch(err => {
+    console.error('Failed to copy:', err);
+    button.textContent = '✗ Failed';
+    setTimeout(() => {
+      button.textContent = '📋 Copy';
+    }, 2000);
+  });
+}
 </script>
 
 </body>
