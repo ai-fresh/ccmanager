@@ -101,27 +101,33 @@ The hook is installed and managed entirely through the app UI. No manual config.
 
 ## Installation
 
-### Download (PKG Installer — Recommended)
+### Requirements
+- macOS 13.0 (Ventura) or later
 
-1. Download `CC Gate-X.Y.Z.pkg` from the [latest release](https://github.com/ai-fresh/ccgate/releases/tag/LATEST)
-2. Right-click the `.pkg` file → **Open** → click **Open** in the dialog (one-time macOS Gatekeeper step)
-3. Click **Continue** → **Install** → enter your password
-4. CC Gate launches automatically — you're ready
+### Step-by-step
 
-> The PKG installer handles everything: copies to `/Applications/`, removes quarantine, and launches the app. Updates work the same way — download the new PKG and run it.
+1. **Download DMG**
+   - Get `CC Gate-X.Y.Z.dmg` from the [latest release](https://github.com/ai-fresh/ccgate/releases/latest)
 
-<details>
-<summary><strong>Alternative: DMG install</strong></summary>
+2. **Install Application**
+   - Open the DMG file
+   - **Drag** `CC Gate.app` to your **Applications** folder
 
-1. Download `CC Gate-X.Y.Z.dmg` from the [latest release](https://github.com/ai-fresh/ccgate/releases/tag/LATEST)
-2. Open the DMG and drag **CC Gate** to `/Applications/`
-3. Run once in Terminal:
+3. **⚠️ Remove macOS Security Block**
+
+   **Before launching**, open Terminal and run:
    ```bash
    xattr -cr "/Applications/CC Gate.app"
-   open "/Applications/CC Gate.app"
    ```
 
-</details>
+   This removes macOS Gatekeeper quarantine. **Why?** CC Gate is not yet signed with an Apple Developer certificate (waiting for Apple Developer Program approval). This command tells macOS you trust the app.
+
+4. **Launch & Setup Hook**
+   - Open **CC Gate** from Applications folder
+   - Menu bar icon appears (terminal icon in top bar)
+   - Go to **Settings → Hook → Install** (one-time setup)
+
+You're ready! All Claude Code sessions will appear in the project list.
 
 ## Quick Start
 

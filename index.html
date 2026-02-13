@@ -384,7 +384,7 @@
     <h1>CC Gate</h1>
     <p class="tagline">Monitor and manage Claude Code sessions from your macOS menu bar. Auto-approve tool permissions, track active sessions, and handle questions — without leaving your workflow.</p>
     <div class="hero-buttons">
-        <a href="https://github.com/ai-fresh/ccgate/releases/download/v2.8.2/CC.Gate-2.8.2.pkg" class="btn btn-primary">Download for macOS</a>
+        <a href="https://github.com/ai-fresh/ccgate/releases/latest" class="btn btn-primary">Download DMG for macOS</a>
         <a href="https://github.com/ai-fresh/ccgate" class="btn btn-secondary">View on GitHub</a>
     </div>
     <div class="badges">
@@ -495,24 +495,25 @@
         <div class="install-steps">
             <div class="install-step">
                 <div class="step-number">1</div>
-                <h3>Download</h3>
-                <p>Get <code>CC Gate-x.y.z.pkg</code> from <a href="https://github.com/ai-fresh/ccgate/releases/download/v2.8.2/CC.Gate-2.8.2.pkg">GitHub Releases</a>.</p>
+                <h3>Download DMG</h3>
+                <p>Get <code>CC Gate-x.y.z.dmg</code> from <a href="https://github.com/ai-fresh/ccgate/releases/latest">GitHub Releases</a>.</p>
             </div>
             <div class="install-step">
                 <div class="step-number">2</div>
-                <h3>Open Installer</h3>
-                <p><strong>Right-click</strong> the <code>.pkg</code> file &rarr; <strong>Open</strong> &rarr; click <strong>Open</strong> in the warning dialog.</p>
-                <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">⚠️ You'll see "unidentified developer" — this is normal. See FAQ below.</p>
+                <h3>Install App</h3>
+                <p>Open the DMG and <strong>drag CC Gate.app</strong> to your <strong>Applications</strong> folder.</p>
             </div>
             <div class="install-step">
                 <div class="step-number">3</div>
-                <h3>Install</h3>
-                <p>Click <strong>Continue</strong> &rarr; <strong>Install</strong> &rarr; enter your password. CC Gate launches automatically.</p>
+                <h3>Remove Security Block</h3>
+                <p>Open <strong>Terminal</strong> and run:</p>
+                <pre><code>xattr -cr "/Applications/CC Gate.app"</code></pre>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">⚠️ This removes macOS Gatekeeper block. See FAQ below.</p>
             </div>
             <div class="install-step">
                 <div class="step-number">4</div>
-                <h3>Install Hook</h3>
-                <p>Open Settings &rarr; Hook &rarr; Install. CC Gate now monitors all your Claude Code sessions.</p>
+                <h3>Launch & Setup Hook</h3>
+                <p>Open <strong>CC Gate</strong> from Applications. Then go to Settings &rarr; Hook &rarr; Install.</p>
             </div>
         </div>
     </div>
@@ -524,17 +525,12 @@
         <h2>FAQ</h2>
         <div class="faq-list">
             <details class="faq-item" open>
-                <summary>⚠️ Why does macOS say "unidentified developer"?</summary>
-                <p><strong>This is normal and expected.</strong> CC Gate is not signed with an Apple Developer ID certificate ($99/year). The app is completely safe.</p>
-                <p><strong>How to install:</strong></p>
-                <ol style="margin-left: 20px; margin-top: 8px;">
-                    <li><strong>Right-click</strong> the PKG file → <strong>Open</strong></li>
-                    <li>Click <strong>Open</strong> again in the warning dialog</li>
-                    <li>Follow installer — that's it!</li>
-                </ol>
-                <p style="margin-top: 8px;"><strong>Alternative:</strong> Remove quarantine manually:</p>
-                <code style="display: block; background: var(--bg-card); padding: 12px; border-radius: 6px; margin-top: 8px;">xattr -d com.apple.quarantine "CC Gate-2.8.1.pkg"</code>
-                <p style="margin-top: 8px; color: var(--text-muted); font-size: 14px;">Why no certificate? Apple charges $99/year for the privilege. CC Gate is free and independent. The code is transparent — you can review it anytime.</p>
+                <summary>⚠️ Why do I need to run a Terminal command before launching?</summary>
+                <p><strong>CC Gate is not signed with an Apple Developer certificate.</strong> I'm waiting for Apple to approve my Developer Program enrollment. Until then, macOS blocks unsigned apps by default.</p>
+                <p><strong>The <code>xattr -cr</code> command removes this block.</strong> It's completely safe — it just tells macOS "I trust this app."</p>
+                <p style="margin-top: 12px;"><strong>Why not just right-click → Open?</strong></p>
+                <p>That works for some apps, but CC Gate uses modern macOS features (menu bar extras, AppleScript) that require the quarantine flag to be fully removed.</p>
+                <p style="margin-top: 12px; color: var(--text-muted); font-size: 14px;"><strong>Note:</strong> Apple Developer Program costs $99/year. CC Gate is free and open-source. Once my enrollment is approved, future versions will be signed and this step won't be needed.</p>
             </details>
             <details class="faq-item">
                 <summary>Is it safe to auto-accept Execute (Bash)?</summary>
