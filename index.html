@@ -443,12 +443,7 @@
     </div>
 
     <div class="hero-notice">
-        ℹ️ <strong>Installation note:</strong> This app isn't signed with Apple Developer certificate yet (waiting for approval). It's completely safe and free. After copying to Applications folder, open Terminal and run:
-        <div class="code-block-wrapper">
-            <pre style="background: rgba(0,0,0,0.3); padding: 10px 10px 10px 10px; border-radius: 6px; margin: 0;"><code>xattr -cr "/Applications/CC Gate.app"</code></pre>
-            <button class="copy-btn" onclick="copyInstallCommand(this)">📋 Copy</button>
-        </div>
-        <a href="#faq">Why is this needed? Learn more ↓</a>
+        ✅ <strong>Signed & Notarized</strong> — CC Gate is signed with Apple Developer ID and notarized by Apple. No security warnings, no Terminal commands needed.
     </div>
 </header>
 
@@ -563,13 +558,6 @@
             </div>
             <div class="install-step">
                 <div class="step-number">3</div>
-                <h3>Remove Security Block</h3>
-                <p>Open <strong>Terminal</strong> and run:</p>
-                <pre><code>xattr -cr "/Applications/CC Gate.app"</code></pre>
-                <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">⚠️ This removes macOS Gatekeeper block. See FAQ below.</p>
-            </div>
-            <div class="install-step">
-                <div class="step-number">4</div>
                 <h3>Launch & Setup Hook</h3>
                 <p>Open <strong>CC Gate</strong> from Applications. Then go to Settings &rarr; Hook &rarr; Install.</p>
             </div>
@@ -583,14 +571,6 @@
         <h2>FAQ</h2>
         <div class="faq-list">
             <details class="faq-item" open>
-                <summary>⚠️ Why do I need to run a Terminal command before launching?</summary>
-                <p><strong>CC Gate is not signed with an Apple Developer certificate.</strong> I'm waiting for Apple to approve my Developer Program enrollment. Until then, macOS blocks unsigned apps by default.</p>
-                <p><strong>The <code>xattr -cr</code> command removes this block.</strong> It's completely safe — it just tells macOS "I trust this app."</p>
-                <p style="margin-top: 12px;"><strong>Why not just right-click → Open?</strong></p>
-                <p>That works for some apps, but CC Gate uses modern macOS features (menu bar extras, AppleScript) that require the quarantine flag to be fully removed.</p>
-                <p style="margin-top: 12px; color: var(--text-muted); font-size: 14px;"><strong>Note:</strong> Apple Developer Program costs $99/year. CC Gate is free and open-source. Once my enrollment is approved, future versions will be signed and this step won't be needed.</p>
-            </details>
-            <details class="faq-item">
                 <summary>Is it safe to auto-accept Execute (Bash)?</summary>
                 <p>The Execute tier gives Claude full terminal access. Only enable it if you trust the codebase and Claude's judgment. For most workflows, Read + Write is a good balance.</p>
             </details>
@@ -686,35 +666,6 @@
 })();
 </script>
 
-<!-- Copy to Clipboard -->
-<script>
-function copyInstallCommand(button) {
-  const command = 'xattr -cr "/Applications/CC Gate.app"';
-
-  navigator.clipboard.writeText(command).then(() => {
-    // Success feedback
-    const originalText = button.textContent;
-    button.textContent = '✓ Copied!';
-    button.style.background = 'rgba(63,185,80,0.2)';
-    button.style.borderColor = 'var(--green)';
-    button.style.color = 'var(--green)';
-
-    // Reset after 2 seconds
-    setTimeout(() => {
-      button.textContent = originalText;
-      button.style.background = '';
-      button.style.borderColor = '';
-      button.style.color = '';
-    }, 2000);
-  }).catch(err => {
-    console.error('Failed to copy:', err);
-    button.textContent = '✗ Failed';
-    setTimeout(() => {
-      button.textContent = '📋 Copy';
-    }, 2000);
-  });
-}
-</script>
 
 </body>
 </html>
