@@ -3,7 +3,7 @@ name: Verify Release
 on:
   release:
     types: [published]
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
     inputs:
       version:
         description: 'Version to test (e.g., 2.8.2)'
@@ -24,8 +24,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: |
-          pip install requests
+        run: pip install requests
 
       - name: Wait for GitHub Pages deployment
         run: |
@@ -42,33 +41,12 @@ jobs:
           fi
 
       - name: Quick bash verification
-        if: success() || failure()  # Run even if Python tests fail
+        if: success() || failure()
         run: |
           chmod +x quick_verify.sh
           ./quick_verify.sh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Comment on release (if failed)
-        if: failure()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const tagName = context.payload.release?.tag_name || 'latest';
-            const releases = await github.rest.repos.listReleases({
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            });
-            const release = releases.data.find(r => r.tag_name === tagName);
-
-            if (release) {
-              await github.rest.repos.createReleaseComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                release_id: release.id,
-                body: `⚠️ **Landing page verification failed!**\n\nThe landing page may not be synchronized with this release. Check the [workflow run](${context.payload.repository.html_url}/actions/runs/${context.runId}) for details.`
-              });
-            }
 
   verify-downloads:
     name: Test Download Links
@@ -77,29 +55,23 @@ jobs:
 
     steps:
       - name: Get latest release info
-        id: release
         run: |
           LATEST=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name')
-          echo "tag=$LATEST" >> $GITHUB_OUTPUT
+          echo "Latest release: $LATEST"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download PKG asset
+      - name: Download and verify PKG
         run: |
           PKG_URL=$(gh api repos/${{ github.repository }}/releases/latest --jq '.assets[] | select(.name | endswith(".pkg")) | .browser_download_url')
           echo "📦 Downloading PKG from: $PKG_URL"
           curl -LO "$PKG_URL"
           ls -lh *.pkg
+          pkgutil --check-signature *.pkg || echo "⚠️ PKG not signed"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Verify PKG signature (if signed)
-        run: |
-          PKG_FILE=$(ls *.pkg)
-          echo "🔍 Checking PKG: $PKG_FILE"
-          pkgutil --check-signature "$PKG_FILE" || echo "⚠️ PKG not signed (expected for unsigned builds)"
-
-      - name: Download DMG asset (if exists)
+      - name: Download and verify DMG
         continue-on-error: true
         run: |
           DMG_URL=$(gh api repos/${{ github.repository }}/releases/latest --jq '.assets[] | select(.name | endswith(".dmg")) | .browser_download_url')
