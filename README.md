@@ -113,16 +113,7 @@ The hook is installed and managed entirely through the app UI. No manual config.
    - Open the DMG file
    - **Drag** `CC Gate.app` to your **Applications** folder
 
-3. **⚠️ Remove macOS Security Block**
-
-   **Before launching**, open Terminal and run:
-   ```bash
-   xattr -cr "/Applications/CC Gate.app"
-   ```
-
-   This removes macOS Gatekeeper quarantine. **Why?** CC Gate is not yet signed with an Apple Developer certificate (waiting for Apple Developer Program approval). This command tells macOS you trust the app.
-
-4. **Launch & Setup Hook**
+3. **Launch & Setup Hook**
    - Open **CC Gate** from Applications folder
    - Menu bar icon appears (terminal icon in top bar)
    - Go to **Settings → Hook → Install** (one-time setup)
