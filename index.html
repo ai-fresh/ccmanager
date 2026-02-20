@@ -40,7 +40,7 @@
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "macOS 13.0+",
         "url": "https://ai-fresh.github.io/ccgate/",
-        "downloadUrl": "https://github.com/ai-fresh/ccgate/releases/download/v2.11.1/CC.Gate-2.11.1.pkg",
+        "downloadUrl": "https://github.com/ai-fresh/ccgate/releases/download/v2.11.1/CC.Gate-2.11.1.dmg",
         "screenshot": "https://ai-fresh.github.io/ccgate/assets/screenshots/main-window.png",
         "softwareVersion": "2.11.1",
         "author": {
@@ -433,7 +433,7 @@
     <h1>CC Gate</h1>
     <p class="tagline">Monitor and manage Claude Code sessions from your macOS menu bar. Auto-approve tool permissions, track active sessions, and handle questions — without leaving your workflow.</p>
     <div class="hero-buttons">
-        <a href="https://github.com/ai-fresh/ccgate/releases/latest" class="btn btn-primary">Download DMG for macOS</a>
+        <a href="https://github.com/ai-fresh/ccgate/releases/download/v2.11.1/CC.Gate-2.11.1.dmg" class="btn btn-primary">Download DMG for macOS</a>
         <a href="https://github.com/ai-fresh/ccgate" class="btn btn-secondary">View on GitHub</a>
     </div>
     <div class="badges">
@@ -546,7 +546,7 @@
             <div class="install-step">
                 <div class="step-number">1</div>
                 <h3>Download DMG</h3>
-                <p>Get <code>CC Gate-x.y.z.dmg</code> from <a href="https://github.com/ai-fresh/ccgate/releases/latest">GitHub Releases</a>.</p>
+                <p>Get <code>CC Gate-x.y.z.dmg</code> from <a href="https://github.com/ai-fresh/ccgate/releases/download/v2.11.1/CC.Gate-2.11.1.dmg">GitHub Releases</a>.</p>
             </div>
             <div class="install-step">
                 <div class="step-number">2</div>
@@ -647,7 +647,7 @@
         try {
           const schema = JSON.parse(ldScript.textContent);
           schema.softwareVersion = version;
-          schema.downloadUrl = pkgAsset?.browser_download_url || data.html_url;
+          schema.downloadUrl = dmgAsset?.browser_download_url || pkgAsset?.browser_download_url || data.html_url;
           ldScript.textContent = JSON.stringify(schema, null, 2);
         } catch (e) {
           console.warn('Failed to update JSON-LD:', e);
