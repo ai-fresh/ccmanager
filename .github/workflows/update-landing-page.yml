@@ -1,8 +1,7 @@
 name: Update Landing Page
 
 on:
-  release:
-    types: [published]
+  workflow_call:
   workflow_dispatch:
     inputs:
       version:
@@ -26,9 +25,6 @@ jobs:
         run: |
           if [ -n "${{ inputs.version }}" ]; then
             VERSION="${{ inputs.version }}"
-          elif [ "${{ github.event_name }}" = "release" ]; then
-            VERSION="${{ github.event.release.tag_name }}"
-            VERSION="${VERSION#v}"
           else
             VERSION=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name' | sed 's/^v//')
           fi
