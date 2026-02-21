@@ -1,0 +1,80 @@
+name: Update Landing Page
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to update to (e.g., 2.11.6). Leave empty to use latest release.'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  update-landing-page:
+    name: Update version in index.html
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          elif [ "${{ github.event_name }}" = "release" ]; then
+            VERSION="${{ github.event.release.tag_name }}"
+            VERSION="${VERSION#v}"
+          else
+            VERSION=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name' | sed 's/^v//')
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "📦 Updating to version: $VERSION"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update index.html
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          FILE="index.html"
+
+          if [ ! -f "$FILE" ]; then
+            echo "❌ index.html not found"
+            exit 1
+          fi
+
+          echo "🔄 Updating version references from old → $VERSION"
+
+          # Update JSON-LD softwareVersion
+          sed -i "s/\"softwareVersion\": \"[0-9]*\.[0-9]*\.[0-9]*\"/\"softwareVersion\": \"$VERSION\"/" "$FILE"
+
+          # Update JSON-LD downloadUrl (DMG)
+          sed -i "s|releases/download/v[0-9]*\.[0-9]*\.[0-9]*/CC\.Gate-[0-9]*\.[0-9]*\.[0-9]*\.dmg|releases/download/v$VERSION/CC.Gate-$VERSION.dmg|g" "$FILE"
+
+          # Update PKG links
+          sed -i "s|releases/download/v[0-9]*\.[0-9]*\.[0-9]*/CC\.Gate-[0-9]*\.[0-9]*\.[0-9]*\.pkg|releases/download/v$VERSION/CC.Gate-$VERSION.pkg|g" "$FILE"
+
+          echo "✅ Updated index.html to v$VERSION"
+          echo ""
+          echo "--- Verification ---"
+          grep -n "softwareVersion" "$FILE" || true
+          grep -n "releases/download" "$FILE" || true
+
+      - name: Commit and push
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "ℹ️ No changes to commit (already up to date)"
+          else
+            git commit -m "chore: update landing page to v$VERSION"
+            git push
+            echo "✅ Pushed update to v$VERSION"
+          fi
