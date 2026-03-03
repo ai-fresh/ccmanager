@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Test Runner — CC Gate Docs</title>
+    <meta name="description" content="CC Gate watches your project files for changes and automatically runs tests in the background, injecting results into Claude Code's context.">
+    <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/features/test-runner.html">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --bg-card: #161b22;
+            --bg-card-hover: #1c2333;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #79b8ff;
+            --green: #3fb950;
+            --orange: #d29922;
+            --red: #f85149;
+            --purple: #bc8cff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--accent-hover); }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+        .docs-nav { position: sticky; top: 0; background: rgba(13,17,23,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 100; padding: 12px 0; }
+        .nav-content { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; }
+        .nav-links a:hover { color: var(--text); }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; transition: all 0.2s; border: 1px solid transparent; text-decoration: none; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-hover); color: #fff; }
+        .btn-sm { padding: 6px 14px !important; font-size: 13px !important; }
+        .docs-layout { display: grid; grid-template-columns: 220px 1fr; gap: 48px; max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+        .docs-sidebar { position: sticky; top: 80px; height: fit-content; }
+        .sidebar-section { margin-bottom: 28px; }
+        .sidebar-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 8px; padding: 0 8px; }
+        .docs-sidebar a { display: block; padding: 5px 8px; font-size: 14px; color: var(--text-muted); border-radius: 6px; margin-bottom: 2px; text-decoration: none; transition: all 0.15s; }
+        .docs-sidebar a:hover { background: var(--bg-card); color: var(--text); }
+        .docs-sidebar a.active { background: rgba(88,166,255,0.1); color: var(--accent); font-weight: 500; }
+        .docs-content h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .docs-content .page-desc { font-size: 18px; color: var(--text-muted); margin-bottom: 40px; }
+        .docs-content h2 { font-size: 22px; font-weight: 700; margin: 48px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .docs-content h2:first-of-type { border-top: none; margin-top: 32px; }
+        .docs-content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; color: var(--text); }
+        .docs-content p { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+        .docs-content ul, .docs-content ol { padding-left: 24px; color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
+        .docs-content li { margin-bottom: 6px; }
+        .docs-content strong { color: var(--text); font-weight: 600; }
+        code { background: rgba(110,118,129,0.2); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', SFMono-Regular, Menlo, monospace; color: var(--text); }
+        pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+        pre code { background: none; padding: 0; font-size: 14px; color: var(--text); }
+        .docs-content img { max-width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.3); margin: 16px 0; display: block; }
+        .screenshot { max-width: 380px; }
+        .screenshot-wide { max-width: 580px; }
+        .callout { padding: 16px 20px; border-radius: 10px; margin: 20px 0; font-size: 14px; line-height: 1.6; color: var(--text); }
+        .callout-info { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.25); }
+        .callout-warn { background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.25); }
+        .callout-tip { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); }
+        .callout-danger { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.25); }
+        .callout strong { display: block; margin-bottom: 4px; }
+        .step-list { counter-reset: step; list-style: none; padding: 0; }
+        .step-list li { counter-increment: step; display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start; }
+        .step-list li::before { content: counter(step); display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; min-width: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; }
+        .step-list li > div { flex: 1; }
+        .step-list li strong { display: block; font-size: 15px; color: var(--text); margin-bottom: 4px; }
+        .step-list li p { margin: 0; font-size: 14px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 24px 0; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .card h3 { font-size: 16px; margin-bottom: 8px; }
+        .card p { font-size: 14px; color: var(--text-muted); margin: 0; }
+        .tier-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 600; }
+        .tier-read { background: rgba(88,166,255,0.15); color: var(--accent); }
+        .tier-write { background: rgba(210,153,34,0.15); color: var(--orange); }
+        .tier-execute { background: rgba(248,81,73,0.15); color: var(--red); }
+        .tier-plan { background: rgba(188,140,255,0.15); color: var(--purple); }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+        th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        td { color: var(--text-muted); }
+        td strong { color: var(--text); }
+        .hook-diagram { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 24px 0; font-family: 'SF Mono', SFMono-Regular, Menlo, monospace; font-size: 13px; color: var(--text-muted); }
+        .hook-diagram .hook-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .hook-diagram .hook-row:last-child { border-bottom: none; }
+        .hook-label { min-width: 200px; color: var(--text); font-weight: 600; }
+        .hook-desc { color: var(--text-muted); font-size: 13px; font-family: inherit; }
+        footer { text-align: center; padding: 40px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px; margin-top: 60px; }
+        footer .links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+        @media(max-width:768px) { .docs-layout { grid-template-columns: 1fr; } .docs-sidebar { display: none; } .docs-content h1 { font-size: 28px; } }
+    </style>
+</head>
+<body>
+
+<nav class="docs-nav">
+    <div class="nav-content">
+        <a href="../../" class="nav-brand">
+            <img src="../../assets/logo.png" alt="CC Gate" width="28" height="28" style="border-radius:6px">
+            <span>CC Gate</span>
+        </a>
+        <div class="nav-links">
+            <a href="../">Docs</a>
+            <a href="../getting-started.html">Get Started</a>
+            <a href="../../">Home</a>
+            <a href="https://github.com/ai-fresh/ccgate/releases" class="btn btn-primary btn-sm">Download</a>
+        </div>
+    </div>
+</nav>
+
+<div class="docs-layout">
+    <aside class="docs-sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Getting Started</div>
+            <a href="../getting-started.html">Installation</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Features</div>
+            <a href="auto-accept.html">Auto-Accept</a>
+            <a href="hook-system.html">Hook System</a>
+            <a href="git-worktrees.html">Git Worktrees</a>
+            <a href="ai-commits.html">AI Commits</a>
+            <a href="github-integration.html">GitHub</a>
+            <a href="release-pipeline.html">Release Pipeline</a>
+            <a href="test-runner.html" class="active">Test Runner</a>
+            <a href="status-indicators.html">Status Indicators</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Reference</div>
+            <a href="../reference/settings.html">Settings</a>
+            <a href="../reference/troubleshooting.html">Troubleshooting</a>
+        </div>
+    </aside>
+
+    <main class="docs-content">
+        <h1>Background Test Runner</h1>
+        <p class="page-desc">Automatically run tests when files change and inject results into Claude Code's context so Claude always knows the current test status.</p>
+
+        <h2>Overview</h2>
+        <p>CC Gate's Test Runner watches your project files for changes and automatically runs tests in the background. Results are injected into Claude Code's context so Claude always knows the current test status before suggesting any changes. This closes the feedback loop: Claude writes code, CC Gate runs tests, Claude sees results and adjusts — without you pasting error messages manually.</p>
+
+        <div class="callout callout-warn">
+            <strong>Developer Mode Feature</strong>
+            The Test Runner is hidden behind Developer Mode. Enable it by tapping the version number 7 times in Settings → About, or via <code>defaults write</code>. See "Enabling Developer Mode" below.
+        </div>
+
+        <h2>Enabling Developer Mode</h2>
+        <p>Developer Mode unlocks experimental and power-user features that are not shown in the standard UI. The Test Runner is one of these features.</p>
+
+        <ol class="step-list">
+            <li>
+                <div>
+                    <strong>Open Settings → About</strong>
+                    <p>Click the CC Gate menu bar icon → Settings → About (the Info tab at the bottom of the settings window).</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Tap the version number 7 times</strong>
+                    <p>Click the version number label (e.g. "CC Gate 2.11.12") rapidly 7 times. After the 7th tap, a "Developer Mode" label appears with a checkmark indicator.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Alternative: Terminal command</strong>
+                    <p>If you prefer, run this in Terminal and restart CC Gate:</p>
+                    <pre><code>defaults write com.adrianmagiera.CCManager developerModeEnabled -bool YES</code></pre>
+                </div>
+            </li>
+        </ol>
+
+        <p>Once Developer Mode is active, a "Developer" section appears in Settings with the Test Watcher toggle and additional configuration options.</p>
+
+        <h2>Test Watcher</h2>
+        <p>With Developer Mode enabled, go to Settings → Developer and toggle "Test Watcher" on. CC Gate immediately begins watching the active project's source directory for file changes.</p>
+
+        <h3>What triggers a test run</h3>
+        <ul>
+            <li>Any source file change detected by the filesystem watcher: <code>.swift</code>, <code>.py</code>, <code>.js</code>, <code>.ts</code>, <code>.cs</code> files</li>
+            <li>A manual "Run Tests" trigger from the CC Gate UI (project card or Test Results window)</li>
+        </ul>
+
+        <h3>Supported test frameworks</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Language</th>
+                    <th>Default command</th>
+                    <th>Override</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Swift</strong></td>
+                    <td><code>swift test</code></td>
+                    <td>Settings → Developer → Test command</td>
+                </tr>
+                <tr>
+                    <td><strong>Python</strong></td>
+                    <td><code>pytest</code></td>
+                    <td>Settings → Developer → Test command</td>
+                </tr>
+                <tr>
+                    <td><strong>JavaScript / TypeScript</strong></td>
+                    <td><code>npm test</code></td>
+                    <td>Settings → Developer → Test command</td>
+                </tr>
+                <tr>
+                    <td><strong>C#</strong></td>
+                    <td><code>dotnet test</code></td>
+                    <td>Settings → Developer → Test command</td>
+                </tr>
+                <tr>
+                    <td><strong>Custom</strong></td>
+                    <td>—</td>
+                    <td>Enter any shell command</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Test Results in Claude Code Context</h2>
+        <p>After each test run, CC Gate writes the results to a JSON file. A secondary hook script reads this file and prepends the test status to Claude Code's context at the start of each message. Claude sees whether tests pass, which tests fail, and the error output — before deciding what changes to make next.</p>
+
+        <p>This means Claude can proactively say "the tests are currently failing with X error — let me fix that before adding the new feature" without you having to paste anything.</p>
+
+        <div class="callout callout-tip">
+            <strong>Tip: Copy failures to Claude</strong>
+            The Test Results window has a "Copy to Claude" button that copies the full failure output formatted for pasting into a Claude Code message. Useful when you want Claude to focus on a specific failure without waiting for the next automatic context injection.
+        </div>
+
+        <h2>Hook Architecture</h2>
+        <p>The Test Runner uses a second hook registration separate from CC Gate's main permission hook. This keeps concerns cleanly separated and allows independent enable/disable.</p>
+
+        <div class="hook-diagram">
+            <div class="hook-row">
+                <span class="hook-label">ccmanager-context.sh</span>
+                <span class="hook-desc">Always active. Handles PermissionRequest events and pending context injection.</span>
+            </div>
+            <div class="hook-row">
+                <span class="hook-label">ccmanager-tests.sh</span>
+                <span class="hook-desc">Test results only. Dynamically registered/unregistered when Test Watcher is toggled.</span>
+            </div>
+        </div>
+
+        <p>When you disable the Test Watcher, CC Gate removes the <code>ccmanager-tests.sh</code> entry from <code>~/.claude/settings.json</code> entirely. Claude Code no longer receives test context for that session. Enabling the watcher re-registers it.</p>
+
+        <div class="callout callout-info">
+            <strong>New sessions required</strong>
+            Claude Code snapshots hook registrations at the start of each session. If you enable or disable the Test Watcher, the change takes effect for new Claude Code sessions only. Close and reopen Claude Code for the change to apply.
+        </div>
+
+        <h2>Viewing Results</h2>
+        <p>CC Gate shows test results in a dedicated TestResultsWindowView, accessible from the project card or via the menu bar icon context menu when tests are running.</p>
+
+        <ul>
+            <li><strong>Pass / fail status</strong> — summary badge showing total passed and failed counts</li>
+            <li><strong>Individual test cases</strong> — expandable list of each test with pass/fail indicator</li>
+            <li><strong>Error output</strong> — full stderr and stdout for failing tests</li>
+            <li><strong>Copy to Claude</strong> — formats and copies failure details for pasting directly into Claude Code</li>
+            <li><strong>Run again</strong> — manually triggers a fresh test run without waiting for a file change</li>
+        </ul>
+
+        <h2>Troubleshooting</h2>
+
+        <h3>Tests not running</h3>
+        <p>Ensure Developer Mode is enabled (version label shows "Developer Mode" checkmark in Settings → About) and that the Test Watcher toggle is on in Settings → Developer. If both are set correctly, check that the project has source files with supported extensions in its directory.</p>
+
+        <h3>Wrong test command being run</h3>
+        <p>CC Gate auto-detects the command but may guess incorrectly for non-standard project layouts. Go to Settings → Developer → Test command and enter the exact shell command you would run in terminal (e.g. <code>./vendor/bin/phpunit</code> or <code>cargo test</code>).</p>
+
+        <h3>Results not appearing in Claude Code</h3>
+        <p>Restart your Claude Code session. Hook changes only apply to new sessions — the test hook registration (or removal) takes effect when Claude Code starts a new conversation, not mid-session.</p>
+
+        <h3>Stale test results after disabling watcher</h3>
+        <p>When you toggle the Test Watcher off, CC Gate automatically deletes the <code>test-results.json</code> file so stale results are not injected into future Claude Code sessions. If you see old results, toggle the watcher off and back on, or delete the file manually at <code>~/.claude/.ccmanager/test-results.json</code>.</p>
+    </main>
+</div>
+
+<footer>
+    <div class="links">
+        <a href="../../">Home</a>
+        <a href="../">Docs</a>
+        <a href="https://github.com/ai-fresh/ccgate/releases">Download</a>
+        <a href="https://github.com/ai-fresh/ccgate/issues">Report Issue</a>
+    </div>
+    <div>CC Gate — macOS menu bar companion for Claude Code</div>
+</footer>
+
+</body>
+</html>

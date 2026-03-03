@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started — CC Gate Documentation</title>
+    <meta name="description" content="Install CC Gate, set up the PermissionRequest hook, grant accessibility permissions, and configure auto-accept for the first time. Complete setup guide for macOS.">
+    <meta name="author" content="AI Fresh">
+    <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/getting-started.html">
+    <meta property="og:title" content="Getting Started — CC Gate Documentation">
+    <meta property="og:description" content="Install CC Gate, set up the hook, grant permissions, and configure auto-accept for the first time.">
+    <meta property="og:url" content="https://ai-fresh.github.io/ccgate/docs/getting-started.html">
+    <link rel="icon" type="image/png" href="../assets/icon.png">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --bg-card: #161b22;
+            --bg-card-hover: #1c2333;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #79b8ff;
+            --green: #3fb950;
+            --orange: #d29922;
+            --red: #f85149;
+            --purple: #bc8cff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+        /* Nav */
+        .docs-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(13,17,23,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 12px 0;
+        }
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text);
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 14px;
+        }
+        .nav-links a { color: var(--text-muted); text-decoration: none; }
+        .nav-links a:hover { color: var(--text); }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-hover); text-decoration: none; }
+        .btn-sm { padding: 6px 14px; font-size: 13px; }
+
+        /* Layout */
+        .docs-layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 48px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        /* Sidebar */
+        .docs-sidebar {
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+        .sidebar-section { margin-bottom: 28px; }
+        .sidebar-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+        .docs-sidebar a {
+            display: block;
+            padding: 5px 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+            border-radius: 6px;
+            margin-bottom: 2px;
+            text-decoration: none;
+        }
+        .docs-sidebar a:hover, .docs-sidebar a.active {
+            background: var(--bg-card);
+            color: var(--text);
+        }
+
+        /* Content */
+        .docs-content h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+        .docs-content .page-intro { font-size: 18px; color: var(--text-muted); margin-bottom: 32px; line-height: 1.6; }
+        .docs-content h2 { font-size: 22px; font-weight: 700; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .docs-content h2:first-of-type { margin-top: 24px; }
+        .docs-content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; color: var(--text); }
+        .docs-content p { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+        .docs-content ul, .docs-content ol { padding-left: 20px; color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
+        .docs-content li { margin-bottom: 6px; }
+        .docs-content code { background: rgba(110,118,129,0.2); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', SFMono-Regular, Menlo, monospace; }
+        .docs-content pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+        .docs-content pre code { background: none; padding: 0; font-size: 14px; color: var(--text); }
+        .docs-content img { max-width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.3); margin: 16px 0; }
+        .docs-content .screenshot { max-width: 440px; display: block; }
+
+        /* Callouts */
+        .callout { padding: 16px 20px; border-radius: 10px; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+        .callout-info { background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.25); color: var(--text-muted); }
+        .callout-info strong { color: var(--accent); }
+        .callout-warn { background: rgba(210,153,34,0.1); border: 1px solid rgba(210,153,34,0.25); color: var(--text-muted); }
+        .callout-warn strong { color: var(--orange); }
+        .callout-tip { background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.25); color: var(--text-muted); }
+        .callout-tip strong { color: var(--green); }
+
+        /* Step cards */
+        .step-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .step-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; margin-top: 0; }
+        .step-card p { font-size: 14px; color: var(--text-muted); margin: 0; }
+
+        /* Next steps cards */
+        .next-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 14px;
+            margin: 20px 0;
+        }
+        .next-step-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            text-decoration: none;
+            display: block;
+            transition: border-color 0.2s;
+        }
+        .next-step-card:hover { border-color: var(--accent); text-decoration: none; }
+        .next-step-card span { font-size: 22px; display: block; margin-bottom: 8px; }
+        .next-step-card h4 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+        .next-step-card p { font-size: 13px; color: var(--text-muted); margin: 0; }
+
+        /* Requirement badges */
+        .req-list { list-style: none; padding: 0; margin: 16px 0; }
+        .req-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+        .req-list li:last-child { border-bottom: none; }
+        .req-check { color: var(--green); font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+        .req-list strong { color: var(--text); }
+
+        footer a { color: var(--text-muted); }
+        footer a:hover { color: var(--text); }
+
+        @media (max-width: 768px) {
+            .docs-layout { grid-template-columns: 1fr; }
+            .docs-sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="docs-nav">
+    <div class="container">
+        <div class="nav-content">
+            <a href="/" class="nav-brand">
+                <img src="../assets/logo.png" alt="CC Gate" width="28" height="28" style="border-radius:6px">
+                <span>CC Gate</span>
+            </a>
+            <div class="nav-links">
+                <a href="../docs/">Docs</a>
+                <a href="../docs/getting-started.html" style="color:var(--text)">Get Started</a>
+                <a href="../">Home</a>
+                <a href="https://github.com/ai-fresh/ccgate/releases" class="btn btn-primary btn-sm">Download</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="docs-layout">
+    <aside class="docs-sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Getting Started</div>
+            <a href="#requirements">System Requirements</a>
+            <a href="#installation">Installation</a>
+            <a href="#first-run">First Run</a>
+            <a href="#hook">Install the Hook</a>
+            <a href="#permissions">Grant Permissions</a>
+            <a href="#auto-accept">Configure Auto-Accept</a>
+            <a href="#next-steps">Next Steps</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Features</div>
+            <a href="features/auto-accept.html">Auto-Accept</a>
+            <a href="features/hook-system.html">Hook System</a>
+            <a href="features/git-worktrees.html">Git Worktrees</a>
+            <a href="features/ai-commits.html">AI Commits</a>
+            <a href="features/github-integration.html">GitHub</a>
+            <a href="features/release-pipeline.html">Release Pipeline</a>
+            <a href="features/test-runner.html">Test Runner</a>
+            <a href="features/status-indicators.html">Status Indicators</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Reference</div>
+            <a href="reference/settings.html">Settings</a>
+            <a href="reference/troubleshooting.html">Troubleshooting</a>
+        </div>
+    </aside>
+
+    <main class="docs-content">
+        <h1>Getting Started with CC Gate</h1>
+        <p class="page-intro">This guide walks you through installing CC Gate, setting up the PermissionRequest hook, and configuring auto-accept so you can start using it with your Claude Code sessions immediately.</p>
+
+        <h2 id="requirements">System Requirements</h2>
+        <p>Before installing CC Gate, make sure your system meets the following requirements:</p>
+        <ul class="req-list">
+            <li>
+                <span class="req-check">&#10003;</span>
+                <div><strong>macOS 13.0 Ventura or later</strong> — CC Gate uses <code>MenuBarExtra</code> and other modern SwiftUI APIs that require Ventura or newer. macOS 14 Sonoma and 15 Sequoia are fully supported.</div>
+            </li>
+            <li>
+                <span class="req-check">&#10003;</span>
+                <div><strong>Claude Code CLI installed</strong> — CC Gate is a companion app for <a href="https://docs.anthropic.com/claude-code" target="_blank" rel="noopener">Claude Code</a>. You must have it installed and authenticated before CC Gate can do anything useful. Install with <code>npm install -g @anthropic-ai/claude-code</code>.</div>
+            </li>
+            <li>
+                <span class="req-check">&#10003;</span>
+                <div><strong>At least one Claude Code project</strong> — CC Gate reads session data from <code>~/.claude/projects/</code>. This directory is created automatically when you run Claude Code for the first time in any folder.</div>
+            </li>
+            <li>
+                <span class="req-check">&#10003;</span>
+                <div><strong>~/.claude/ directory</strong> — CC Gate needs read access to your Claude configuration directory. On sandboxed builds, you will be prompted to grant this access on first launch.</div>
+            </li>
+        </ul>
+
+        <h2 id="installation">Installation</h2>
+        <p>CC Gate is distributed as a signed and notarized macOS app. There are two ways to install it:</p>
+
+        <h3>Option A — DMG (Recommended)</h3>
+        <p>The DMG installer is the simplest way to install CC Gate:</p>
+        <ol>
+            <li>Go to the <a href="https://github.com/ai-fresh/ccgate/releases" target="_blank" rel="noopener">GitHub Releases page</a> and download the latest <code>CC Gate-x.y.z.dmg</code> file.</li>
+            <li>Open the downloaded DMG by double-clicking it.</li>
+            <li>Drag <strong>CC Gate.app</strong> to your <strong>Applications</strong> folder in the window that opens.</li>
+            <li>Eject the DMG volume.</li>
+        </ol>
+
+        <h3>Option B — PKG (System Installer)</h3>
+        <p>The PKG installer places CC Gate in <code>/Applications</code> automatically and is useful for managed deployments:</p>
+        <ol>
+            <li>Download the latest <code>CC Gate-x.y.z.pkg</code> from <a href="https://github.com/ai-fresh/ccgate/releases" target="_blank" rel="noopener">GitHub Releases</a>.</li>
+            <li>Double-click the PKG and follow the installer prompts.</li>
+            <li>Enter your administrator password when requested.</li>
+        </ol>
+
+        <h3>First Launch Security Bypass</h3>
+        <p>Because CC Gate is distributed outside the Mac App Store, macOS Gatekeeper may block it on first launch even though it is properly signed and notarized. If you see a message saying the app "cannot be opened because the developer cannot be verified":</p>
+        <ol>
+            <li>Find <strong>CC Gate.app</strong> in your Applications folder in Finder.</li>
+            <li><strong>Right-click</strong> (or Control-click) the app icon.</li>
+            <li>Choose <strong>Open</strong> from the context menu.</li>
+            <li>In the dialog that appears, click <strong>Open</strong> again to confirm.</li>
+        </ol>
+        <p>This only needs to be done once. After that, CC Gate will launch normally by double-clicking or from Spotlight.</p>
+
+        <div class="callout callout-info">
+            <strong>Note:</strong> CC Gate is signed with an Apple Developer ID certificate and notarized by Apple. The security bypass above is only required because it is not distributed through the App Store. Gatekeeper still verifies the signature before you confirm the first launch.
+        </div>
+
+        <h2 id="first-run">First Run</h2>
+        <p>When you launch CC Gate for the first time, a small terminal icon appears in your macOS menu bar — the narrow strip of icons at the top right of your screen. CC Gate has no Dock icon by design; it lives entirely in the menu bar.</p>
+
+        <h3>What you see</h3>
+        <p>Click the CC Gate icon in the menu bar to open the popup. The main popup shows:</p>
+        <ul>
+            <li><strong>Project list</strong> — every project directory where Claude Code has been used, detected automatically from <code>~/.claude/projects/</code>.</li>
+            <li><strong>Status indicators</strong> — colored dots and spinners next to each project name showing whether Claude Code is currently active, waiting for input, or idle. See <a href="features/status-indicators.html">Status Indicators</a> for full details.</li>
+            <li><strong>Session count</strong> — how many Claude Code sessions exist for each project.</li>
+            <li><strong>Last activity time</strong> — when the most recent session file was modified.</li>
+            <li><strong>Bell icon</strong> — opens the Auto-Accept Questions window where you control permission tiers.</li>
+            <li><strong>Settings icon</strong> — opens the full Settings panel for CC Gate configuration.</li>
+        </ul>
+
+        <div class="callout callout-info">
+            <strong>Note:</strong> If you don't see any projects in the list, make sure Claude Code has been run at least once in a project directory. The <code>~/.claude/projects/</code> folder and its contents are created by Claude Code when it first runs.
+        </div>
+
+        <h2 id="hook">Install the Hook</h2>
+        <p>The hook is the most important part of CC Gate's auto-accept functionality. Without the hook, CC Gate can monitor sessions and show status indicators, but it cannot intercept permission requests or automatically approve tool usage.</p>
+
+        <h3>What the hook does</h3>
+        <p>Claude Code has a built-in mechanism called <code>PermissionRequest</code> hooks. Before Claude executes any tool that requires your approval — such as writing a file, running a terminal command, or making a web request — it calls this hook with the tool name and arguments. The hook can then return an <code>allow</code> or <code>deny</code> decision.</p>
+        <p>CC Gate installs a shell script at <code>~/.claude/hooks/ccmanager-permissions.sh</code> and registers it in <code>~/.claude/settings.json</code>. When a PermissionRequest fires, this script checks CC Gate's auto-accept configuration file at <code>~/.claude/.ccmanager/auto-accept-config.json</code> in under a millisecond, and either approves the request immediately or routes it to the CC Gate UI for manual approval.</p>
+
+        <h3>How to install</h3>
+        <ol>
+            <li>Click the CC Gate icon in the menu bar.</li>
+            <li>Click the <strong>Settings</strong> icon (gear icon) to open Settings.</li>
+            <li>Click the <strong>Hook</strong> tab.</li>
+            <li>Click <strong>Install Hook</strong>.</li>
+            <li>The status badge should turn green and show <strong>Installed</strong>.</li>
+        </ol>
+
+        <img src="../assets/screenshots/docs/settings-hook.png" alt="CC Gate Hook settings tab showing green Installed status badge" class="screenshot">
+
+        <div class="callout callout-warn">
+            <strong>Important:</strong> The hook only applies to Claude Code sessions started <em>after</em> the hook is installed. Any existing Claude Code sessions (terminal windows already running <code>claude</code>) will not pick up the hook until you start a new session. Type <code>/clear</code> in Claude Code or open a new terminal window to start a fresh session.
+        </div>
+
+        <h3>Hook auto-upgrade</h3>
+        <p>When CC Gate is updated and the hook script changes, CC Gate detects that the installed hook version is outdated on the next app startup and automatically reinstalls the new version. A notification banner appears in the popup letting you know this happened. You do not need to manually reinstall the hook after app updates.</p>
+
+        <h3>Hook auto-repair</h3>
+        <p>Claude Code sometimes overwrites <code>~/.claude/settings.json</code> when you run certain commands, removing the hook registration. CC Gate detects this and automatically re-registers the hook on the next refresh cycle. The hook script file itself is not affected — only the registration entry in settings.json may need re-adding.</p>
+
+        <h2 id="permissions">Grant Permissions</h2>
+        <p>CC Gate needs Accessibility permission to send keyboard input to terminal windows when manually approving or denying questions from the CC Gate UI. Without this permission, the manual approval buttons in the Questions window may not function correctly.</p>
+
+        <h3>How to grant Accessibility access</h3>
+        <ol>
+            <li>Open CC Gate Settings.</li>
+            <li>Click the <strong>Permissions</strong> tab.</li>
+            <li>Click <strong>Grant Accessibility Access</strong>.</li>
+            <li>macOS will prompt you to open System Settings &gt; Privacy &amp; Security &gt; Accessibility.</li>
+            <li>Find <strong>CC Gate</strong> in the list and enable the toggle next to it.</li>
+        </ol>
+
+        <img src="../assets/screenshots/docs/settings-permissions.png" alt="CC Gate Permissions tab showing accessibility access status" class="screenshot">
+
+        <div class="callout callout-tip">
+            <strong>Tip:</strong> If you only plan to use the auto-accept feature and never manually answer questions from the CC Gate UI, Accessibility access is optional. It is only required for the manual Approve/Deny buttons in the Questions window to send keystrokes to the terminal.
+        </div>
+
+        <h2 id="auto-accept">Configure Auto-Accept</h2>
+        <p>Auto-accept is where CC Gate really shines. Instead of switching to a terminal window to answer every "May I read this file?" or "May I run this command?" question, CC Gate can answer them automatically based on permission tiers you configure.</p>
+
+        <h3>Opening the Questions window</h3>
+        <ol>
+            <li>Click the CC Gate icon in the menu bar.</li>
+            <li>Click the <strong>bell icon</strong> in the top-right corner of the popup.</li>
+            <li>The Questions window opens, showing the 4-tier toggle controls.</li>
+        </ol>
+
+        <img src="../assets/screenshots/docs/auto-accept-window.png" alt="CC Gate auto-accept questions window with 4 tier toggles" class="screenshot">
+
+        <h3>Enabling your first tier</h3>
+        <p>For a first-time setup, enabling the <strong>Read tier</strong> is a safe and sensible starting point:</p>
+        <ol>
+            <li>In the Questions window, find the <strong>Read</strong> row (shown in blue).</li>
+            <li>Toggle the switch to enable it.</li>
+            <li>CC Gate will now automatically approve Read, Glob, Grep, WebSearch, WebFetch, and LS tool requests without showing them to you.</li>
+        </ol>
+
+        <p>The 4 tiers available are:</p>
+        <ul>
+            <li><strong>Read</strong> (blue) — Read-only operations. Minimal risk. Recommended for everyone.</li>
+            <li><strong>Write</strong> (orange) — File creation and modification. Low risk if you use git, since changes are reversible.</li>
+            <li><strong>Execute</strong> (red) — Bash and terminal commands. High risk. Only enable if you trust the codebase and Claude's judgment.</li>
+            <li><strong>Plan</strong> (purple) — ExitPlanMode approval. Minimal risk. Allows Claude to proceed from planning to execution phase.</li>
+        </ul>
+
+        <div class="callout callout-tip">
+            <strong>Tip:</strong> Start with only the Read tier enabled for a few sessions to get comfortable with how CC Gate works. Add the Write tier when you feel confident. For most workflows, Read + Write provides an excellent balance of automation and safety.
+        </div>
+
+        <div class="callout callout-warn">
+            <strong>Warning:</strong> Enabling Execute (Bash) gives Claude Code full shell access to your system. Only enable this for projects where you have high trust in both the codebase and Claude's decisions. Consider enabling it per-session rather than permanently.
+        </div>
+
+        <h2 id="next-steps">Next Steps</h2>
+        <p>You're set up and ready to go. Explore these guides to get more out of CC Gate:</p>
+
+        <div class="next-steps">
+            <a href="features/auto-accept.html" class="next-step-card">
+                <span>&#9889;</span>
+                <h4>Auto-Accept Deep Dive</h4>
+                <p>Understand the full tier system, hierarchical enabling, special cases, and session statistics.</p>
+            </a>
+            <a href="features/git-worktrees.html" class="next-step-card">
+                <span>&#127795;</span>
+                <h4>Git Worktrees</h4>
+                <p>Run multiple Claude Code sessions on different branches simultaneously from the CC Gate popup.</p>
+            </a>
+            <a href="features/hook-system.html" class="next-step-card">
+                <span>&#128268;</span>
+                <h4>Hook System</h4>
+                <p>Understand how the PermissionRequest hook works under the hood and how CC Gate manages it.</p>
+            </a>
+            <a href="features/status-indicators.html" class="next-step-card">
+                <span>&#128994;</span>
+                <h4>Status Indicators</h4>
+                <p>Learn what every color, spinner, and badge in the CC Gate popup means for your sessions.</p>
+            </a>
+            <a href="reference/settings.html" class="next-step-card">
+                <span>&#9881;</span>
+                <h4>Settings Reference</h4>
+                <p>Complete reference for every option in CC Gate Settings — General, AI, GitHub, and more.</p>
+            </a>
+            <a href="reference/troubleshooting.html" class="next-step-card">
+                <span>&#128270;</span>
+                <h4>Troubleshooting</h4>
+                <p>Solutions for common problems — hook not installing, projects not appearing, and more.</p>
+            </a>
+        </div>
+
+    </main>
+</div>
+
+<footer>
+    <div class="container" style="text-align:center; padding: 40px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px;">
+        <div style="display:flex; gap:24px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;">
+            <a href="/">Home</a>
+            <a href="../docs/">Docs</a>
+            <a href="https://github.com/ai-fresh/ccgate">GitHub</a>
+            <a href="https://github.com/ai-fresh/ccgate/releases">Releases</a>
+        </div>
+        <p>CC Gate — built for the Claude Code community.</p>
+    </div>
+</footer>
+
+</body>
+</html>

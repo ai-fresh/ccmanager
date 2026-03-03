@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Release Pipeline — CC Gate Docs</title>
+    <meta name="description" content="Automate releases for your own projects — CC Gate detects your project type, runs tests, bumps version, builds, and pushes a tagged release to GitHub.">
+    <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/features/release-pipeline.html">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --bg-card: #161b22;
+            --bg-card-hover: #1c2333;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #79b8ff;
+            --green: #3fb950;
+            --orange: #d29922;
+            --red: #f85149;
+            --purple: #bc8cff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--accent-hover); }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+        .docs-nav { position: sticky; top: 0; background: rgba(13,17,23,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 100; padding: 12px 0; }
+        .nav-content { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; }
+        .nav-links a:hover { color: var(--text); }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; transition: all 0.2s; border: 1px solid transparent; text-decoration: none; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-hover); color: #fff; }
+        .btn-sm { padding: 6px 14px !important; font-size: 13px !important; }
+        .docs-layout { display: grid; grid-template-columns: 220px 1fr; gap: 48px; max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+        .docs-sidebar { position: sticky; top: 80px; height: fit-content; }
+        .sidebar-section { margin-bottom: 28px; }
+        .sidebar-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 8px; padding: 0 8px; }
+        .docs-sidebar a { display: block; padding: 5px 8px; font-size: 14px; color: var(--text-muted); border-radius: 6px; margin-bottom: 2px; text-decoration: none; transition: all 0.15s; }
+        .docs-sidebar a:hover { background: var(--bg-card); color: var(--text); }
+        .docs-sidebar a.active { background: rgba(88,166,255,0.1); color: var(--accent); font-weight: 500; }
+        .docs-content h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .docs-content .page-desc { font-size: 18px; color: var(--text-muted); margin-bottom: 40px; }
+        .docs-content h2 { font-size: 22px; font-weight: 700; margin: 48px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .docs-content h2:first-of-type { border-top: none; margin-top: 32px; }
+        .docs-content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; color: var(--text); }
+        .docs-content p { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+        .docs-content ul, .docs-content ol { padding-left: 24px; color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
+        .docs-content li { margin-bottom: 6px; }
+        .docs-content strong { color: var(--text); font-weight: 600; }
+        code { background: rgba(110,118,129,0.2); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', SFMono-Regular, Menlo, monospace; color: var(--text); }
+        pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+        pre code { background: none; padding: 0; font-size: 14px; color: var(--text); }
+        .docs-content img { max-width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.3); margin: 16px 0; display: block; }
+        .screenshot { max-width: 380px; }
+        .screenshot-wide { max-width: 580px; }
+        .callout { padding: 16px 20px; border-radius: 10px; margin: 20px 0; font-size: 14px; line-height: 1.6; color: var(--text); }
+        .callout-info { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.25); }
+        .callout-warn { background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.25); }
+        .callout-tip { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); }
+        .callout-danger { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.25); }
+        .callout strong { display: block; margin-bottom: 4px; }
+        .step-list { counter-reset: step; list-style: none; padding: 0; }
+        .step-list li { counter-increment: step; display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start; }
+        .step-list li::before { content: counter(step); display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; min-width: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; }
+        .step-list li > div { flex: 1; }
+        .step-list li strong { display: block; font-size: 15px; color: var(--text); margin-bottom: 4px; }
+        .step-list li p { margin: 0; font-size: 14px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 24px 0; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .card h3 { font-size: 16px; margin-bottom: 8px; }
+        .card p { font-size: 14px; color: var(--text-muted); margin: 0; }
+        .tier-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 600; }
+        .tier-read { background: rgba(88,166,255,0.15); color: var(--accent); }
+        .tier-write { background: rgba(210,153,34,0.15); color: var(--orange); }
+        .tier-execute { background: rgba(248,81,73,0.15); color: var(--red); }
+        .tier-plan { background: rgba(188,140,255,0.15); color: var(--purple); }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+        th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        td { color: var(--text-muted); }
+        td strong { color: var(--text); }
+        .pipeline-step { display: flex; align-items: flex-start; gap: 20px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; }
+        .pipeline-num { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; min-width: 36px; border-radius: 8px; background: rgba(88,166,255,0.15); color: var(--accent); font-size: 14px; font-weight: 700; }
+        .pipeline-step h3 { font-size: 15px; margin: 0 0 4px; }
+        .pipeline-step p { font-size: 14px; color: var(--text-muted); margin: 0; }
+        footer { text-align: center; padding: 40px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px; margin-top: 60px; }
+        footer .links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+        @media(max-width:768px) { .docs-layout { grid-template-columns: 1fr; } .docs-sidebar { display: none; } .docs-content h1 { font-size: 28px; } }
+    </style>
+</head>
+<body>
+
+<nav class="docs-nav">
+    <div class="nav-content">
+        <a href="../../" class="nav-brand">
+            <img src="../../assets/logo.png" alt="CC Gate" width="28" height="28" style="border-radius:6px">
+            <span>CC Gate</span>
+        </a>
+        <div class="nav-links">
+            <a href="../">Docs</a>
+            <a href="../getting-started.html">Get Started</a>
+            <a href="../../">Home</a>
+            <a href="https://github.com/ai-fresh/ccgate/releases" class="btn btn-primary btn-sm">Download</a>
+        </div>
+    </div>
+</nav>
+
+<div class="docs-layout">
+    <aside class="docs-sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Getting Started</div>
+            <a href="../getting-started.html">Installation</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Features</div>
+            <a href="auto-accept.html">Auto-Accept</a>
+            <a href="hook-system.html">Hook System</a>
+            <a href="git-worktrees.html">Git Worktrees</a>
+            <a href="ai-commits.html">AI Commits</a>
+            <a href="github-integration.html">GitHub</a>
+            <a href="release-pipeline.html" class="active">Release Pipeline</a>
+            <a href="test-runner.html">Test Runner</a>
+            <a href="status-indicators.html">Status Indicators</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Reference</div>
+            <a href="../reference/settings.html">Settings</a>
+            <a href="../reference/troubleshooting.html">Troubleshooting</a>
+        </div>
+    </aside>
+
+    <main class="docs-content">
+        <h1>Release Pipeline</h1>
+        <p class="page-desc">Automate releases for your own projects — tests, version bump, build, tag, and GitHub Release in one flow.</p>
+
+        <h2>Overview</h2>
+        <p>CC Gate's Release Pipeline automates releasing <strong>your own projects</strong> — not CC Gate itself. It detects your project type, runs your test suite, bumps the version number, executes the build, creates a git tag, and optionally publishes a GitHub Release with auto-generated release notes. Everything happens from CommitSheet without touching a terminal.</p>
+
+        <div class="callout callout-info">
+            <strong>Supported Project Types</strong>
+            Swift (<code>swift build</code> + <code>swift test</code>), JavaScript / Node.js (<code>npm run build</code> + <code>npm test</code>), Python (<code>pytest</code>), C# (.NET build + <code>dotnet test</code>). Custom commands are also supported.
+        </div>
+
+        <h2>Enabling Release Pipeline</h2>
+        <p>The Release Pipeline is available from CommitSheet. After you commit changes on the main branch, a "Release" button appears in CommitSheet alongside the Push button. Clicking it opens the Release configuration wizard if this is your first release, or proceeds directly to the release flow if already configured.</p>
+
+        <h2>CI/CD Pipeline Wizard</h2>
+        <p>Introduced in v2.11.12, the CI/CD Pipeline Wizard helps you set up automated releases even if your project has no existing CI configuration.</p>
+
+        <ol class="step-list">
+            <li>
+                <div>
+                    <strong>Detection</strong>
+                    <p>CC Gate scans for existing CI configuration: GitHub Actions YAML files in <code>.github/workflows/</code>, Makefile targets, or shell scripts with known release patterns.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Configuration or Generation</strong>
+                    <p>If no CI is found, CC Gate offers to generate a GitHub Actions YAML workflow tailored to your project type. If CI already exists, it reads the existing configuration and extracts the test and build commands.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Command Setup</strong>
+                    <p>Configure your test command, build command, and version bump strategy. CC Gate shows auto-detected defaults and lets you override each one. Settings are saved per project.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Workflow File Commit</strong>
+                    <p>If CC Gate generated a new GitHub Actions YAML, the WorkflowGenerator creates the file at <code>.github/workflows/release.yml</code> and commits it automatically with a <code>ci: add release workflow</code> commit message.</p>
+                </div>
+            </li>
+        </ol>
+
+        <h2>Release Flow</h2>
+        <p>Once configured, clicking "Release" in CommitSheet triggers the full pipeline in sequence:</p>
+
+        <div style="margin: 24px 0;">
+            <div class="pipeline-step">
+                <div class="pipeline-num">1</div>
+                <div>
+                    <h3>Tests</h3>
+                    <p>Runs your configured test command. Elapsed time is shown live. If tests fail and "Require passing tests" is enabled, the release is aborted and the error output is shown. You can disable this check in configuration to release despite failing tests.</p>
+                </div>
+            </div>
+            <div class="pipeline-step">
+                <div class="pipeline-num">2</div>
+                <div>
+                    <h3>Version Bump</h3>
+                    <p>Increments the version number in your project's version file (e.g. <code>package.json</code>, <code>AppVersion.swift</code>, <code>pyproject.toml</code>). Choose patch, minor, or major. The new version is shown before confirming.</p>
+                </div>
+            </div>
+            <div class="pipeline-step">
+                <div class="pipeline-num">3</div>
+                <div>
+                    <h3>Build</h3>
+                    <p>Runs the configured build command. Output is streamed in real time. If the build fails, the release is halted and you can view the full error output.</p>
+                </div>
+            </div>
+            <div class="pipeline-step">
+                <div class="pipeline-num">4</div>
+                <div>
+                    <h3>Commit Version Bump</h3>
+                    <p>Commits the version bump with a standardized message: <code>chore(release): X.Y.Z</code>. This commit is separate from your feature commits so the release is cleanly identifiable in git history.</p>
+                </div>
+            </div>
+            <div class="pipeline-step">
+                <div class="pipeline-num">5</div>
+                <div>
+                    <h3>Tag</h3>
+                    <p>Creates an annotated git tag <code>vX.Y.Z</code> on the release commit with a message describing the release.</p>
+                </div>
+            </div>
+            <div class="pipeline-step">
+                <div class="pipeline-num">6</div>
+                <div>
+                    <h3>Push</h3>
+                    <p>Pushes both the release commit and the tag to <code>origin/main</code>. The push includes <code>--tags</code> so the tag is visible on GitHub immediately.</p>
+                </div>
+            </div>
+            <div class="pipeline-step">
+                <div class="pipeline-num">7</div>
+                <div>
+                    <h3>GitHub Release (optional)</h3>
+                    <p>If enabled and a GitHub token is configured, CC Gate calls the GitHub API to create a Release entry for the tag with auto-generated release notes based on commits since the previous tag. A link to the Release page is shown when complete.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2>Configuration Options</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Option</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Require passing tests</strong></td>
+                    <td>On</td>
+                    <td>Abort release if the test command exits with a non-zero code</td>
+                </tr>
+                <tr>
+                    <td><strong>Test command</strong></td>
+                    <td>Auto-detected</td>
+                    <td>Custom shell command to run tests (e.g. <code>npm test</code>, <code>pytest</code>, <code>swift test</code>)</td>
+                </tr>
+                <tr>
+                    <td><strong>Build command</strong></td>
+                    <td>Auto-detected</td>
+                    <td>Custom shell command to build the project before tagging</td>
+                </tr>
+                <tr>
+                    <td><strong>Version strategy</strong></td>
+                    <td>Patch</td>
+                    <td>Which version segment to increment: patch (0.0.X), minor (0.X.0), or major (X.0.0)</td>
+                </tr>
+                <tr>
+                    <td><strong>Create GitHub Release</strong></td>
+                    <td>Off</td>
+                    <td>Publish a GitHub Release via API after pushing the tag</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Troubleshooting</h2>
+
+        <h3>Test failures blocking release</h3>
+        <p>Fix the failing tests before releasing, or temporarily disable "Require passing tests" in the Release configuration panel. Disabling this is not recommended for production releases, but can be useful for internal tooling or when tests are flaky due to environment issues.</p>
+
+        <h3>Build errors</h3>
+        <p>CC Gate streams build output in real time. Scroll through the output panel to find the specific error. Fix the build issue in your editor, then trigger a new release from CommitSheet. The version number will not be double-incremented — only one bump per successful release.</p>
+
+        <h3>Push rejected</h3>
+        <p>The remote has commits that are not in your local branch. Run <code>git pull origin main</code> in terminal, resolve any conflicts, then return to CC Gate and trigger the release again.</p>
+
+        <h3>Version file not found</h3>
+        <p>CC Gate auto-detects common version file patterns (<code>package.json</code>, <code>*.swift</code> with version constants, <code>pyproject.toml</code>, <code>*.csproj</code>). If your project uses a non-standard location, open the Release wizard and manually specify the path to the version file in the "Version file" field.</p>
+
+        <div class="callout callout-warn">
+            <strong>Releases are irreversible</strong>
+            Once a tag is pushed to a public repository, it is visible to all contributors. If you release a broken version, create a new patch release rather than deleting the tag. Deleting published tags confuses package managers and CI systems that may have already picked up the release.
+        </div>
+    </main>
+</div>
+
+<footer>
+    <div class="links">
+        <a href="../../">Home</a>
+        <a href="../">Docs</a>
+        <a href="https://github.com/ai-fresh/ccgate/releases">Download</a>
+        <a href="https://github.com/ai-fresh/ccgate/issues">Report Issue</a>
+    </div>
+    <div>CC Gate — macOS menu bar companion for Claude Code</div>
+</footer>
+
+</body>
+</html>

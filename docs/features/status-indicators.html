@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Indicators — CC Gate Documentation</title>
+    <meta name="description" content="Reference guide for all CC Gate status indicators — active, waiting, idle, and outdated session states. Understand how CC Gate determines project status and configures refresh intervals.">
+    <meta name="author" content="AI Fresh">
+    <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/features/status-indicators.html">
+    <meta property="og:title" content="Status Indicators — CC Gate Documentation">
+    <meta property="og:description" content="Reference guide for CC Gate status indicators — active, waiting, idle, outdated session states and how they are determined.">
+    <meta property="og:url" content="https://ai-fresh.github.io/ccgate/docs/features/status-indicators.html">
+    <link rel="icon" type="image/png" href="../../assets/icon.png">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --bg-card: #161b22;
+            --bg-card-hover: #1c2333;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #79b8ff;
+            --green: #3fb950;
+            --orange: #d29922;
+            --red: #f85149;
+            --purple: #bc8cff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+        .docs-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(13,17,23,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 12px 0;
+        }
+        .nav-content { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+        .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; }
+        .nav-links a:hover { color: var(--text); }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; transition: all 0.2s; border: 1px solid transparent; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-hover); text-decoration: none; }
+        .btn-sm { padding: 6px 14px; font-size: 13px; }
+
+        .docs-layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 48px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .docs-sidebar { position: sticky; top: 80px; height: fit-content; }
+        .sidebar-section { margin-bottom: 28px; }
+        .sidebar-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 8px; }
+        .docs-sidebar a { display: block; padding: 5px 8px; font-size: 14px; color: var(--text-muted); border-radius: 6px; margin-bottom: 2px; text-decoration: none; }
+        .docs-sidebar a:hover, .docs-sidebar a.active { background: var(--bg-card); color: var(--text); }
+
+        .docs-content h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+        .docs-content .page-intro { font-size: 18px; color: var(--text-muted); margin-bottom: 32px; line-height: 1.6; }
+        .docs-content h2 { font-size: 22px; font-weight: 700; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .docs-content h2:first-of-type { margin-top: 24px; }
+        .docs-content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; }
+        .docs-content p { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+        .docs-content ul, .docs-content ol { padding-left: 20px; color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
+        .docs-content li { margin-bottom: 6px; }
+        .docs-content code { background: rgba(110,118,129,0.2); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', SFMono-Regular, Menlo, monospace; }
+        .docs-content pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+        .docs-content pre code { background: none; padding: 0; font-size: 14px; color: var(--text); }
+        .docs-content img { max-width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.3); margin: 16px 0; }
+        .docs-content .screenshot { max-width: 440px; display: block; }
+
+        .callout { padding: 16px 20px; border-radius: 10px; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+        .callout-info { background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.25); color: var(--text-muted); }
+        .callout-info strong { color: var(--accent); }
+        .callout-warn { background: rgba(210,153,34,0.1); border: 1px solid rgba(210,153,34,0.25); color: var(--text-muted); }
+        .callout-warn strong { color: var(--orange); }
+        .callout-tip { background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.25); color: var(--text-muted); }
+        .callout-tip strong { color: var(--green); }
+
+        /* Status cards */
+        .status-cards { display: grid; gap: 16px; margin: 20px 0; }
+        .status-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .status-dot-large {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+        .status-dot-active { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+        .status-dot-waiting { background: var(--orange); }
+        .status-dot-idle { background: #444c56; }
+        .status-dot-outdated { background: var(--orange); opacity: 0.6; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(63,185,80,0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(63,185,80,0); }
+            100% { box-shadow: 0 0 0 0 rgba(63,185,80,0); }
+        }
+
+        .status-card-content h3 { font-size: 16px; font-weight: 600; color: var(--text); margin: 0 0 4px; }
+        .status-card-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
+        .status-card-content p { font-size: 14px; color: var(--text-muted); margin: 0; line-height: 1.6; }
+
+        /* Info grid */
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin: 20px 0; }
+        .info-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 18px;
+        }
+        .info-item .info-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; }
+        .info-item .info-value { font-size: 14px; color: var(--text); }
+        .info-item .info-desc { font-size: 13px; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+
+        /* Refresh rate table */
+        .refresh-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .refresh-table th, .refresh-table td { padding: 11px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+        .refresh-table th { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        .refresh-table td { font-size: 14px; }
+        .energy-low { color: var(--green); }
+        .energy-med { color: var(--orange); }
+        .energy-high { color: var(--red); }
+
+        /* Menu bar mockup */
+        .menubar-mockup {
+            background: #1c1c1e;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        .menubar-icon { font-size: 16px; }
+        .menubar-text { color: var(--text); font-size: 13px; }
+        .menubar-badge { background: var(--green); color: #fff; border-radius: 10px; padding: 1px 6px; font-size: 11px; font-weight: 700; }
+        .menubar-badge-orange { background: var(--orange); }
+
+        footer a { color: var(--text-muted); }
+        footer a:hover { color: var(--text); }
+
+        @media (max-width: 768px) {
+            .docs-layout { grid-template-columns: 1fr; }
+            .docs-sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="docs-nav">
+    <div class="container">
+        <div class="nav-content">
+            <a href="/" class="nav-brand">
+                <img src="../../assets/logo.png" alt="CC Gate" width="28" height="28" style="border-radius:6px">
+                <span>CC Gate</span>
+            </a>
+            <div class="nav-links">
+                <a href="../../docs/">Docs</a>
+                <a href="../../docs/getting-started.html">Get Started</a>
+                <a href="../../">Home</a>
+                <a href="https://github.com/ai-fresh/ccgate/releases" class="btn btn-primary btn-sm">Download</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="docs-layout">
+    <aside class="docs-sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Getting Started</div>
+            <a href="../getting-started.html">Installation</a>
+            <a href="../getting-started.html#first-run">First Run</a>
+            <a href="../getting-started.html#hook">Install Hook</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Features</div>
+            <a href="auto-accept.html">Auto-Accept</a>
+            <a href="hook-system.html">Hook System</a>
+            <a href="git-worktrees.html">Git Worktrees</a>
+            <a href="ai-commits.html">AI Commits</a>
+            <a href="github-integration.html">GitHub</a>
+            <a href="release-pipeline.html">Release Pipeline</a>
+            <a href="test-runner.html">Test Runner</a>
+            <a href="status-indicators.html" class="active">Status Indicators</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Reference</div>
+            <a href="../reference/settings.html">Settings</a>
+            <a href="../reference/troubleshooting.html">Troubleshooting</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">On this page</div>
+            <a href="#overview">Overview</a>
+            <a href="#states">Status States</a>
+            <a href="#how-determined">How Status is Determined</a>
+            <a href="#session-info">Session File Info</a>
+            <a href="#refresh-rate">Refresh Rate</a>
+            <a href="#menu-bar-icon">Menu Bar Icon</a>
+        </div>
+    </aside>
+
+    <main class="docs-content">
+        <h1>Status Indicators</h1>
+        <p class="page-intro">CC Gate shows live status for every Claude Code project in the main popup. This reference explains what each status state means, how it is determined from session files, and how to configure the refresh rate for your workflow.</p>
+
+        <h2 id="overview">Overview</h2>
+        <p>The CC Gate popup provides at-a-glance visibility into all your Claude Code projects without needing to switch to any terminal window. Each project card shows a status indicator reflecting the current state of Claude Code sessions in that directory.</p>
+
+        <img src="../../assets/screenshots/docs/popup-projects.png" alt="CC Gate main popup showing project list with status indicators including green active and gray idle states" class="screenshot">
+
+        <p>Status is determined by reading and parsing the session files that Claude Code writes to <code>~/.claude/projects/</code>. CC Gate does this on a configurable timer, refreshing status for all projects at once. No background processes are monitored and no system calls like <code>ps</code> or <code>lsof</code> are used — status is inferred entirely from filesystem timestamps and session file content.</p>
+
+        <h2 id="states">Status States</h2>
+        <p>There are four possible states for a project. Each has a distinct visual appearance:</p>
+
+        <div class="status-cards">
+
+            <div class="status-card">
+                <div class="status-dot-large status-dot-active"></div>
+                <div class="status-card-content">
+                    <h3>Active</h3>
+                    <div class="status-card-meta">Green pulsing dot &mdash; Claude Code is currently running a task</div>
+                    <p>The Active state means a Claude Code process is running in this project directory and is actively doing work. The dot pulses with a subtle glow animation to draw your attention. You'll see this state while Claude is thinking, planning, or executing tool calls. A project may stay in Active state for extended periods during long-running tasks like large refactors, test runs, or multi-file edits.</p>
+                </div>
+            </div>
+
+            <div class="status-card">
+                <div class="status-dot-large status-dot-waiting"></div>
+                <div class="status-card-content">
+                    <h3>Waiting</h3>
+                    <div class="status-card-meta">Orange dot &mdash; Claude Code is waiting for your input or permission</div>
+                    <p>The Waiting state means Claude Code has paused and is expecting something from you. This includes two scenarios: a tool permission request waiting for your approval (which CC Gate can handle automatically with <a href="auto-accept.html">Auto-Accept</a>), or a direct question from Claude that requires your input. The orange color is intentionally attention-grabbing — something needs your response before Claude can continue.</p>
+                </div>
+            </div>
+
+            <div class="status-card">
+                <div class="status-dot-large status-dot-idle"></div>
+                <div class="status-card-content">
+                    <h3>Idle</h3>
+                    <div class="status-card-meta">Gray dot &mdash; No active Claude Code process</div>
+                    <p>The Idle state means there is no running Claude Code process for this project. The project has session history (it appears in the list), but Claude Code is not currently running in that directory. This is the normal resting state of any project between sessions. You'll see all your projects in Idle state when Claude Code is not open in any terminal.</p>
+                </div>
+            </div>
+
+            <div class="status-card">
+                <div class="status-dot-large status-dot-outdated"></div>
+                <div class="status-card-content">
+                    <h3>Outdated</h3>
+                    <div class="status-card-meta">Faded orange dot &mdash; Session data is stale (older than 24 hours)</div>
+                    <p>The Outdated state appears when the most recent session file for a project was last modified more than 24 hours ago. This usually means you worked on the project yesterday or earlier but haven't opened Claude Code in it since. It's informational — not an error. The outdated indicator helps you distinguish freshly-used projects from ones that haven't been touched in a while.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <h2 id="how-determined">How Status is Determined</h2>
+        <p>CC Gate does not directly monitor running processes. Instead, it reads the session files that Claude Code maintains in <code>~/.claude/projects/</code> to infer the current state. Here is how each status is determined:</p>
+
+        <h3>Project discovery</h3>
+        <p>CC Gate's <code>ProjectScanner</code> reads <code>~/.claude/projects/</code> to find all projects. Each subdirectory in this folder corresponds to one project Claude Code has been used in. The folder name is an encoded form of the project's absolute path (encoded by Claude Code itself). CC Gate reads the <code>originalPath</code> field from session files to decode the actual path.</p>
+
+        <h3>Session file parsing</h3>
+        <p>Each project directory contains <code>.jsonl</code> (JSON Lines) session files. Claude Code appends one JSON object per line to these files as it works. Each line describes a message or event in the session. CC Gate's <code>SessionStatusChecker</code> reads the last few lines of the most recent <code>.jsonl</code> file for each project to determine:</p>
+        <ul>
+            <li><strong>Last message type</strong> — if the last message was an assistant message still in progress, the session is Active. If it was a permission request, it's Waiting. If it was a completion, it's Idle.</li>
+            <li><strong>File timestamp</strong> — how recently the session file was modified. If the last modification was more than 24 hours ago, the state becomes Outdated.</li>
+            <li><strong>Active process detection</strong> — CC Gate compares the modification time of the session file against the current time. A file modified within the last few seconds (adjusted for the refresh interval) indicates an actively running session.</li>
+        </ul>
+
+        <h3>Caching</h3>
+        <p>Session status is cached for 4 seconds by the <code>SessionStatusChecker</code>. This means rapid successive reads — such as when the popup is opened while a refresh is in progress — return the cached status rather than re-reading all session files from disk. The cache expires automatically, so the status shown is never more than 4 seconds stale within a refresh cycle.</p>
+
+        <h2 id="session-info">What the Popup Shows</h2>
+        <p>Each project card in the CC Gate popup shows additional information alongside the status indicator:</p>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Project Name</div>
+                <div class="info-value">my-project</div>
+                <div class="info-desc">Derived from the last component of the project directory path. The full path is shown on hover.</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Status Indicator</div>
+                <div class="info-value">Green / Orange / Gray</div>
+                <div class="info-desc">The colored dot described above — active, waiting, idle, or outdated.</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Last Activity</div>
+                <div class="info-value">2 min ago</div>
+                <div class="info-desc">How long ago the most recent session file was modified. Updates on each refresh.</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Session Count</div>
+                <div class="info-value">3 sessions</div>
+                <div class="info-desc">Total number of .jsonl session files for this project. Each claude session creates one.</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Git Worktrees</div>
+                <div class="info-value">&gt; expand</div>
+                <div class="info-desc">For git repositories, click the arrow to expand and see all worktrees with their individual statuses.</div>
+            </div>
+        </div>
+
+        <h2 id="refresh-rate">Refresh Rate</h2>
+        <p>CC Gate refreshes status on a configurable timer. The default is <strong>15 seconds</strong>, chosen as a balance between freshness and energy efficiency. You can adjust this in <strong>Settings &rarr; General &rarr; Monitoring</strong> using the "Częstotliwość odświeżania" (Refresh frequency) slider.</p>
+
+        <table class="refresh-table">
+            <thead>
+                <tr>
+                    <th>Interval</th>
+                    <th>Energy Impact</th>
+                    <th>Status Freshness</th>
+                    <th>Best For</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>5 seconds</td>
+                    <td class="energy-high">High CPU usage</td>
+                    <td>Very fresh (&le;5s delay)</td>
+                    <td>Active monitoring, plugged in</td>
+                </tr>
+                <tr>
+                    <td>15 seconds (default)</td>
+                    <td class="energy-med">Balanced</td>
+                    <td>Fresh (&le;15s delay)</td>
+                    <td>Most workflows</td>
+                </tr>
+                <tr>
+                    <td>30 seconds</td>
+                    <td class="energy-low">Low energy</td>
+                    <td>Acceptable (&le;30s delay)</td>
+                    <td>Battery saving, background use</td>
+                </tr>
+                <tr>
+                    <td>60 seconds</td>
+                    <td class="energy-low">Minimal impact</td>
+                    <td>Coarse (&le;60s delay)</td>
+                    <td>Always-on overnight use</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>The high energy impact at 5 seconds comes from the system calls involved in scanning session files. CC Gate uses <code>FileManager</code> APIs to list and read files in <code>~/.claude/projects/</code>, which triggers filesystem activity that macOS tracks as CPU usage. At 15 seconds, the impact is negligible in Activity Monitor.</p>
+
+        <div class="callout callout-tip">
+            <strong>Tip:</strong> If you mostly work with one or two projects at a time and run CC Gate continuously in the background, consider using 30 or 60 seconds. The status will still update reliably — you'll just see it a bit later after changes occur.
+        </div>
+
+        <h3>Dynamic caching (v2.6.5+)</h3>
+        <p>CC Gate uses a dynamic caching system that adapts to your refresh interval:</p>
+        <ul>
+            <li><strong>ClaudeProcessDetector cache</strong> — expires at <code>refreshInterval - 1 second</code>. At 15s refresh, cache expires after 14s.</li>
+            <li><strong>QuestionWatcher polling</strong> — checks for new question files every 2 seconds, independently of the main refresh timer.</li>
+            <li><strong>SessionStatusChecker cache</strong> — 4 seconds, shared across all concurrent reads within a refresh cycle.</li>
+        </ul>
+        <p>This means that even at a 60-second refresh interval, new permission questions appearing in <code>~/.claude/.ccmanager/questions/</code> are still picked up within 2 seconds by the QuestionWatcher. The slower refresh only affects project status updates in the popup, not the responsiveness of the Questions window.</p>
+
+        <h2 id="menu-bar-icon">Menu Bar Icon</h2>
+        <p>The CC Gate icon in the macOS menu bar also reflects the overall state of all your projects:</p>
+
+        <div style="display:flex; gap:16px; flex-wrap:wrap; margin:16px 0;">
+            <div class="menubar-mockup">
+                <span class="menubar-icon">&#128196;</span>
+                <span class="menubar-text">CC Gate</span>
+            </div>
+            <div class="menubar-mockup">
+                <span class="menubar-icon">&#128196;</span>
+                <span class="menubar-text">CC Gate</span>
+                <span class="menubar-badge">2</span>
+            </div>
+            <div class="menubar-mockup">
+                <span class="menubar-icon">&#128196;</span>
+                <span class="menubar-text">CC Gate</span>
+                <span class="menubar-badge menubar-badge-orange">!</span>
+            </div>
+        </div>
+
+        <ul>
+            <li><strong>Default icon (no badge)</strong> — All projects are Idle or Outdated. No Claude Code sessions are active.</li>
+            <li><strong>Green badge with count</strong> — One or more projects have Active sessions. The number shows how many projects are currently active.</li>
+            <li><strong>Orange badge with exclamation</strong> — One or more projects are in Waiting state, meaning Claude Code is paused and needs your attention. This badge has higher priority than the Active badge.</li>
+        </ul>
+
+        <p>The badge makes it easy to notice when Claude Code has stopped and is waiting for your approval — even when you're in a different app. You don't need to keep checking the popup; the menu bar icon alerts you when action is needed.</p>
+
+        <div class="callout callout-info">
+            <strong>Note:</strong> If you use the <a href="auto-accept.html">Auto-Accept</a> feature with appropriate tiers enabled, the Waiting state should be rare in practice — most permission requests are handled automatically before reaching you. You'll primarily see the orange badge for <code>AskUserQuestion</code> prompts and unknown tools that require manual approval.
+        </div>
+
+    </main>
+</div>
+
+<footer>
+    <div class="container" style="text-align:center; padding: 40px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px;">
+        <div style="display:flex; gap:24px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;">
+            <a href="/">Home</a>
+            <a href="../../docs/">Docs</a>
+            <a href="https://github.com/ai-fresh/ccgate">GitHub</a>
+            <a href="https://github.com/ai-fresh/ccgate/releases">Releases</a>
+        </div>
+        <p>CC Gate — built for the Claude Code community.</p>
+    </div>
+</footer>
+
+</body>
+</html>

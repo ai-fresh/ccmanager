@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Commit Messages — CC Gate Docs</title>
+    <meta name="description" content="CC Gate analyzes your Claude Code session and git diff to generate semantically accurate Conventional Commit messages automatically.">
+    <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/features/ai-commits.html">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --bg-card: #161b22;
+            --bg-card-hover: #1c2333;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #79b8ff;
+            --green: #3fb950;
+            --orange: #d29922;
+            --red: #f85149;
+            --purple: #bc8cff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--accent-hover); }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+        .docs-nav { position: sticky; top: 0; background: rgba(13,17,23,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 100; padding: 12px 0; }
+        .nav-content { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; }
+        .nav-links a:hover { color: var(--text); }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; transition: all 0.2s; border: 1px solid transparent; text-decoration: none; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-hover); color: #fff; }
+        .btn-sm { padding: 6px 14px !important; font-size: 13px !important; }
+        .docs-layout { display: grid; grid-template-columns: 220px 1fr; gap: 48px; max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+        .docs-sidebar { position: sticky; top: 80px; height: fit-content; }
+        .sidebar-section { margin-bottom: 28px; }
+        .sidebar-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 8px; padding: 0 8px; }
+        .docs-sidebar a { display: block; padding: 5px 8px; font-size: 14px; color: var(--text-muted); border-radius: 6px; margin-bottom: 2px; text-decoration: none; transition: all 0.15s; }
+        .docs-sidebar a:hover { background: var(--bg-card); color: var(--text); }
+        .docs-sidebar a.active { background: rgba(88,166,255,0.1); color: var(--accent); font-weight: 500; }
+        .docs-content h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .docs-content .page-desc { font-size: 18px; color: var(--text-muted); margin-bottom: 40px; }
+        .docs-content h2 { font-size: 22px; font-weight: 700; margin: 48px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .docs-content h2:first-of-type { border-top: none; margin-top: 32px; }
+        .docs-content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; color: var(--text); }
+        .docs-content p { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+        .docs-content ul, .docs-content ol { padding-left: 24px; color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
+        .docs-content li { margin-bottom: 6px; }
+        .docs-content strong { color: var(--text); font-weight: 600; }
+        code { background: rgba(110,118,129,0.2); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', SFMono-Regular, Menlo, monospace; color: var(--text); }
+        pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+        pre code { background: none; padding: 0; font-size: 14px; color: var(--text); }
+        .docs-content img { max-width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.3); margin: 16px 0; display: block; }
+        .screenshot { max-width: 380px; }
+        .screenshot-wide { max-width: 580px; }
+        .callout { padding: 16px 20px; border-radius: 10px; margin: 20px 0; font-size: 14px; line-height: 1.6; color: var(--text); }
+        .callout-info { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.25); }
+        .callout-warn { background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.25); }
+        .callout-tip { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); }
+        .callout-danger { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.25); }
+        .callout strong { display: block; margin-bottom: 4px; }
+        .step-list { counter-reset: step; list-style: none; padding: 0; }
+        .step-list li { counter-increment: step; display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start; }
+        .step-list li::before { content: counter(step); display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; min-width: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; }
+        .step-list li > div { flex: 1; }
+        .step-list li strong { display: block; font-size: 15px; color: var(--text); margin-bottom: 4px; }
+        .step-list li p { margin: 0; font-size: 14px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 24px 0; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .card h3 { font-size: 16px; margin-bottom: 8px; }
+        .card p { font-size: 14px; color: var(--text-muted); margin: 0; }
+        .tier-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 600; }
+        .tier-read { background: rgba(88,166,255,0.15); color: var(--accent); }
+        .tier-write { background: rgba(210,153,34,0.15); color: var(--orange); }
+        .tier-execute { background: rgba(248,81,73,0.15); color: var(--red); }
+        .tier-plan { background: rgba(188,140,255,0.15); color: var(--purple); }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+        th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        td { color: var(--text-muted); }
+        td strong { color: var(--text); }
+        footer { text-align: center; padding: 40px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px; margin-top: 60px; }
+        footer .links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+        @media(max-width:768px) { .docs-layout { grid-template-columns: 1fr; } .docs-sidebar { display: none; } .docs-content h1 { font-size: 28px; } }
+    </style>
+</head>
+<body>
+
+<nav class="docs-nav">
+    <div class="nav-content">
+        <a href="../../" class="nav-brand">
+            <img src="../../assets/logo.png" alt="CC Gate" width="28" height="28" style="border-radius:6px">
+            <span>CC Gate</span>
+        </a>
+        <div class="nav-links">
+            <a href="../">Docs</a>
+            <a href="../getting-started.html">Get Started</a>
+            <a href="../../">Home</a>
+            <a href="https://github.com/ai-fresh/ccgate/releases" class="btn btn-primary btn-sm">Download</a>
+        </div>
+    </div>
+</nav>
+
+<div class="docs-layout">
+    <aside class="docs-sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Getting Started</div>
+            <a href="../getting-started.html">Installation</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Features</div>
+            <a href="auto-accept.html">Auto-Accept</a>
+            <a href="hook-system.html">Hook System</a>
+            <a href="git-worktrees.html">Git Worktrees</a>
+            <a href="ai-commits.html" class="active">AI Commits</a>
+            <a href="github-integration.html">GitHub</a>
+            <a href="release-pipeline.html">Release Pipeline</a>
+            <a href="test-runner.html">Test Runner</a>
+            <a href="status-indicators.html">Status Indicators</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Reference</div>
+            <a href="../reference/settings.html">Settings</a>
+            <a href="../reference/troubleshooting.html">Troubleshooting</a>
+        </div>
+    </aside>
+
+    <main class="docs-content">
+        <h1>AI Commit Messages</h1>
+        <p class="page-desc">Generate semantically accurate Conventional Commit messages from your Claude Code session context and git diff — no manual description required.</p>
+
+        <h2>Overview</h2>
+        <p>CC Gate's AI Commit Messages feature analyzes your Claude Code session context and git diff to generate semantically accurate commit messages — without you having to describe your changes manually. Instead of writing "fixed some stuff" or trying to recall what you built over the last hour, CC Gate reads what Claude Code actually did and produces a precise, structured commit message in seconds.</p>
+
+        <div class="callout callout-info">
+            <strong>Pro Feature</strong>
+            AI Commit Messages requires a CC Gate Pro plan and an Anthropic API key. See Settings → Pro to upgrade, and Settings → AI to enter your key.
+        </div>
+
+        <h2>Requirements</h2>
+        <ul>
+            <li><strong>Pro plan</strong> — AI Commits is a Pro feature (Settings → Pro)</li>
+            <li><strong>Anthropic API key</strong> — Settings → AI → enter your key from <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a></li>
+            <li><strong>Claude Code session</strong> — an active or recent <code>.jsonl</code> session file for the project</li>
+            <li><strong>GitHub token</strong> (optional) — needed for the push workflow after committing</li>
+        </ul>
+
+        <div style="display:flex; gap:16px; flex-wrap:wrap; margin: 24px 0;">
+            <img src="../../assets/screenshots/docs/settings-pro.png" alt="Pro plan settings" class="screenshot">
+            <img src="../../assets/screenshots/docs/settings-ai.png" alt="AI API key settings" class="screenshot">
+        </div>
+
+        <h2>How It Works</h2>
+        <p>When you open CommitSheet for a project, CC Gate kicks off a multi-step pipeline to build the most accurate commit message possible with the fewest tokens.</p>
+
+        <ol class="step-list">
+            <li>
+                <div>
+                    <strong>Opening CommitSheet</strong>
+                    <p>Right-click a worktree and choose "Commit changes", or click the commit button in a project card. CommitSheet opens with the staged diff loaded and generation begins automatically.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>DELTA Logic — only new messages since last commit</strong>
+                    <p>CC Gate reads the timestamp of your last git commit, then filters the <code>.jsonl</code> session file to include only Claude Code messages that occurred after that commit. This avoids re-analyzing old context, saves tokens, and keeps the generated message focused on what actually changed in this work session.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Session Context Extraction</strong>
+                    <p>The filtered session messages are parsed: assistant messages (what Claude did) and user messages (what you asked) are combined into a structured conversation summary. Tool calls like <code>Edit</code>, <code>Write</code>, and <code>Bash</code> are extracted to identify which files were touched and what operations were performed.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Fallback for Projects Without Sessions</strong>
+                    <p>If no active session file is found, CC Gate looks for a <code>CLAUDE.md</code> or <code>README.md</code> in the project root and uses that as project context instead. The diff alone is used to generate the message.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Large Diff Chunking</strong>
+                    <p>Diffs exceeding 20,000 tokens are automatically split into chunks. Each chunk is summarized individually using Claude Haiku (fast and cheap), then all summaries are combined and passed to Claude Sonnet for the final commit message. This keeps costs low even on large refactors.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Refinement Loop</strong>
+                    <p>After the message is generated, you can edit it directly in CommitSheet. You can also add a short note — for example, "I was working on fixing the auth timeout" — and CC Gate will refine the message using that hint without regenerating from scratch. This is much faster and cheaper than a full regeneration.</p>
+                </div>
+            </li>
+        </ol>
+
+        <h2>Conventional Commits Format</h2>
+        <p>CommitSheet uses structured <a href="https://www.conventionalcommits.org" target="_blank" rel="noopener">Conventional Commits</a> format. Every generated message follows this structure:</p>
+
+        <pre><code>type(scope): short imperative description
+
+Optional longer body explaining the why and how.
+Can span multiple lines, 72 chars wide.</code></pre>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Options</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Type</strong></td>
+                    <td><code>feat</code>, <code>fix</code>, <code>docs</code>, <code>refactor</code>, <code>test</code>, <code>chore</code>, <code>style</code>, <code>perf</code>, <code>ci</code></td>
+                    <td>Nature of the change</td>
+                </tr>
+                <tr>
+                    <td><strong>Scope</strong></td>
+                    <td>optional — e.g. <code>git</code>, <code>hook</code>, <code>ui</code>, <code>auth</code></td>
+                    <td>Which part of the codebase</td>
+                </tr>
+                <tr>
+                    <td><strong>Description</strong></td>
+                    <td>max ~72 chars, imperative mood</td>
+                    <td>Short summary of the change</td>
+                </tr>
+                <tr>
+                    <td><strong>Body</strong></td>
+                    <td>optional multi-line</td>
+                    <td>Detailed explanation of why and how</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout callout-tip">
+            <strong>Tip: Refine without regenerating</strong>
+            Add a note in the refinement field (e.g. "focus on the performance improvements") and click Refine. This costs a fraction of a full regeneration and usually produces a better result than starting over.
+        </div>
+
+        <h2>Troubleshooting</h2>
+
+        <h3>"No session found"</h3>
+        <p>Make sure Claude Code has processed at least one message for this project. The session file must exist in <code>~/.claude/projects/</code>. Open the project in Claude Code and send a message, then try again.</p>
+
+        <h3>Empty diff</h3>
+        <p>CommitSheet detected no staged or unstaged changes. Make sure you have modified files before opening CommitSheet. Run <code>git status</code> in terminal to verify.</p>
+
+        <h3>API key error</h3>
+        <p>Verify your Anthropic API key in Settings → AI → Test button. If the test fails, the key may be invalid, revoked, or have insufficient credits. Regenerate at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>.</p>
+
+        <h3>Token limit / chunking failure</h3>
+        <p>Large diffs are automatically chunked. If you see errors even with chunking enabled, the diff may be extremely large (over 500 KB). Consider using <code>.gitignore</code> to exclude large generated files (e.g. <code>package-lock.json</code>, compiled assets, database files) from tracking.</p>
+    </main>
+</div>
+
+<footer>
+    <div class="links">
+        <a href="../../">Home</a>
+        <a href="../">Docs</a>
+        <a href="https://github.com/ai-fresh/ccgate/releases">Download</a>
+        <a href="https://github.com/ai-fresh/ccgate/issues">Report Issue</a>
+    </div>
+    <div>CC Gate — macOS menu bar companion for Claude Code</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings Reference — CC Gate Docs</title>
+    <meta name="description" content="Complete reference for every CC Gate settings tab: General, Permissions, Hook, AI, GitHub, Pro, and About.">
+    <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/reference/settings.html">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --bg-card: #161b22;
+            --bg-card-hover: #1c2333;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #79b8ff;
+            --green: #3fb950;
+            --orange: #d29922;
+            --red: #f85149;
+            --purple: #bc8cff;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--accent-hover); }
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+        .docs-nav { position: sticky; top: 0; background: rgba(13,17,23,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); z-index: 100; padding: 12px 0; }
+        .nav-content { display: flex; align-items: center; justify-content: space-between; gap: 24px; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+        .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; }
+        .nav-links a:hover { color: var(--text); }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; transition: all 0.2s; border: 1px solid transparent; text-decoration: none; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-hover); color: #fff; }
+        .btn-sm { padding: 6px 14px !important; font-size: 13px !important; }
+        .docs-layout { display: grid; grid-template-columns: 220px 1fr; gap: 48px; max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+        .docs-sidebar { position: sticky; top: 80px; height: fit-content; }
+        .sidebar-section { margin-bottom: 28px; }
+        .sidebar-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 8px; padding: 0 8px; }
+        .docs-sidebar a { display: block; padding: 5px 8px; font-size: 14px; color: var(--text-muted); border-radius: 6px; margin-bottom: 2px; text-decoration: none; transition: all 0.15s; }
+        .docs-sidebar a:hover { background: var(--bg-card); color: var(--text); }
+        .docs-sidebar a.active { background: rgba(88,166,255,0.1); color: var(--accent); font-weight: 500; }
+        .docs-content h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .docs-content .page-desc { font-size: 18px; color: var(--text-muted); margin-bottom: 40px; }
+        .docs-content h2 { font-size: 22px; font-weight: 700; margin: 48px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .docs-content h2:first-of-type { border-top: none; margin-top: 32px; }
+        .docs-content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; color: var(--text); }
+        .docs-content p { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+        .docs-content ul, .docs-content ol { padding-left: 24px; color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
+        .docs-content li { margin-bottom: 6px; }
+        .docs-content strong { color: var(--text); font-weight: 600; }
+        code { background: rgba(110,118,129,0.2); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', SFMono-Regular, Menlo, monospace; color: var(--text); }
+        pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+        pre code { background: none; padding: 0; font-size: 14px; color: var(--text); }
+        .docs-content img { max-width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.3); margin: 16px 0; display: block; }
+        .screenshot { max-width: 380px; }
+        .screenshot-wide { max-width: 580px; }
+        .callout { padding: 16px 20px; border-radius: 10px; margin: 20px 0; font-size: 14px; line-height: 1.6; color: var(--text); }
+        .callout-info { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.25); }
+        .callout-warn { background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.25); }
+        .callout-tip { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); }
+        .callout-danger { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.25); }
+        .callout strong { display: block; margin-bottom: 4px; }
+        .step-list { counter-reset: step; list-style: none; padding: 0; }
+        .step-list li { counter-increment: step; display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start; }
+        .step-list li::before { content: counter(step); display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; min-width: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; }
+        .step-list li > div { flex: 1; }
+        .step-list li strong { display: block; font-size: 15px; color: var(--text); margin-bottom: 4px; }
+        .step-list li p { margin: 0; font-size: 14px; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 24px 0; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        .card h3 { font-size: 16px; margin-bottom: 8px; }
+        .card p { font-size: 14px; color: var(--text-muted); margin: 0; }
+        .tier-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 600; }
+        .tier-read { background: rgba(88,166,255,0.15); color: var(--accent); }
+        .tier-write { background: rgba(210,153,34,0.15); color: var(--orange); }
+        .tier-execute { background: rgba(248,81,73,0.15); color: var(--red); }
+        .tier-plan { background: rgba(188,140,255,0.15); color: var(--purple); }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+        th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+        td { color: var(--text-muted); }
+        td strong { color: var(--text); }
+        .settings-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+        .settings-row:last-child { border-bottom: none; }
+        .settings-row-label { flex: 1; }
+        .settings-row-label strong { display: block; font-size: 15px; color: var(--text); margin-bottom: 3px; }
+        .settings-row-label span { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+        .settings-default { font-size: 12px; background: rgba(110,118,129,0.15); color: var(--text-muted); padding: 2px 8px; border-radius: 4px; white-space: nowrap; margin-top: 4px; display: inline-block; }
+        .tab-header { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; }
+        .tab-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: rgba(88,166,255,0.1); }
+        .tab-header h3 { font-size: 18px; margin: 0 0 2px; }
+        .tab-header p { font-size: 13px; color: var(--text-muted); margin: 0; }
+        footer { text-align: center; padding: 40px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px; margin-top: 60px; }
+        footer .links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+        @media(max-width:768px) { .docs-layout { grid-template-columns: 1fr; } .docs-sidebar { display: none; } .docs-content h1 { font-size: 28px; } }
+    </style>
+</head>
+<body>
+
+<nav class="docs-nav">
+    <div class="nav-content">
+        <a href="../../" class="nav-brand">
+            <img src="../../assets/logo.png" alt="CC Gate" width="28" height="28" style="border-radius:6px">
+            <span>CC Gate</span>
+        </a>
+        <div class="nav-links">
+            <a href="../">Docs</a>
+            <a href="../getting-started.html">Get Started</a>
+            <a href="../../">Home</a>
+            <a href="https://github.com/ai-fresh/ccgate/releases" class="btn btn-primary btn-sm">Download</a>
+        </div>
+    </div>
+</nav>
+
+<div class="docs-layout">
+    <aside class="docs-sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Getting Started</div>
+            <a href="../getting-started.html">Installation</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Features</div>
+            <a href="../features/auto-accept.html">Auto-Accept</a>
+            <a href="../features/hook-system.html">Hook System</a>
+            <a href="../features/git-worktrees.html">Git Worktrees</a>
+            <a href="../features/ai-commits.html">AI Commits</a>
+            <a href="../features/github-integration.html">GitHub</a>
+            <a href="../features/release-pipeline.html">Release Pipeline</a>
+            <a href="../features/test-runner.html">Test Runner</a>
+            <a href="../features/status-indicators.html">Status Indicators</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Reference</div>
+            <a href="settings.html" class="active">Settings</a>
+            <a href="troubleshooting.html">Troubleshooting</a>
+        </div>
+    </aside>
+
+    <main class="docs-content">
+        <h1>Settings Reference</h1>
+        <p class="page-desc">Complete reference for every option in CC Gate's settings window, organized by tab.</p>
+
+        <p>Open Settings by clicking the CC Gate menu bar icon → the gear icon, or by pressing the keyboard shortcut shown in the menu. Settings are divided into tabs: General, Permissions, Hook, AI, GitHub, Pro, and About.</p>
+
+        <img src="../../assets/screenshots/docs/settings-general.png" alt="CC Gate Settings — General tab" class="screenshot-wide">
+
+        <h2>General Tab</h2>
+
+        <div class="tab-header">
+            <div class="tab-icon">&#9881;</div>
+            <div>
+                <h3>General</h3>
+                <p>Startup behavior, project defaults, editor preferences, and monitoring frequency.</p>
+            </div>
+        </div>
+
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Launch at Login</strong>
+                <span>Start CC Gate automatically when you log into macOS. CC Gate runs as a menu bar app with no Dock icon, so it stays out of the way.</span>
+                <span class="settings-default">Default: Off</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>New Project Folder</strong>
+                <span>The default directory where CC Gate places new projects created via the Clone or New Project flow. You can always override per-project. Tap "Browse" to select a folder.</span>
+                <span class="settings-default">Default: ~/Documents</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Default Application</strong>
+                <span>Which editor or terminal to open when you click "Open" on a project. Options: VS Code, Cursor, Warp, iTerm2, Terminal. The selected app must be installed — CC Gate checks at launch and shows a warning if the selected app is not found.</span>
+                <span class="settings-default">Default: VS Code</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Monitoring — Refresh Interval</strong>
+                <span>How often CC Gate scans <code>~/.claude/projects/</code> for project changes, session status updates, and active Claude Code processes. Set with a slider from 5 to 60 seconds. Lower values make the status display more responsive; higher values reduce CPU and battery usage.</span>
+                <span class="settings-default">Default: 15 seconds</span>
+            </div>
+        </div>
+
+        <div class="callout callout-tip">
+            <strong>Battery tip</strong>
+            At the default 15s interval, CC Gate has minimal energy impact. If you are on battery or do not need real-time status, try 30s or 60s. At 5s, CC Gate runs frequent <code>ps</code> and file system calls which noticeably increase CPU usage.
+        </div>
+
+        <h2>Permissions Tab</h2>
+
+        <div class="tab-header">
+            <div class="tab-icon">&#128274;</div>
+            <div>
+                <h3>Permissions</h3>
+                <p>macOS system permission required for sending keyboard input to terminal windows.</p>
+            </div>
+        </div>
+
+        <img src="../../assets/screenshots/docs/settings-permissions.png" alt="CC Gate Settings — Permissions tab" class="screenshot-wide">
+
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Accessibility Access</strong>
+                <span>CC Gate needs Accessibility permission to send keyboard input to terminal windows when you answer a Claude Code question manually (for questions that are not auto-accepted). Without this, the "Answer" button in the Questions window will not be able to type your response into the terminal.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Grant button</strong>
+                <span>Opens System Settings → Privacy &amp; Security → Accessibility. Find CC Gate in the list and enable the toggle. macOS may require your administrator password.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Restart App</strong>
+                <span>After granting Accessibility permission, click "Restart App" to reload CC Gate. The permission takes effect only after restart.</span>
+            </div>
+        </div>
+
+        <div class="callout callout-info">
+            <strong>Auto-Accept users</strong>
+            If you use CC Gate exclusively in auto-accept mode and never manually answer questions from the CC Gate UI, Accessibility permission is not required.
+        </div>
+
+        <h2>Hook Tab</h2>
+
+        <div class="tab-header">
+            <div class="tab-icon">&#128279;</div>
+            <div>
+                <h3>Hook</h3>
+                <p>Install and manage the permission hook that connects Claude Code to CC Gate.</p>
+            </div>
+        </div>
+
+        <img src="../../assets/screenshots/docs/settings-hook.png" alt="CC Gate Settings — Hook tab" class="screenshot-wide">
+
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Status badge</strong>
+                <span>Shows the current hook state. Green "Installed" means the hook is present and the version matches. Yellow "Outdated" means a newer hook version is available and the hook should be reinstalled. Red "Not installed" means the hook file or registration is missing.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Install / Uninstall button</strong>
+                <span>Install writes <code>~/.claude/hooks/ccmanager-permissions.sh</code> and registers it in <code>~/.claude/settings.json</code> under <code>hooks.PermissionRequest</code>. Uninstall removes both the file and the registration entry. Always use this button — never edit the hook file or settings.json directly.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Auto-repair</strong>
+                <span>If Claude Code resets or overwrites <code>settings.json</code> and removes the hook registration, CC Gate detects this on the next refresh cycle and automatically re-adds the registration entry. The hook file itself is not affected.</span>
+            </div>
+        </div>
+
+        <h2>AI Tab</h2>
+
+        <div class="tab-header">
+            <div class="tab-icon">&#10024;</div>
+            <div>
+                <h3>AI</h3>
+                <p>Configure the Anthropic API key used for AI Commit Message generation.</p>
+            </div>
+        </div>
+
+        <img src="../../assets/screenshots/docs/settings-ai.png" alt="CC Gate Settings — AI tab" class="screenshot-wide">
+
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Enable AI commit messages</strong>
+                <span>Master toggle for the AI Commit Messages feature. Requires a Pro plan. When disabled, CommitSheet shows a manual commit message field only.</span>
+                <span class="settings-default">Default: Off (requires Pro)</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>API Key</strong>
+                <span>Your Anthropic API key from <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>. Stored in macOS Keychain, never written to disk. Starts with <code>sk-ant-</code>.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Test button</strong>
+                <span>Sends a minimal test request to the Anthropic API to verify the key is valid and has sufficient credits. Shows a green checkmark on success or an error message on failure.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Model</strong>
+                <span>Which Claude model to use for generating commit messages. Default: Claude Haiku for diff summarization chunks (fast and cheap), Claude Sonnet for the final combined message (higher quality). Both are configurable.</span>
+                <span class="settings-default">Default: Haiku for chunks, Sonnet for final</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Privacy</strong>
+                <span>CC Gate sends only the git diff and session context to the Anthropic API. No data is stored on Anthropic servers beyond the time required to process the request. Your code is not used for model training.</span>
+            </div>
+        </div>
+
+        <h2>GitHub Tab</h2>
+
+        <div class="tab-header">
+            <div class="tab-icon">&#128025;</div>
+            <div>
+                <h3>GitHub</h3>
+                <p>Personal Access Token for GitHub REST API operations: push, fork, clone, and view commits.</p>
+            </div>
+        </div>
+
+        <img src="../../assets/screenshots/docs/settings-github.png" alt="CC Gate Settings — GitHub tab" class="screenshot-wide">
+
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Personal Access Token</strong>
+                <span>A GitHub Personal Access Token (classic) with <code>repo</code> scope. Required for push, fork, clone, and GitHub Release creation. Stored in macOS Keychain. Generate one at <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a>.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Save token / Clear</strong>
+                <span>Save adds the token to Keychain and shows a connected status. Clear removes the token from Keychain. CC Gate will show "Not connected" after clearing until a new token is saved.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Status</strong>
+                <span>Shows "Connected" with a green indicator when a valid token is saved, or "Not connected" with a gray indicator when no token is present.</span>
+            </div>
+        </div>
+
+        <h2>Pro Tab</h2>
+
+        <div class="tab-header">
+            <div class="tab-icon">&#11088;</div>
+            <div>
+                <h3>Pro</h3>
+                <p>Manage your CC Gate Pro subscription and configure Pro features.</p>
+            </div>
+        </div>
+
+        <img src="../../assets/screenshots/docs/settings-pro.png" alt="CC Gate Settings — Pro tab" class="screenshot-wide">
+
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Plan status</strong>
+                <span>Shows your current plan: Free or Pro. Includes subscription renewal date for Pro subscribers.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>AI Commit Messages</strong>
+                <span>Pro feature card. When on Pro plan, shows a "Configure" button that links to the AI tab for API key entry. When on Free plan, shows an upgrade prompt.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>More Pro features coming soon</strong>
+                <span>Additional Pro-exclusive features are in development. Current Pro users will receive them automatically as updates are released.</span>
+            </div>
+        </div>
+
+        <h2>About / Info Tab</h2>
+
+        <div class="tab-header">
+            <div class="tab-icon">&#8505;</div>
+            <div>
+                <h3>About</h3>
+                <p>Version info, build details, links, and the Developer Mode easter egg.</p>
+            </div>
+        </div>
+
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Version number</strong>
+                <span>Current CC Gate version (e.g. "CC Gate 2.11.12"). Tap this label 7 times rapidly to unlock Developer Mode, which exposes the Test Runner and other experimental features. A "Developer Mode" checkmark appears after the 7th tap.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Build number</strong>
+                <span>Internal build identifier used when reporting bugs. Always include this in bug reports.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>GitHub link</strong>
+                <span>Opens the public CC Gate repository and landing page at <a href="https://github.com/ai-fresh/ccgate" target="_blank" rel="noopener">github.com/ai-fresh/ccgate</a>.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Release notes</strong>
+                <span>Opens the GitHub Releases page where you can read the full changelog for each version.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Support / Report issue</strong>
+                <span>Opens the GitHub Issues page to file a bug report or feature request.</span>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer>
+    <div class="links">
+        <a href="../../">Home</a>
+        <a href="../">Docs</a>
+        <a href="https://github.com/ai-fresh/ccgate/releases">Download</a>
+        <a href="https://github.com/ai-fresh/ccgate/issues">Report Issue</a>
+    </div>
+    <div>CC Gate — macOS menu bar companion for Claude Code</div>
+</footer>
+
+</body>
+</html>

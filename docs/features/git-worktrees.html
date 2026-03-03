@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Worktrees — CC Gate Documentation</title>
+    <meta name="description" content="Create and manage Git worktrees from CC Gate's menu bar popup. Run parallel Claude Code sessions on separate branches, commit changes, merge branches, and diagnose git issues.">
+    <meta name="author" content="AI Fresh">
+    <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/features/git-worktrees.html">
+    <meta property="og:title" content="Git Worktrees — CC Gate Documentation">
+    <meta property="og:description" content="Create and manage Git worktrees from CC Gate's menu bar popup. Run parallel Claude Code sessions on separate branches.">
+    <meta property="og:url" content="https://ai-fresh.github.io/ccgate/docs/features/git-worktrees.html">
+    <link rel="icon" type="image/png" href="../../assets/icon.png">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --bg-card: #161b22;
+            --bg-card-hover: #1c2333;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #79b8ff;
+            --green: #3fb950;
+            --orange: #d29922;
+            --red: #f85149;
+            --purple: #bc8cff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--accent); text-decoration: none; }
+        a:hover { color: var(--accent-hover); text-decoration: underline; }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+        .docs-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(13,17,23,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 12px 0;
+        }
+        .nav-content { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+        .nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+        .nav-links { display: flex; align-items: center; gap: 20px; font-size: 14px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; }
+        .nav-links a:hover { color: var(--text); }
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; transition: all 0.2s; border: 1px solid transparent; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { background: var(--accent-hover); text-decoration: none; }
+        .btn-sm { padding: 6px 14px; font-size: 13px; }
+
+        .docs-layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 48px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .docs-sidebar { position: sticky; top: 80px; height: fit-content; }
+        .sidebar-section { margin-bottom: 28px; }
+        .sidebar-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 8px; }
+        .docs-sidebar a { display: block; padding: 5px 8px; font-size: 14px; color: var(--text-muted); border-radius: 6px; margin-bottom: 2px; text-decoration: none; }
+        .docs-sidebar a:hover, .docs-sidebar a.active { background: var(--bg-card); color: var(--text); }
+
+        .docs-content h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+        .docs-content .page-intro { font-size: 18px; color: var(--text-muted); margin-bottom: 32px; line-height: 1.6; }
+        .docs-content h2 { font-size: 22px; font-weight: 700; margin: 40px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .docs-content h2:first-of-type { margin-top: 24px; }
+        .docs-content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; }
+        .docs-content p { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
+        .docs-content ul, .docs-content ol { padding-left: 20px; color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
+        .docs-content li { margin-bottom: 6px; }
+        .docs-content code { background: rgba(110,118,129,0.2); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', SFMono-Regular, Menlo, monospace; }
+        .docs-content pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
+        .docs-content pre code { background: none; padding: 0; font-size: 14px; color: var(--text); }
+        .docs-content img { max-width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.3); margin: 16px 0; }
+        .docs-content .screenshot { max-width: 440px; display: block; }
+
+        .callout { padding: 16px 20px; border-radius: 10px; margin: 20px 0; font-size: 14px; line-height: 1.6; }
+        .callout-info { background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.25); color: var(--text-muted); }
+        .callout-info strong { color: var(--accent); }
+        .callout-warn { background: rgba(210,153,34,0.1); border: 1px solid rgba(210,153,34,0.25); color: var(--text-muted); }
+        .callout-warn strong { color: var(--orange); }
+        .callout-tip { background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.25); color: var(--text-muted); }
+        .callout-tip strong { color: var(--green); }
+
+        /* Context menu mockup */
+        .context-menu {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 6px;
+            display: inline-block;
+            min-width: 220px;
+            margin: 16px 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .context-menu-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .context-menu-item:hover { background: var(--bg-card-hover); }
+        .context-menu-separator {
+            height: 1px;
+            background: var(--border);
+            margin: 4px 6px;
+        }
+        .context-menu-item .item-icon { font-size: 15px; width: 20px; text-align: center; }
+        .context-menu-item.destructive { color: var(--red); }
+
+        /* Worktree diagram */
+        .worktree-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            font-family: 'SF Mono', SFMono-Regular, Menlo, monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+        .wt-branch { color: var(--accent); }
+        .wt-path { color: var(--text-muted); }
+        .wt-commit { color: var(--green); }
+        .wt-arrow { color: var(--text-muted); }
+
+        /* Feature grid */
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
+        .feature-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+        }
+        .feature-item .fi-icon { font-size: 22px; margin-bottom: 10px; }
+        .feature-item h4 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+        .feature-item p { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.5; }
+
+        footer a { color: var(--text-muted); }
+        footer a:hover { color: var(--text); }
+
+        @media (max-width: 768px) {
+            .docs-layout { grid-template-columns: 1fr; }
+            .docs-sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="docs-nav">
+    <div class="container">
+        <div class="nav-content">
+            <a href="/" class="nav-brand">
+                <img src="../../assets/logo.png" alt="CC Gate" width="28" height="28" style="border-radius:6px">
+                <span>CC Gate</span>
+            </a>
+            <div class="nav-links">
+                <a href="../../docs/">Docs</a>
+                <a href="../../docs/getting-started.html">Get Started</a>
+                <a href="../../">Home</a>
+                <a href="https://github.com/ai-fresh/ccgate/releases" class="btn btn-primary btn-sm">Download</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="docs-layout">
+    <aside class="docs-sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Getting Started</div>
+            <a href="../getting-started.html">Installation</a>
+            <a href="../getting-started.html#first-run">First Run</a>
+            <a href="../getting-started.html#hook">Install Hook</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Features</div>
+            <a href="auto-accept.html">Auto-Accept</a>
+            <a href="hook-system.html">Hook System</a>
+            <a href="git-worktrees.html" class="active">Git Worktrees</a>
+            <a href="ai-commits.html">AI Commits</a>
+            <a href="github-integration.html">GitHub</a>
+            <a href="release-pipeline.html">Release Pipeline</a>
+            <a href="test-runner.html">Test Runner</a>
+            <a href="status-indicators.html">Status Indicators</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Reference</div>
+            <a href="../reference/settings.html">Settings</a>
+            <a href="../reference/troubleshooting.html">Troubleshooting</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">On this page</div>
+            <a href="#what-are">What are Worktrees?</a>
+            <a href="#viewing">Viewing Worktrees</a>
+            <a href="#creating">Creating a Worktree</a>
+            <a href="#context-menu">Context Menu</a>
+            <a href="#committing">Committing Changes</a>
+            <a href="#merging">Merging to Main</a>
+            <a href="#deleting">Deleting a Worktree</a>
+            <a href="#health">Git Health Checker</a>
+            <a href="#troubleshooting">Troubleshooting</a>
+        </div>
+    </aside>
+
+    <main class="docs-content">
+        <h1>Git Worktrees</h1>
+        <p class="page-intro">Git worktrees let you check out multiple branches of the same repository into separate directories simultaneously. CC Gate makes creating, managing, and working across these worktrees seamless directly from your menu bar.</p>
+
+        <h2 id="what-are">What are Git Worktrees?</h2>
+        <p>A Git worktree is an additional working directory linked to the same repository. Unlike cloning the repository a second time, worktrees share the same <code>.git</code> folder — so they see the same branches, history, and remote configuration, but each has its own checked-out branch and working tree state.</p>
+
+        <p>The primary use case with CC Gate is running <strong>parallel Claude Code sessions</strong>: one Claude instance working on a feature branch while another maintains the main branch, without either session interfering with the other's working directory.</p>
+
+        <div class="worktree-diagram">
+            <div><span class="wt-path">~/projects/my-app/</span> <span class="wt-arrow">←</span> <span class="wt-branch">main</span> <span class="wt-commit">[a1b2c3d]</span></div>
+            <div><span class="wt-path">~/projects/my-app-worktrees/feature-auth/</span> <span class="wt-arrow">←</span> <span class="wt-branch">feature/auth</span> <span class="wt-commit">[e4f5g6h]</span></div>
+            <div><span class="wt-path">~/projects/my-app-worktrees/fix-bug-42/</span> <span class="wt-arrow">←</span> <span class="wt-branch">fix/bug-42</span> <span class="wt-commit">[i7j8k9l]</span></div>
+        </div>
+
+        <p>Each directory in the diagram above is a fully functional checkout. You can open a terminal in any of them, run <code>claude</code>, and have independent Claude Code sessions working simultaneously. CC Gate shows all three in the popup as separate worktree rows under the project card.</p>
+
+        <div class="callout callout-info">
+            <strong>Git requirement:</strong> Worktrees require Git 2.5 or later. Run <code>git --version</code> to check. macOS ships with git, but you can also install a newer version via Homebrew with <code>brew install git</code>.
+        </div>
+
+        <h2 id="viewing">Viewing Worktrees</h2>
+        <p>In the CC Gate main popup, each project card shows a disclosure arrow (<strong>&gt;</strong>) on the right side if the project is a git repository with worktrees. Click the arrow to expand the worktree section.</p>
+
+        <img src="../../assets/screenshots/docs/popup-worktrees.png" alt="CC Gate popup showing expanded project with worktrees list including branch names and status dots" class="screenshot">
+
+        <p>Each worktree row in the expanded view shows:</p>
+        <ul>
+            <li><strong>Branch name</strong> — the currently checked-out branch in that worktree directory.</li>
+            <li><strong>Commit hash prefix</strong> — the short hash of the HEAD commit (e.g., <code>a1b2c3d</code>), useful for identifying what state each worktree is in at a glance.</li>
+            <li><strong>Status dot</strong> — the same colored status indicator used for the project overall, but scoped to Claude Code sessions running inside that specific worktree directory.</li>
+            <li><strong>Dirty indicator</strong> — a badge appears if the worktree has uncommitted changes (modified or untracked files).</li>
+        </ul>
+
+        <p>The main project card row always represents the primary worktree (the original repository checkout, usually on <code>main</code> or <code>master</code>). All additional worktrees are listed below it in the expanded section.</p>
+
+        <h2 id="creating">Creating a Worktree</h2>
+        <p>To create a new worktree from CC Gate:</p>
+        <ol>
+            <li>In the main popup, expand a project card by clicking the <strong>&gt;</strong> arrow.</li>
+            <li>Click the <strong>+</strong> button in the worktree section header.</li>
+            <li>The <strong>Create Worktree</strong> sheet opens.</li>
+            <li>Enter a <strong>branch name</strong> for the new worktree (e.g., <code>feature/my-new-feature</code>).</li>
+            <li>Select the <strong>base branch</strong> from the dropdown — this is what the new branch will be based on. Defaults to <code>main</code>.</li>
+            <li>The <strong>worktree path</strong> is calculated automatically based on your repository location and branch name. You can optionally customize it.</li>
+            <li>Click <strong>Create</strong>.</li>
+        </ol>
+
+        <p>CC Gate runs <code>git worktree add -b &lt;branch&gt; &lt;path&gt; &lt;base&gt;</code> in the background. The new worktree directory is created immediately. A success notification confirms the location.</p>
+
+        <div class="callout callout-tip">
+            <strong>Tip:</strong> Use a consistent naming convention for your worktrees. A good pattern is <code>feature/description</code>, <code>fix/issue-number</code>, or <code>experiment/name</code>. The branch name directly determines the worktree directory name, so keep it concise and filesystem-friendly (no spaces).
+        </div>
+
+        <h2 id="context-menu">Worktree Context Menu</h2>
+        <p>Right-clicking any worktree row in the expanded project card opens a context menu with actions for that specific worktree:</p>
+
+        <div class="context-menu">
+            <div class="context-menu-item"><span class="item-icon">&#128187;</span> Open in VS Code</div>
+            <div class="context-menu-item"><span class="item-icon">&#128279;</span> Open in Cursor</div>
+            <div class="context-menu-item"><span class="item-icon">&#128188;</span> Open in Warp</div>
+            <div class="context-menu-item"><span class="item-icon">&#128196;</span> Open in iTerm2</div>
+            <div class="context-menu-item"><span class="item-icon">&#128196;</span> Open in Terminal</div>
+            <div class="context-menu-separator"></div>
+            <div class="context-menu-item"><span class="item-icon">&#128269;</span> Show in Finder</div>
+            <div class="context-menu-item"><span class="item-icon">&#128203;</span> Copy Path</div>
+            <div class="context-menu-separator"></div>
+            <div class="context-menu-item"><span class="item-icon">&#10003;</span> Commit Changes...</div>
+            <div class="context-menu-item"><span class="item-icon">&#8644;</span> Merge to main...</div>
+            <div class="context-menu-separator"></div>
+            <div class="context-menu-item destructive"><span class="item-icon">&#128465;</span> Delete Worktree...</div>
+        </div>
+
+        <h3>Open in Editor / Terminal</h3>
+        <p>The editor and terminal options open the worktree directory directly in the selected application. CC Gate detects which editors and terminals you have installed and only shows available options. Supported editors: <strong>VS Code</strong>, <strong>Cursor</strong>. Supported terminals: <strong>Warp</strong>, <strong>iTerm2</strong>, <strong>Terminal.app</strong>.</p>
+
+        <h3>Show in Finder / Copy Path</h3>
+        <p><strong>Show in Finder</strong> opens a Finder window with the worktree directory selected. <strong>Copy Path</strong> copies the absolute filesystem path to your clipboard — useful for <code>cd</code> commands or sharing the location with a team member.</p>
+
+        <h2 id="committing">Committing Changes</h2>
+        <p>When a worktree has uncommitted changes (shown by the dirty indicator), you can commit directly from CC Gate without opening a terminal:</p>
+        <ol>
+            <li>Right-click the worktree row and choose <strong>Commit Changes...</strong></li>
+            <li>The <strong>Commit Sheet</strong> opens, showing a summary of changed files and a diff preview.</li>
+            <li>Enter a <strong>commit message</strong> in the text field. If you have <a href="ai-commits.html">AI Commit Messages</a> configured, click <strong>Generate</strong> to create a conventional commit message from the diff automatically.</li>
+            <li>Review the auto-generated or manually written message and edit as needed.</li>
+            <li>Click <strong>Commit</strong>.</li>
+        </ol>
+
+        <p>CC Gate runs <code>git add -A &amp;&amp; git commit -m "&lt;message&gt;"</code> in the worktree directory. The commit hash and success confirmation appear in the sheet after the operation completes.</p>
+
+        <div class="callout callout-info">
+            <strong>Conventional commits:</strong> The commit message field supports the conventional commits format — <code>type(scope): description</code>. The AI commit message generator always produces conventional commit format messages. Examples: <code>feat(auth): add OAuth2 login flow</code>, <code>fix(api): handle rate limit errors gracefully</code>.
+        </div>
+
+        <h2 id="merging">Merging to Main</h2>
+        <p>When your work in a worktree is ready to be integrated back into the main branch:</p>
+        <ol>
+            <li>Make sure all changes in the worktree are committed (no dirty indicator).</li>
+            <li>Right-click the worktree row and choose <strong>Merge to main...</strong></li>
+            <li>The <strong>Merge Sheet</strong> opens, showing the commits that will be merged and the target branch (defaulting to <code>main</code>).</li>
+            <li>Confirm the merge options and click <strong>Merge</strong>.</li>
+        </ol>
+
+        <p>CC Gate switches to the main branch, runs <code>git merge &lt;branch&gt;</code>, and switches back. The merge result — fast-forward, merge commit, or conflict notification — is displayed in the sheet.</p>
+
+        <div class="callout callout-warn">
+            <strong>Merge conflicts:</strong> If the merge produces conflicts, CC Gate will notify you and abort the merge. You must resolve conflicts manually in a terminal or editor. Open the main worktree in your preferred editor via the context menu, resolve the conflicts, and run <code>git merge --continue</code> in the terminal.
+        </div>
+
+        <h2 id="deleting">Deleting a Worktree</h2>
+        <p>To remove a worktree that is no longer needed:</p>
+        <ol>
+            <li>Right-click the worktree row and choose <strong>Delete Worktree...</strong></li>
+            <li>A confirmation dialog appears, warning that the working directory and any uncommitted changes will be permanently lost.</li>
+            <li>Confirm the deletion.</li>
+        </ol>
+
+        <p>CC Gate runs <code>git worktree remove --force &lt;path&gt;</code>, which removes the working directory and deregisters the worktree from git. The branch itself is <strong>not deleted</strong> — it remains in the repository and can be checked out again later.</p>
+
+        <div class="callout callout-warn">
+            <strong>Warning:</strong> Deleting a worktree is irreversible if you have uncommitted changes. Always commit or stash your work before deleting. The confirmation dialog shows a list of uncommitted files if any exist, giving you a final chance to save your work before proceeding.
+        </div>
+
+        <h2 id="health">Git Health Checker</h2>
+        <p>CC Gate includes a Git Health diagnostic tool (introduced in v2.11.12) that can identify and help remediate common git repository issues that might prevent normal worktree operations.</p>
+
+        <h3>What it checks</h3>
+        <div class="feature-grid">
+            <div class="feature-item">
+                <div class="fi-icon">&#128270;</div>
+                <h4>Stuck merge state</h4>
+                <p>Detects in-progress merges that were never completed or aborted, which block new merges from starting.</p>
+            </div>
+            <div class="feature-item">
+                <div class="fi-icon">&#128270;</div>
+                <h4>Broken refs</h4>
+                <p>Finds corrupt or missing branch references that can cause git operations to fail unexpectedly.</p>
+            </div>
+            <div class="feature-item">
+                <div class="fi-icon">&#128270;</div>
+                <h4>Detached worktrees</h4>
+                <p>Identifies worktree registrations pointing to directories that no longer exist on disk.</p>
+            </div>
+            <div class="feature-item">
+                <div class="fi-icon">&#128270;</div>
+                <h4>Lock files</h4>
+                <p>Detects stale <code>.git/index.lock</code> files left behind by crashed git processes that block all operations.</p>
+            </div>
+        </div>
+
+        <h3>Running the health check</h3>
+        <p>The health check can be triggered from the context menu of any project card in the CC Gate popup. When issues are found, CC Gate presents each one with a description of what it means and a one-click <strong>Fix</strong> button that applies the remediation automatically (e.g., removing a stale lock file or running <code>git worktree prune</code>).</p>
+
+        <h2 id="troubleshooting">Troubleshooting</h2>
+
+        <h3>Merge conflicts must be resolved manually</h3>
+        <p>CC Gate cannot resolve merge conflicts on your behalf. When a merge fails due to conflicts, open the project in your editor, look for conflict markers (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>), resolve them, stage the resolved files, and run <code>git merge --continue</code> or <code>git commit</code>.</p>
+
+        <h3>Worktree shows as "stuck" or doesn't appear</h3>
+        <p>If a worktree directory was deleted manually (outside CC Gate) without properly removing it from git, the worktree will be listed by git but have no corresponding directory. Run the Git Health Checker to detect and prune these orphaned registrations, or run <code>git worktree prune</code> in a terminal.</p>
+
+        <h3>Push rejected after creating worktree</h3>
+        <p>When pushing a new branch to a remote for the first time, git requires you to set the upstream tracking branch. Open the worktree directory in a terminal and run:</p>
+        <pre><code>git push --set-upstream origin &lt;branch-name&gt;</code></pre>
+        <p>If you have the <a href="github-integration.html">GitHub integration</a> configured, CC Gate can handle this automatically when you commit and push from the Commit Sheet.</p>
+
+        <h3>Cannot delete worktree — "is checked out"</h3>
+        <p>Git prevents deleting a worktree if another process has the directory locked or if the branch is currently checked out in another worktree. Make sure no terminal sessions are running in the worktree directory and try again. If the problem persists, close any editors pointing to that directory and retry.</p>
+    </main>
+</div>
+
+<footer>
+    <div class="container" style="text-align:center; padding: 40px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px;">
+        <div style="display:flex; gap:24px; justify-content:center; margin-bottom:16px; flex-wrap:wrap;">
+            <a href="/">Home</a>
+            <a href="../../docs/">Docs</a>
+            <a href="https://github.com/ai-fresh/ccgate">GitHub</a>
+            <a href="https://github.com/ai-fresh/ccgate/releases">Releases</a>
+        </div>
+        <p>CC Gate — built for the Claude Code community.</p>
+    </div>
+</footer>
+
+</body>
+</html>
