@@ -205,6 +205,21 @@
             </tbody>
         </table>
 
+        <h2 id="no-tests">No tests found</h2>
+        <p>If you open the test runner for a project that doesn't have any tests yet, CC Gate won't leave you stuck. Instead, it shows a helper screen designed to get you started quickly.</p>
+
+        <h3>When the project language is detected</h3>
+        <p>CC Gate scans your files and identifies the dominant language (JavaScript, Python, Swift, etc.). It shows you a stats banner with the number of source files and functions found — these are all the places that would benefit from tests.</p>
+        <p>Below the stats, you'll see a full list of those functions grouped by file. This is useful to quickly understand the scope of work.</p>
+        <p>At the bottom there's a <strong>Copy AI Prompt — Generate Tests</strong> button (purple). Clicking it copies a ready-made prompt to your clipboard that includes all the function names. Paste it into Claude Code and Claude will write tests for your entire project.</p>
+
+        <h3>When no test framework is installed (JavaScript or Python)</h3>
+        <p>For JavaScript and Python projects, CC Gate can go one step further: it offers a one-click <strong>Install Jest</strong> or <strong>Install pytest</strong> button. Click it and CC Gate installs the framework, sets up the config, and gets everything ready. After that, come back and run your first tests normally.</p>
+
+        <div class="callout callout-tip">
+            <strong>Tip:</strong> Use "Copy AI Prompt — Generate Tests" to bootstrap test coverage for an existing project. Paste the prompt into Claude Code and ask it to write the tests — Claude will have the full list of functions to cover.
+        </div>
+
         <h2>Troubleshooting</h2>
 
         <h3>Tests aren't running</h3>
