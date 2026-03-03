@@ -387,46 +387,44 @@
 
         </div>
 
-        <h2 id="how-levels-work">How they work together</h2>
+        <h2 id="how-levels-work">Each level is independent</h2>
 
-        <p>The levels build on each other. When you turn on a higher level, all the levels below it switch on too — because it wouldn't make sense to let Claude run commands but not read files. Turning off a lower level switches off everything above it as well.</p>
+        <p>The 6 levels work completely independently — turning one on or off has no effect on the others. You can have any combination active at the same time. For example, you can enable Read and Execute but leave Write off. Or enable only Plan. It's entirely up to you.</p>
 
         <div class="hierarchy-diagram">
             <div class="hierarchy-row">
-                <span class="tier-badge tier-skill">Skill (6)</span>
-                <span class="hierarchy-connector">&#8594;</span>
-                <span class="hierarchy-desc">also turns on IDE, Read, Write, Execute, and Plan</span>
+                <span class="tier-badge tier-ide">IDE</span>
+                <span class="hierarchy-connector">&#10003;</span>
+                <span class="hierarchy-desc">independent — doesn't affect other levels</span>
             </div>
             <div class="hierarchy-row">
-                <span class="tier-badge tier-plan">Plan (5)</span>
-                <span class="hierarchy-connector">&#8594;</span>
-                <span class="hierarchy-desc">also turns on IDE, Read, Write, and Execute</span>
+                <span class="tier-badge tier-read">Read</span>
+                <span class="hierarchy-connector">&#10003;</span>
+                <span class="hierarchy-desc">independent — doesn't affect other levels</span>
             </div>
             <div class="hierarchy-row">
-                <span class="tier-badge tier-execute">Execute (4)</span>
-                <span class="hierarchy-connector">&#8594;</span>
-                <span class="hierarchy-desc">also turns on IDE, Read, and Write</span>
+                <span class="tier-badge tier-write">Write</span>
+                <span class="hierarchy-connector">&#10003;</span>
+                <span class="hierarchy-desc">independent — doesn't affect other levels</span>
             </div>
             <div class="hierarchy-row">
-                <span class="tier-badge tier-write">Write (3)</span>
-                <span class="hierarchy-connector">&#8594;</span>
-                <span class="hierarchy-desc">also turns on IDE and Read</span>
+                <span class="tier-badge tier-execute">Execute</span>
+                <span class="hierarchy-connector">&#10003;</span>
+                <span class="hierarchy-desc">independent — doesn't affect other levels</span>
             </div>
             <div class="hierarchy-row">
-                <span class="tier-badge tier-read">Read (2)</span>
-                <span class="hierarchy-connector">&#8594;</span>
-                <span class="hierarchy-desc">also turns on IDE</span>
+                <span class="tier-badge tier-plan">Plan</span>
+                <span class="hierarchy-connector">&#10003;</span>
+                <span class="hierarchy-desc">independent — doesn't affect other levels</span>
             </div>
             <div class="hierarchy-row">
-                <span class="tier-badge tier-ide">IDE (1)</span>
-                <span class="hierarchy-connector">&#8594;</span>
-                <span class="hierarchy-desc">standalone, no dependencies</span>
+                <span class="tier-badge tier-skill">Skill</span>
+                <span class="hierarchy-connector">&#10003;</span>
+                <span class="hierarchy-desc">independent — doesn't affect other levels</span>
             </div>
         </div>
 
-        <p>In practice: just find your highest comfortable level and switch it on. Everything below it turns on automatically. You can still go back and switch individual levels off if you want finer control.</p>
-
-        <p>Want to turn everything off? Switch off the IDE toggle and all levels clear at once.</p>
+        <p>Toggle each one individually. Changes take effect immediately — no restart needed, even mid-session.</p>
 
         <h2 id="never-auto-accepted">What CC Gate never auto-accepts</h2>
 
@@ -435,14 +433,15 @@
                 <div class="special-case-icon">&#128172;</div>
                 <div>
                     <h4>When Claude asks you a question</h4>
-                    <p>Auto-Accept only handles permission requests — "can I do this?" Claude asking you a real question, like "which approach do you prefer?" or "what's your name?", is completely different. CC Gate passes those through to you directly. You'll see them appear in your terminal as normal, and you answer them yourself.</p>
+                    <p>There's an important difference between Claude <em>asking for permission</em> ("can I edit this file?") and Claude <em>asking you a question</em> ("what should the button label say?" or "which option do you prefer?").</p>
+                    <p>Auto-Accept only handles <strong>permission requests</strong>. When Claude asks you an actual question to clarify what you want, CC Gate never intercepts it — it goes straight to your terminal. You type your answer there, just as if CC Gate weren't installed. This always requires your manual response.</p>
                 </div>
             </div>
             <div class="special-case">
                 <div class="special-case-icon">&#10067;</div>
                 <div>
                     <h4>Tools CC Gate doesn't recognise</h4>
-                    <p>If Claude tries to use a tool that CC Gate has never seen before, it will always ask you manually — no matter which levels you have turned on. Unknown tools are never auto-approved. You'll see the request appear in the Questions window just like any other permission prompt, and you can decide yourself.</p>
+                    <p>If Claude tries to use a tool that CC Gate doesn't know about, it always asks you manually — no matter which levels are on. Unknown tools are never auto-approved. You'll see the request appear in the Questions window and you decide yourself.</p>
                 </div>
             </div>
         </div>
