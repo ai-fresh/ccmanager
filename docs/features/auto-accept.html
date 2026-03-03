@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto-Accept — CC Gate Documentation</title>
-    <meta name="description" content="Comprehensive guide to CC Gate's 4-tier auto-accept system for Claude Code permissions. Understand Read, Write, Execute, and Plan tiers, hierarchical enabling, and special cases.">
+    <title>Auto-Accept — CC Gate</title>
+    <meta name="description" content="Choose what Claude Code can do automatically. CC Gate's auto-accept has 6 levels so you stay in control.">
     <meta name="author" content="AI Fresh">
     <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/features/auto-accept.html">
-    <meta property="og:title" content="Auto-Accept — CC Gate Documentation">
-    <meta property="og:description" content="Understand the 4-tier permission system for auto-approving Claude Code tool requests — Read, Write, Execute, Plan.">
+    <meta property="og:title" content="Auto-Accept — CC Gate">
+    <meta property="og:description" content="Choose what Claude Code can do automatically. CC Gate's auto-accept has 6 levels so you stay in control.">
     <meta property="og:url" content="https://ai-fresh.github.io/ccgate/docs/features/auto-accept.html">
     <link rel="icon" type="image/png" href="../../assets/icon.png">
     <style>
@@ -100,10 +100,12 @@
 
         /* Tier badges */
         .tier-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 600; }
-        .tier-read { background: rgba(88,166,255,0.15); color: var(--accent); }
-        .tier-write { background: rgba(210,153,34,0.15); color: var(--orange); }
-        .tier-execute { background: rgba(248,81,73,0.15); color: var(--red); }
-        .tier-plan { background: rgba(188,140,255,0.15); color: var(--purple); }
+        .tier-ide    { background: rgba(63,185,80,0.15);  color: var(--green); }
+        .tier-read   { background: rgba(88,166,255,0.15); color: var(--accent); }
+        .tier-write  { background: rgba(210,153,34,0.15); color: var(--orange); }
+        .tier-execute{ background: rgba(248,81,73,0.15);  color: var(--red); }
+        .tier-plan   { background: rgba(188,140,255,0.15);color: var(--purple); }
+        .tier-skill  { background: rgba(110,118,129,0.2); color: var(--text-muted); }
 
         /* Tier cards */
         .tier-cards { display: grid; gap: 16px; margin: 20px 0; }
@@ -129,14 +131,18 @@
             font-size: 12px;
             font-weight: 700;
         }
-        .tier-card-read .tier-card-number { background: rgba(88,166,255,0.2); color: var(--accent); }
-        .tier-card-write .tier-card-number { background: rgba(210,153,34,0.2); color: var(--orange); }
-        .tier-card-execute .tier-card-number { background: rgba(248,81,73,0.2); color: var(--red); }
-        .tier-card-plan .tier-card-number { background: rgba(188,140,255,0.2); color: var(--purple); }
-        .tier-card-read { border-left: 3px solid var(--accent); }
-        .tier-card-write { border-left: 3px solid var(--orange); }
+        .tier-card-ide     .tier-card-number { background: rgba(63,185,80,0.2);  color: var(--green); }
+        .tier-card-read    .tier-card-number { background: rgba(88,166,255,0.2); color: var(--accent); }
+        .tier-card-write   .tier-card-number { background: rgba(210,153,34,0.2); color: var(--orange); }
+        .tier-card-execute .tier-card-number { background: rgba(248,81,73,0.2);  color: var(--red); }
+        .tier-card-plan    .tier-card-number { background: rgba(188,140,255,0.2);color: var(--purple); }
+        .tier-card-skill   .tier-card-number { background: rgba(110,118,129,0.2);color: var(--text-muted); }
+        .tier-card-ide     { border-left: 3px solid var(--green); }
+        .tier-card-read    { border-left: 3px solid var(--accent); }
+        .tier-card-write   { border-left: 3px solid var(--orange); }
         .tier-card-execute { border-left: 3px solid var(--red); }
-        .tier-card-plan { border-left: 3px solid var(--purple); }
+        .tier-card-plan    { border-left: 3px solid var(--purple); }
+        .tier-card-skill   { border-left: 3px solid #444c56; }
         .tier-card h3 { font-size: 16px; font-weight: 600; margin: 0; }
         .tier-card-meta { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
         .tier-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin: 0 0 12px; }
@@ -148,15 +154,8 @@
             border: 1px solid var(--border);
             border-radius: 6px;
             font-size: 12px;
-            font-family: 'SF Mono', SFMono-Regular, Menlo, monospace;
             color: var(--text-muted);
         }
-
-        /* Tiers table */
-        .tiers-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        .tiers-table th, .tiers-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
-        .tiers-table th { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
-        .tiers-table td { font-size: 14px; }
 
         /* Hierarchy diagram */
         .hierarchy-diagram {
@@ -165,8 +164,7 @@
             border-radius: 12px;
             padding: 24px;
             margin: 20px 0;
-            font-family: 'SF Mono', SFMono-Regular, Menlo, monospace;
-            font-size: 13px;
+            font-size: 14px;
         }
         .hierarchy-row {
             display: flex;
@@ -175,6 +173,7 @@
             padding: 8px 0;
         }
         .hierarchy-connector { color: var(--text-muted); font-size: 16px; }
+        .hierarchy-desc { color: var(--text-muted); }
 
         /* Special cases */
         .special-cases { display: grid; gap: 12px; margin: 16px 0; }
@@ -188,8 +187,22 @@
             align-items: flex-start;
         }
         .special-case-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
-        .special-case h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .special-case h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
         .special-case p { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.5; }
+
+        /* Tips list */
+        .tips-list { display: grid; gap: 12px; margin: 16px 0; }
+        .tip-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--green);
+            border-radius: 10px;
+            padding: 14px 18px;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        .tip-item strong { color: var(--text); }
 
         footer a { color: var(--text-muted); }
         footer a:hover { color: var(--text); }
@@ -224,13 +237,12 @@
         <div class="sidebar-section">
             <div class="sidebar-label">Getting Started</div>
             <a href="../getting-started.html">Installation</a>
-            <a href="../getting-started.html#first-run">First Run</a>
-            <a href="../getting-started.html#hook">Install Hook</a>
+            <a href="../getting-started.html#hook">Connect to Claude Code</a>
         </div>
         <div class="sidebar-section">
             <div class="sidebar-label">Features</div>
             <a href="auto-accept.html" class="active">Auto-Accept</a>
-            <a href="hook-system.html">Hook System</a>
+            <a href="hook-system.html">Connection to Claude Code</a>
             <a href="git-worktrees.html">Git Worktrees</a>
             <a href="ai-commits.html">AI Commits</a>
             <a href="github-integration.html">GitHub</a>
@@ -245,226 +257,211 @@
         </div>
         <div class="sidebar-section">
             <div class="sidebar-label">On this page</div>
-            <a href="#what-is">What is Auto-Accept?</a>
-            <a href="#four-tiers">The 4 Tiers</a>
-            <a href="#hierarchical">Hierarchical Enabling</a>
-            <a href="#special-cases">Special Cases</a>
-            <a href="#statistics">Session Statistics</a>
-            <a href="#enabling">Enabling & Disabling</a>
+            <a href="#opening">Opening Auto-Accept</a>
+            <a href="#six-levels">The 6 permission levels</a>
+            <a href="#how-levels-work">How they work together</a>
+            <a href="#never-auto-accepted">What's never auto-accepted</a>
+            <a href="#good-defaults">Good defaults to start with</a>
         </div>
     </aside>
 
     <main class="docs-content">
         <h1>Auto-Accept</h1>
-        <p class="page-intro">CC Gate can automatically approve Claude Code's tool permission requests, eliminating the need to switch back to your terminal window to type "yes" dozens of times per session. Understand how the 4-tier system works and configure it for your workflow.</p>
+        <p class="page-intro">Every time Claude Code wants to do something, it asks for permission first. Auto-Accept lets you say yes in advance for the kinds of actions you're comfortable with — so Claude can keep working without interrupting you every few seconds.</p>
 
-        <h2 id="what-is">What is Auto-Accept?</h2>
-        <p>Every time Claude Code wants to use a tool that requires your approval — reading a file, running a shell command, browsing the web — it pauses and waits for you to confirm. In a long coding session, this can mean dozens or even hundreds of individual approval prompts.</p>
-        <p>Auto-accept intercepts these prompts before they reach your terminal. When a permission request comes in, the CC Gate hook checks your tier configuration and either approves it immediately (in under a millisecond) or routes it to the CC Gate Questions window for your manual review.</p>
+        <h2 id="opening">Opening the Auto-Accept panel</h2>
 
-        <img src="../../assets/screenshots/docs/auto-accept-window.png" alt="CC Gate auto-accept questions window showing 4 tier toggles and session stats" class="screenshot">
+        <p>Click the bell icon in the top-right corner of the CC Gate popup. The Auto-Accept panel opens, showing all six permission levels as toggles. You can switch any of them on or off at any time, even while Claude is working.</p>
 
-        <p>The result is a significantly smoother Claude Code workflow: Claude keeps working without interruption for approved tool types, while requests for higher-risk operations still reach you for explicit approval.</p>
+        <img src="../../assets/screenshots/docs/auto-accept-window.png" alt="CC Gate auto-accept window showing six permission level toggles" class="screenshot">
 
-        <div class="callout callout-info">
-            <strong>Prerequisite:</strong> Auto-accept requires the CC Gate hook to be installed. Go to Settings &rarr; Hook &rarr; Install to set it up. See the <a href="../getting-started.html#hook">Getting Started guide</a> for full instructions.
-        </div>
+        <h2 id="six-levels">The 6 permission levels</h2>
 
-        <h2 id="four-tiers">The 4 Tiers</h2>
-        <p>CC Gate organizes Claude Code's tools into four tiers based on their potential impact. You can enable each tier independently, giving you precise control over what Claude can do without asking.</p>
+        <p>Each level covers a different type of action Claude Code can take. They're listed from the most specific (editor actions) to the most general (skills). Turn on the ones you're comfortable with.</p>
 
         <div class="tier-cards">
 
-            <div class="tier-card tier-card-read">
+            <div class="tier-card tier-card-ide">
                 <div class="tier-card-header">
                     <span class="tier-card-number">1</span>
                     <div>
-                        <h3><span class="tier-badge tier-read">Read</span></h3>
-                        <div class="tier-card-meta">Risk: Minimal &mdash; read-only operations, no side effects</div>
+                        <h3><span class="tier-badge tier-ide">IDE</span></h3>
+                        <div class="tier-card-meta">Safe &mdash; Claude interacts with your code editor</div>
                     </div>
                 </div>
-                <p>The Read tier covers all operations that only observe your filesystem or the web without making any changes. These operations are entirely safe to auto-approve for the vast majority of use cases — Claude is just looking, not touching anything.</p>
-                <p><strong>When to enable:</strong> Almost always. Enabling Read lets Claude explore your codebase, search files, and look things up on the web without interruption, which dramatically speeds up development sessions.</p>
+                <p>Claude can talk to your code editor — for example, asking it for the list of errors and warnings in your current file, or running a snippet of code directly inside the editor. These are editor-specific actions that don't touch your filesystem or run system commands.</p>
+                <p><strong>Risk level:</strong> Very low. Claude is just reading diagnostics or triggering an in-editor run — nothing outside your editor is affected.</p>
+                <p><strong>Good for:</strong> Anyone using an IDE integration with Claude Code. Safe to leave on all the time.</p>
                 <div class="tier-tools">
-                    <span class="tool-tag">Read</span>
-                    <span class="tool-tag">Glob</span>
-                    <span class="tool-tag">Grep</span>
-                    <span class="tool-tag">WebSearch</span>
-                    <span class="tool-tag">WebFetch</span>
-                    <span class="tool-tag">LS</span>
+                    <span class="tool-tag">Get error diagnostics</span>
+                    <span class="tool-tag">Run code in editor</span>
+                </div>
+            </div>
+
+            <div class="tier-card tier-card-read">
+                <div class="tier-card-header">
+                    <span class="tier-card-number">2</span>
+                    <div>
+                        <h3><span class="tier-badge tier-read">Read</span></h3>
+                        <div class="tier-card-meta">Safe &mdash; Claude can look, but never touch</div>
+                    </div>
+                </div>
+                <p>Claude can open and read files, search through your project, browse the web for information, and list folder contents. It cannot change anything — only look. This is as risky as letting someone glance at your screen.</p>
+                <p><strong>Risk level:</strong> Zero. Nothing can be created, edited, or deleted.</p>
+                <p><strong>Good for:</strong> Everyone. There's no reason not to have this on.</p>
+                <div class="tier-tools">
+                    <span class="tool-tag">Reading files</span>
+                    <span class="tool-tag">Searching code</span>
+                    <span class="tool-tag">Web searches</span>
+                    <span class="tool-tag">Listing folders</span>
                 </div>
             </div>
 
             <div class="tier-card tier-card-write">
                 <div class="tier-card-header">
-                    <span class="tier-card-number">2</span>
+                    <span class="tier-card-number">3</span>
                     <div>
                         <h3><span class="tier-badge tier-write">Write</span></h3>
-                        <div class="tier-card-meta">Risk: Low — creates or modifies files, reversible with git</div>
+                        <div class="tier-card-meta">Moderate &mdash; Claude can create and edit files</div>
                     </div>
                 </div>
-                <p>The Write tier covers tools that create or modify files on your filesystem. Changes made by Write-tier tools are fully reversible if you use git — a <code>git diff</code> shows exactly what changed, and <code>git restore</code> undoes it.</p>
-                <p><strong>When to enable:</strong> Enable when you want Claude to make code changes without confirming every file edit individually. Recommended when working in a git repository where you can easily review and revert changes.</p>
+                <p>Claude can create new files and edit existing ones. If you're using git (which most people working with Claude are), every change Claude makes can be reviewed and undone. It's a bit like giving someone edit access to a shared document — you can always see what changed and roll it back.</p>
+                <p><strong>Risk level:</strong> Low if you use git. Changes are visible and reversible.</p>
+                <p><strong>Good for:</strong> Anyone who wants Claude to write and edit code without stopping for every single file.</p>
                 <div class="tier-tools">
-                    <span class="tool-tag">Edit</span>
-                    <span class="tool-tag">Write</span>
-                    <span class="tool-tag">MultiEdit</span>
-                    <span class="tool-tag">NotebookEdit</span>
+                    <span class="tool-tag">Editing files</span>
+                    <span class="tool-tag">Creating new files</span>
+                    <span class="tool-tag">Modifying notebooks</span>
                 </div>
             </div>
 
             <div class="tier-card tier-card-execute">
                 <div class="tier-card-header">
-                    <span class="tier-card-number">3</span>
+                    <span class="tier-card-number">4</span>
                     <div>
                         <h3><span class="tier-badge tier-execute">Execute</span></h3>
-                        <div class="tier-card-meta">Risk: High — full shell access, commands may be irreversible</div>
+                        <div class="tier-card-meta">Powerful &mdash; Claude can run terminal commands</div>
                     </div>
                 </div>
-                <p>The Execute tier covers the Bash tool, which gives Claude Code full terminal command execution on your system. This is the most powerful and risky tier — an approved Bash command can delete files, modify system settings, install packages, make network requests, or run any other terminal command.</p>
-                <p><strong>When to enable:</strong> Only when you have high confidence in both the codebase and Claude's judgment for the current task. Consider enabling it temporarily for specific sessions rather than permanently. Keep it disabled for any session involving unfamiliar codebases or sensitive system directories.</p>
+                <p>Claude can run actual commands in the terminal — install packages, run build scripts, delete files, anything you could type yourself. This is the most powerful level, and it should be used thoughtfully. Only turn this on when you trust what Claude is doing and you're familiar with the project.</p>
+                <p><strong>Risk level:</strong> High potential. Terminal commands can have broad effects.</p>
+                <p><strong>Good for:</strong> Trusted personal projects where you're keeping an eye on what Claude does. Not recommended for unfamiliar codebases.</p>
                 <div class="tier-tools">
-                    <span class="tool-tag">Bash</span>
+                    <span class="tool-tag">Running scripts</span>
+                    <span class="tool-tag">Installing packages</span>
+                    <span class="tool-tag">Any shell command</span>
                 </div>
             </div>
 
             <div class="tier-card tier-card-plan">
                 <div class="tier-card-header">
-                    <span class="tier-card-number">4</span>
+                    <span class="tier-card-number">5</span>
                     <div>
                         <h3><span class="tier-badge tier-plan">Plan</span></h3>
-                        <div class="tier-card-meta">Risk: Minimal — approves Claude's plan before execution begins</div>
+                        <div class="tier-card-meta">Very low risk &mdash; just a workflow step</div>
                     </div>
                 </div>
-                <p>The Plan tier covers <code>ExitPlanMode</code>, which is Claude's request to transition from its planning phase to active execution. When Claude Code uses plan mode, it first outlines what it intends to do and waits for your approval before starting. Enabling this tier means CC Gate approves that transition automatically.</p>
-                <p><strong>When to enable:</strong> Enable when you have reviewed Claude's planning behavior and trust it to proceed without explicit plan approval each time. This tier has minimal risk on its own — the actual execution still requires Read/Write/Execute tier approvals for each individual tool.</p>
+                <p>Sometimes Claude lays out a plan before starting work and waits for you to say "go ahead." Turning this on lets CC Gate say "go ahead" automatically, so Claude moves straight from planning into doing without the extra pause.</p>
+                <p><strong>Risk level:</strong> Very low. This is just a workflow checkpoint, not an action with side effects.</p>
+                <p><strong>Good for:</strong> Anyone who trusts Claude's planning and finds the extra confirmation unnecessary.</p>
                 <div class="tier-tools">
-                    <span class="tool-tag">ExitPlanMode</span>
+                    <span class="tool-tag">Exiting plan mode</span>
+                </div>
+            </div>
+
+            <div class="tier-card tier-card-skill">
+                <div class="tier-card-header">
+                    <span class="tier-card-number">6</span>
+                    <div>
+                        <h3><span class="tier-badge tier-skill">Skill</span></h3>
+                        <div class="tier-card-meta">Varies &mdash; Claude uses a built-in skill</div>
+                    </div>
+                </div>
+                <p>Claude has a set of built-in skills — pre-defined tasks it knows how to do. When Claude wants to use one of these skills, it asks for permission. Turning this on lets CC Gate approve skill usage automatically.</p>
+                <p><strong>Risk level:</strong> Depends on the skill. Skills are pre-defined, so Claude can't invent new ones on the fly.</p>
+                <p><strong>Good for:</strong> Users who regularly use Claude's skills and find the approval prompts repetitive.</p>
+                <div class="tier-tools">
+                    <span class="tool-tag">Built-in Claude skills</span>
                 </div>
             </div>
 
         </div>
 
-        <h3>Tier Summary Table</h3>
-        <table class="tiers-table">
-            <thead>
-                <tr>
-                    <th>Tier</th>
-                    <th>Tools Covered</th>
-                    <th>Risk Level</th>
-                    <th>Recommended For</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><span class="tier-badge tier-read">Read</span></td>
-                    <td>Read, Glob, Grep, WebSearch, WebFetch, LS</td>
-                    <td>Minimal</td>
-                    <td>Everyone</td>
-                </tr>
-                <tr>
-                    <td><span class="tier-badge tier-write">Write</span></td>
-                    <td>Edit, Write, MultiEdit, NotebookEdit</td>
-                    <td>Low</td>
-                    <td>Git-based projects</td>
-                </tr>
-                <tr>
-                    <td><span class="tier-badge tier-execute">Execute</span></td>
-                    <td>Bash</td>
-                    <td>High</td>
-                    <td>Trusted codebases only</td>
-                </tr>
-                <tr>
-                    <td><span class="tier-badge tier-plan">Plan</span></td>
-                    <td>ExitPlanMode</td>
-                    <td>Minimal</td>
-                    <td>Plan-mode workflows</td>
-                </tr>
-            </tbody>
-        </table>
+        <h2 id="how-levels-work">How they work together</h2>
 
-        <h2 id="hierarchical">Hierarchical Enabling</h2>
-        <p>The 4 tiers are hierarchical: enabling a higher tier automatically enables all tiers below it. This reflects the logical dependency between tiers — you wouldn't want Claude to be able to execute shell commands but not read files.</p>
+        <p>The levels build on each other. When you turn on a higher level, all the levels below it switch on too — because it wouldn't make sense to let Claude run commands but not read files. Turning off a lower level switches off everything above it as well.</p>
 
         <div class="hierarchy-diagram">
             <div class="hierarchy-row">
-                <span class="tier-badge tier-plan">Plan (4)</span>
+                <span class="tier-badge tier-skill">Skill (6)</span>
                 <span class="hierarchy-connector">&#8594;</span>
-                <span style="color:var(--text-muted)">also enables tiers 1, 2, 3</span>
+                <span class="hierarchy-desc">also turns on IDE, Read, Write, Execute, and Plan</span>
             </div>
             <div class="hierarchy-row">
-                <span class="tier-badge tier-execute">Execute (3)</span>
+                <span class="tier-badge tier-plan">Plan (5)</span>
                 <span class="hierarchy-connector">&#8594;</span>
-                <span style="color:var(--text-muted)">also enables tiers 1, 2</span>
+                <span class="hierarchy-desc">also turns on IDE, Read, Write, and Execute</span>
             </div>
             <div class="hierarchy-row">
-                <span class="tier-badge tier-write">Write (2)</span>
+                <span class="tier-badge tier-execute">Execute (4)</span>
                 <span class="hierarchy-connector">&#8594;</span>
-                <span style="color:var(--text-muted)">also enables tier 1</span>
+                <span class="hierarchy-desc">also turns on IDE, Read, and Write</span>
             </div>
             <div class="hierarchy-row">
-                <span class="tier-badge tier-read">Read (1)</span>
+                <span class="tier-badge tier-write">Write (3)</span>
                 <span class="hierarchy-connector">&#8594;</span>
-                <span style="color:var(--text-muted)">standalone, no dependencies</span>
+                <span class="hierarchy-desc">also turns on IDE and Read</span>
+            </div>
+            <div class="hierarchy-row">
+                <span class="tier-badge tier-read">Read (2)</span>
+                <span class="hierarchy-connector">&#8594;</span>
+                <span class="hierarchy-desc">also turns on IDE</span>
+            </div>
+            <div class="hierarchy-row">
+                <span class="tier-badge tier-ide">IDE (1)</span>
+                <span class="hierarchy-connector">&#8594;</span>
+                <span class="hierarchy-desc">standalone, no dependencies</span>
             </div>
         </div>
 
-        <p>The reverse is also true for disabling: turning off the Read tier disables all tiers, since they all depend on Read being active. Turning off Write disables Write, Execute, and Plan, but leaves Read enabled.</p>
+        <p>In practice: just find your highest comfortable level and switch it on. Everything below it turns on automatically. You can still go back and switch individual levels off if you want finer control.</p>
 
-        <p>In practice, this means the most common configuration is simply choosing your highest acceptable tier and enabling it — the lower tiers are enabled automatically.</p>
+        <p>Want to turn everything off? Switch off the IDE toggle and all levels clear at once.</p>
 
-        <div class="callout callout-tip">
-            <strong>Tip:</strong> If you want to quickly revert to "manual everything" mode — for a sensitive refactor session or when working in an unfamiliar codebase — simply disable the Read tier toggle. All tiers are disabled in one click.
-        </div>
-
-        <h2 id="special-cases">Special Cases</h2>
-        <p>Certain tool types are always handled specially regardless of your tier configuration:</p>
+        <h2 id="never-auto-accepted">What CC Gate never auto-accepts</h2>
 
         <div class="special-cases">
             <div class="special-case">
                 <div class="special-case-icon">&#128172;</div>
                 <div>
-                    <h4>AskUserQuestion — Always manual</h4>
-                    <p>When Claude Code uses <code>AskUserQuestion</code>, it's asking you a genuine question that requires your input — not just asking permission to use a tool. The CC Gate hook passes these through entirely, allowing Claude Code's native terminal prompt to handle them. You'll see the question appear in your terminal as usual.</p>
+                    <h4>When Claude asks you a question</h4>
+                    <p>Auto-Accept only handles permission requests — "can I do this?" Claude asking you a real question, like "which approach do you prefer?" or "what's your name?", is completely different. CC Gate passes those through to you directly. You'll see them appear in your terminal as normal, and you answer them yourself.</p>
                 </div>
             </div>
             <div class="special-case">
                 <div class="special-case-icon">&#10067;</div>
                 <div>
-                    <h4>Unknown tools — Always manual</h4>
-                    <p>If Claude Code introduces a new tool that CC Gate doesn't recognize — either because it's a very new Claude Code feature or a custom extension — the hook will not auto-accept it. The request is routed to the CC Gate Questions window for your manual review. This is a safe default: unknown tools are treated as requiring explicit approval until they are mapped to a tier in a future CC Gate update.</p>
-                </div>
-            </div>
-            <div class="special-case">
-                <div class="special-case-icon">&#9889;</div>
-                <div>
-                    <h4>Safe commands — May bypass hook</h4>
-                    <p>Claude Code itself may decide that certain commands are safe enough to run without triggering the PermissionRequest hook at all. Simple read-only commands like <code>echo</code>, <code>ls</code>, and <code>git status</code> may not fire the hook, meaning they are handled by Claude Code internally without ever reaching CC Gate. This is expected behavior — Claude Code applies its own safety judgments before asking for permission.</p>
+                    <h4>Tools CC Gate doesn't recognise</h4>
+                    <p>If Claude tries to use a tool that CC Gate has never seen before, it will always ask you manually — no matter which levels you have turned on. Unknown tools are never auto-approved. You'll see the request appear in the Questions window just like any other permission prompt, and you can decide yourself.</p>
                 </div>
             </div>
         </div>
 
-        <h2 id="statistics">Session Statistics</h2>
-        <p>The Questions window header shows a counter of how many tool requests have been auto-accepted in the current CC Gate session. This counter resets when CC Gate is restarted.</p>
-        <p>The statistics give you a quick sense of how much interruption auto-accept is saving you. In an active development session, it's common to see 50–200 auto-accepted Read requests for a single Claude task, depending on the complexity of the codebase exploration.</p>
-        <p>Individual request details — tool name, project, timestamp, and decision (auto-accepted or manually approved/denied) — are shown in the Questions window list for the current session.</p>
+        <h2 id="good-defaults">Good defaults to start with</h2>
 
-        <h2 id="enabling">Enabling and Disabling Tiers</h2>
-        <h3>Opening the Questions window</h3>
-        <ol>
-            <li>Click the CC Gate icon in the menu bar to open the main popup.</li>
-            <li>Click the <strong>bell icon</strong> (&#128276;) in the top-right area of the popup header.</li>
-            <li>The Questions &amp; Auto-Accept window opens as a floating panel.</li>
-        </ol>
-
-        <h3>Toggling a tier</h3>
-        <p>Each tier has a toggle switch on its row in the Questions window. Click the toggle to enable or disable that tier. Changes take effect immediately — the auto-accept config file is written synchronously and the hook picks up the new setting on the very next permission request.</p>
-
-        <h3>State persistence</h3>
-        <p>Tier settings are stored in <code>UserDefaults</code> and persist across app restarts. The configuration file at <code>~/.claude/.ccmanager/auto-accept-config.json</code> is updated every time you change a tier setting, ensuring the hook always has the latest configuration without needing to communicate with the app at runtime.</p>
-
-        <div class="callout callout-info">
-            <strong>Technical note:</strong> The hook reads the config file directly from disk on every permission request. There is no inter-process communication overhead — the hook decision takes approximately 0ms from the config file read. This design makes auto-accept reliable even when CC Gate's main UI is not focused or the display is off.
+        <div class="tips-list">
+            <div class="tip-item">
+                <strong>Day 1: turn on IDE and Read.</strong> These are completely safe. You'll immediately notice how much smoother things feel — Claude stops asking for permission every few seconds just to look at your files. No risk, huge improvement.
+            </div>
+            <div class="tip-item">
+                <strong>After a few sessions: add Write.</strong> Once you've seen how Claude works and you're using git, adding Write lets Claude edit and create files without interrupting you. You can always review everything with <code>git diff</code> before committing.
+            </div>
+            <div class="tip-item">
+                <strong>For trusted projects only: consider Execute.</strong> If you're working on a personal project you know well, Execute is very convenient. If you're in a client codebase or something unfamiliar, keep it off until you're comfortable with what Claude is doing.
+            </div>
+            <div class="tip-item">
+                <strong>Changes take effect immediately.</strong> You can toggle any level on or off mid-session. There's nothing to restart. Switch Execute off the moment you'd rather review a command before it runs.
+            </div>
         </div>
 
     </main>

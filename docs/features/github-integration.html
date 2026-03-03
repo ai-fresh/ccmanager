@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Integration — CC Gate Docs</title>
-    <meta name="description" content="Push commits, fork repos, clone projects, and navigate GitHub directly from CC Gate's menu bar interface.">
+    <title>GitHub Integration — CC Gate</title>
+    <meta name="description" content="Connect CC Gate to GitHub to push, fork, and clone — without leaving the app.">
     <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/features/github-integration.html">
     <style>
         :root {
@@ -70,20 +70,10 @@
         .step-list li > div { flex: 1; }
         .step-list li strong { display: block; font-size: 15px; color: var(--text); margin-bottom: 4px; }
         .step-list li p { margin: 0; font-size: 14px; }
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 24px 0; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0; }
         .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
         .card h3 { font-size: 16px; margin-bottom: 8px; }
         .card p { font-size: 14px; color: var(--text-muted); margin: 0; }
-        .tier-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 600; }
-        .tier-read { background: rgba(88,166,255,0.15); color: var(--accent); }
-        .tier-write { background: rgba(210,153,34,0.15); color: var(--orange); }
-        .tier-execute { background: rgba(248,81,73,0.15); color: var(--red); }
-        .tier-plan { background: rgba(188,140,255,0.15); color: var(--purple); }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
-        th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
-        td { color: var(--text-muted); }
-        td strong { color: var(--text); }
         footer { text-align: center; padding: 40px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px; margin-top: 60px; }
         footer .links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
         @media(max-width:768px) { .docs-layout { grid-template-columns: 1fr; } .docs-sidebar { display: none; } .docs-content h1 { font-size: 28px; } }
@@ -132,115 +122,100 @@
 
     <main class="docs-content">
         <h1>GitHub Integration</h1>
-        <p class="page-desc">Push commits, fork repositories, clone projects, and navigate to commits on GitHub.com — all without leaving CC Gate.</p>
+        <p class="page-desc">Connect CC Gate to your GitHub account and push code, fork repositories, and clone projects directly from the app.</p>
 
-        <h2>Overview</h2>
-        <p>CC Gate integrates with GitHub to enable repository operations directly from the app. Once you configure a Personal Access Token, you can push commits after the AI Commit flow, fork repositories under your account, clone new projects, and jump directly to any commit on GitHub.com with one click.</p>
+        <h2>Connecting your account</h2>
+        <p>CC Gate uses a GitHub Personal Access Token to talk to GitHub on your behalf. Think of it as a password specifically for apps — you generate it on GitHub and paste it into CC Gate. It stays on your Mac and is never shared anywhere else.</p>
 
-        <img src="../../assets/screenshots/docs/settings-github.png" alt="GitHub settings tab" class="screenshot-wide">
+        <img src="../../assets/screenshots/docs/settings-github.png" alt="CC Gate GitHub settings tab" class="screenshot-wide">
 
-        <h2>Setting Up a GitHub Token</h2>
-        <p>CC Gate uses a GitHub Personal Access Token (classic) for REST API operations. The token is stored in macOS Keychain — never in any file on disk or sent to any server other than api.github.com.</p>
+        <p>Here's how to get a token and connect it:</p>
 
         <ol class="step-list">
             <li>
                 <div>
-                    <strong>Open GitHub token settings</strong>
-                    <p>Go to <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a>, or navigate: GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic).</p>
+                    <strong>Go to GitHub</strong>
+                    <p>Sign in to github.com, click your profile picture in the top right, then click <strong>Settings</strong>.</p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <strong>Open Developer settings</strong>
+                    <p>Scroll all the way down the left sidebar and click <strong>Developer settings</strong>. Then choose <strong>Personal access tokens</strong> → <strong>Tokens (classic)</strong>.</p>
                 </div>
             </li>
             <li>
                 <div>
                     <strong>Generate a new token</strong>
-                    <p>Click "Generate new token (classic)". Set a descriptive name like "CC Gate" so you remember what it's for.</p>
+                    <p>Click <strong>Generate new token (classic)</strong>. Give it a name like "CC Gate" so you remember what it's for.</p>
                 </div>
             </li>
             <li>
                 <div>
-                    <strong>Set expiration</strong>
-                    <p>Choose 90 days for better security, or "No expiration" if you prefer not to rotate it. A calendar reminder to refresh is recommended for time-limited tokens.</p>
-                </div>
-            </li>
-            <li>
-                <div>
-                    <strong>Select required scopes</strong>
-                    <p>Check <code>repo</code> (full repository access, including private repos). Optionally add <code>delete_repo</code> if you want CC Gate to be able to clean up forks. No other scopes are needed.</p>
+                    <strong>Choose permissions</strong>
+                    <p>Tick the <strong>repo</strong> checkbox. That's the only permission CC Gate needs.</p>
                 </div>
             </li>
             <li>
                 <div>
                     <strong>Copy the token</strong>
-                    <p>GitHub shows the token only once. Copy it immediately — it starts with <code>ghp_</code>. If you close the page without copying, you must generate a new one.</p>
+                    <p>Click <strong>Generate token</strong> and copy the result immediately — it starts with <code>ghp_</code>. GitHub only shows it once.</p>
                 </div>
             </li>
             <li>
                 <div>
-                    <strong>Add token to CC Gate</strong>
-                    <p>Open CC Gate → Settings → GitHub tab → paste the token into the "Personal Access Token" field → click Save token. The status indicator should turn green showing "Connected".</p>
+                    <strong>Paste it into CC Gate</strong>
+                    <p>Open CC Gate → Settings → GitHub → paste your token → click <strong>Save token</strong>. The status badge will turn green when it's connected.</p>
                 </div>
             </li>
         </ol>
 
-        <div class="callout callout-tip">
-            <strong>Security note</strong>
-            The token is stored using macOS Keychain Services — the same mechanism used by Safari to store passwords. CC Gate never writes it to any file, and never transmits it to any server other than api.github.com during REST API calls.
+        <div class="callout callout-info">
+            <strong>Your token is stored securely.</strong> CC Gate saves it to your Mac's Keychain — the same place Safari stores your passwords. It is never written to a file and never sent anywhere except directly to GitHub.
         </div>
 
-        <h2>GitHub Operations</h2>
+        <h2>Pushing changes</h2>
+        <p>After you commit in CC Gate, a <strong>Push</strong> button appears showing how many commits haven't been pushed yet. Click it to send your changes to GitHub.</p>
+        <p>If the push is rejected — usually because someone else pushed something first — you'll need to pull the latest changes, sort out any conflicts, and then push again.</p>
 
-        <h3>Push Changes</h3>
-        <p>After completing a commit in CommitSheet, a "Push" button appears showing how many commits are ahead of <code>origin/main</code>. Click it to push directly. If there are uncommitted changes, CC Gate shows a warning with an option to commit first ("Go to Commit") before pushing.</p>
+        <h2>Forking a repo</h2>
+        <p>Right-click a project in CC Gate and choose <strong>Fork</strong>. CC Gate creates a copy of that repository under your GitHub account. This is the standard way to contribute to open-source projects — you fork the repo, make your changes, then open a pull request.</p>
 
-        <h3>Fork Repository</h3>
-        <p>Right-click any project in the CC Gate menu → Fork. CC Gate calls the GitHub API to fork the repository under your account. The remote URL is automatically extracted from the project's git configuration, so you don't need to type anything. The fork appears in your GitHub account within seconds.</p>
+        <h2>Cloning a project</h2>
+        <p>Click <strong>+</strong> in CC Gate, then choose <strong>Clone from GitHub</strong>. Enter the repository URL or the <code>owner/repo</code> name. CC Gate downloads it and adds it to your project list automatically.</p>
 
-        <h3>Clone Project</h3>
-        <p>Click the "+" button in the menu bar → Clone from GitHub → enter an <code>owner/repo</code> identifier or a full GitHub URL. CC Gate clones the repository into your configured default projects directory and immediately shows it in the project list.</p>
-
-        <h3>Go to Commit on GitHub</h3>
-        <p>After a successful push, a "View on GitHub" button appears. Clicking it opens the specific commit URL in your default browser, so you can share it, review the diff, or copy the commit SHA.</p>
+        <h2>Viewing your commit on GitHub</h2>
+        <p>After pushing, a <strong>View on GitHub</strong> button appears. Click it to open that specific commit in your browser — useful for sharing with teammates or reviewing the diff.</p>
 
         <div class="card-grid">
             <div class="card">
                 <h3>Push</h3>
-                <p>Push commits after the AI Commit workflow. Shows commit count ahead of remote.</p>
+                <p>Send committed changes to GitHub in one click.</p>
             </div>
             <div class="card">
                 <h3>Fork</h3>
-                <p>Fork any tracked repository to your GitHub account via the GitHub REST API.</p>
+                <p>Copy any project to your GitHub account.</p>
             </div>
             <div class="card">
                 <h3>Clone</h3>
-                <p>Clone repositories by owner/repo or full URL into your projects directory.</p>
+                <p>Download a repo and add it to your project list.</p>
             </div>
             <div class="card">
-                <h3>View Commit</h3>
-                <p>Open pushed commits directly on github.com in your browser.</p>
+                <h3>View on GitHub</h3>
+                <p>Open any pushed commit in your browser.</p>
             </div>
         </div>
 
-        <h2>Privacy and Security</h2>
-        <ul>
-            <li>CC Gate does <strong>not</strong> read your GitHub username or password</li>
-            <li>SSH key authentication is handled entirely by macOS — CC Gate has no access to your SSH keys</li>
-            <li>For HTTPS remotes, login credentials are stored in macOS Keychain by git itself, not by CC Gate</li>
-            <li>The Personal Access Token is used exclusively for GitHub REST API calls (fork, clone list, repository info)</li>
-            <li>CC Gate does not send any data to third-party analytics or tracking services</li>
-        </ul>
-
         <h2>Troubleshooting</h2>
 
-        <h3>"Not connected / API token not set"</h3>
-        <p>Add your Personal Access Token in Settings → GitHub. The status badge will turn green once a valid token is saved.</p>
-
         <h3>Push rejected</h3>
-        <p>This typically means the remote has commits your local branch does not have. Run <code>git pull origin main</code> (or the relevant branch) in your terminal, resolve any merge conflicts, then try pushing again from CC Gate.</p>
+        <p>Someone pushed to the branch before you did. Pull their changes first — your terminal can do this with <code>git pull</code> — resolve any conflicts, then push again from CC Gate.</p>
 
         <h3>Fork already exists</h3>
-        <p>GitHub's API returns an error if a fork of the repository already exists under your account. Navigate to <code>github.com/your-username/repo-name</code> directly. CC Gate cannot merge or overwrite an existing fork.</p>
+        <p>You already have a fork of this repo on GitHub. Go directly to <code>github.com/your-username/repo-name</code> to find it.</p>
 
-        <h3>Token expired or invalid</h3>
-        <p>Generate a new token at <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a> following the setup steps above, then update it in Settings → GitHub → paste new token → Save token.</p>
+        <h3>Token expired or not working</h3>
+        <p>Go to GitHub and generate a new token the same way as above, then update it in Settings → GitHub → paste the new token → Save token.</p>
     </main>
 </div>
 

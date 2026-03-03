@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hook System — CC Gate Documentation</title>
-    <meta name="description" content="Deep dive into CC Gate's PermissionRequest hook system — how it intercepts Claude Code tool requests, auto-installs, self-repairs, and auto-upgrades to keep your workflow running smoothly.">
+    <title>Connection to Claude Code — CC Gate</title>
+    <meta name="description" content="How CC Gate connects to Claude Code to intercept permission requests. Install once, it works automatically.">
     <meta name="author" content="AI Fresh">
     <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/features/hook-system.html">
-    <meta property="og:title" content="Hook System — CC Gate Documentation">
-    <meta property="og:description" content="How CC Gate's PermissionRequest hook intercepts Claude Code tool requests, auto-installs, and self-repairs.">
+    <meta property="og:title" content="Connection to Claude Code — CC Gate">
+    <meta property="og:description" content="How CC Gate connects to Claude Code to intercept permission requests. Install once, it works automatically.">
     <meta property="og:url" content="https://ai-fresh.github.io/ccgate/docs/features/hook-system.html">
     <link rel="icon" type="image/png" href="../../assets/icon.png">
     <style>
@@ -98,41 +98,29 @@
         .callout-tip { background: rgba(63,185,80,0.1); border: 1px solid rgba(63,185,80,0.25); color: var(--text-muted); }
         .callout-tip strong { color: var(--green); }
 
-        /* Flow diagram */
-        .flow-diagram {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+        /* Before/After comparison */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
             margin: 20px 0;
         }
-        .flow-step {
+        .comparison-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 14px 20px;
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
+            border-radius: 10px;
+            padding: 18px 20px;
         }
-        .flow-step-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
-        .flow-step-content h4 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-        .flow-step-content p { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.5; }
-        .flow-arrow { text-align: center; color: var(--text-muted); font-size: 18px; padding: 4px 0; }
-
-        /* File paths */
-        .file-paths { display: grid; gap: 10px; margin: 16px 0; }
-        .file-path-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px 16px;
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
+        .comparison-card h4 {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
         }
-        .file-path-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
-        .file-path-details code { font-size: 13px; font-family: 'SF Mono', SFMono-Regular, Menlo, monospace; background: rgba(110,118,129,0.2); padding: 2px 6px; border-radius: 4px; }
-        .file-path-details p { font-size: 13px; color: var(--text-muted); margin: 4px 0 0; line-height: 1.4; }
+        .comparison-card.before h4 { color: var(--text-muted); }
+        .comparison-card.after h4 { color: var(--green); }
+        .comparison-card p { font-size: 14px; color: var(--text-muted); margin: 0; line-height: 1.6; }
 
         /* Status badges */
         .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; }
@@ -140,12 +128,43 @@
         .status-not-installed { background: rgba(248,81,73,0.15); color: var(--red); }
         .status-outdated { background: rgba(210,153,34,0.15); color: var(--orange); }
 
+        /* Status table */
+        .status-grid { display: grid; gap: 10px; margin: 16px 0; }
+        .status-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        .status-row-badge { flex-shrink: 0; margin-top: 2px; }
+        .status-row-desc { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+        .status-row-desc strong { color: var(--text); display: block; margin-bottom: 2px; }
+
+        /* Maintenance cards */
+        .maintenance-list { display: grid; gap: 12px; margin: 16px 0; }
+        .maintenance-item {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+        .maintenance-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+        .maintenance-item h4 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+        .maintenance-item p { font-size: 13px; color: var(--text-muted); margin: 0; line-height: 1.5; }
+
         footer a { color: var(--text-muted); }
         footer a:hover { color: var(--text); }
 
         @media (max-width: 768px) {
             .docs-layout { grid-template-columns: 1fr; }
             .docs-sidebar { display: none; }
+            .comparison { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -173,13 +192,12 @@
         <div class="sidebar-section">
             <div class="sidebar-label">Getting Started</div>
             <a href="../getting-started.html">Installation</a>
-            <a href="../getting-started.html#first-run">First Run</a>
-            <a href="../getting-started.html#hook">Install Hook</a>
+            <a href="../getting-started.html#hook">Connect to Claude Code</a>
         </div>
         <div class="sidebar-section">
             <div class="sidebar-label">Features</div>
             <a href="auto-accept.html">Auto-Accept</a>
-            <a href="hook-system.html" class="active">Hook System</a>
+            <a href="hook-system.html" class="active">Connection to Claude Code</a>
             <a href="git-worktrees.html">Git Worktrees</a>
             <a href="ai-commits.html">AI Commits</a>
             <a href="github-integration.html">GitHub</a>
@@ -194,212 +212,113 @@
         </div>
         <div class="sidebar-section">
             <div class="sidebar-label">On this page</div>
-            <a href="#what-is">What is the Hook?</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#installing">Installing</a>
-            <a href="#auto-repair">Auto-Repair</a>
-            <a href="#auto-upgrade">Auto-Upgrade</a>
+            <a href="#what-the-hook-does">What the hook does</a>
+            <a href="#installing">Installing the hook</a>
+            <a href="#status">Hook status</a>
+            <a href="#maintenance">Automatic maintenance</a>
             <a href="#uninstalling">Uninstalling</a>
-            <a href="#important-notes">Important Notes</a>
-            <a href="#troubleshooting">Troubleshooting</a>
         </div>
     </aside>
 
     <main class="docs-content">
-        <h1>Hook System</h1>
-        <p class="page-intro">The hook is CC Gate's connection point into Claude Code. It intercepts permission requests before they reach your terminal, enabling instant auto-approval of configured tool tiers and routing manual decisions to the CC Gate UI.</p>
+        <h1>Connecting to Claude Code</h1>
+        <p class="page-intro">CC Gate connects to Claude Code through something called a hook — a small background process that lets the two apps talk to each other. You install it once and never think about it again.</p>
 
-        <h2 id="what-is">What is the Hook?</h2>
-        <p>Claude Code has a built-in extensibility mechanism called <em>hooks</em>. Hooks are shell scripts that Claude Code calls at specific lifecycle events. CC Gate uses one specific hook type: <code>PermissionRequest</code>.</p>
-        <p>The <code>PermissionRequest</code> hook fires every time Claude Code is about to use a tool that requires your approval. This includes file operations (Read, Write, Edit), web requests (WebFetch, WebSearch), terminal commands (Bash), and any other tool that Claude Code treats as needing user consent.</p>
-        <p>Without CC Gate, Claude Code handles these itself — pausing and printing a permission prompt to your terminal, then waiting for you to type <code>y</code> or <code>n</code>. With CC Gate's hook installed, every permission request passes through the hook script first, giving CC Gate the opportunity to approve it automatically or display it in the Questions window for your review.</p>
+        <h2 id="what-the-hook-does">What the hook does</h2>
+
+        <p>When Claude Code is about to do something that needs permission, it checks whether any apps want to handle that request. The CC Gate hook steps in and says "yes, I'll handle it." Depending on your Auto-Accept settings, it either approves silently or pops up a notification in CC Gate so you can decide.</p>
+
+        <div class="comparison">
+            <div class="comparison-card before">
+                <h4>Without CC Gate</h4>
+                <p>Claude Code asks in the terminal. You have to switch to that window and type yes or no — every single time, for every action.</p>
+            </div>
+            <div class="comparison-card after">
+                <h4>With CC Gate installed</h4>
+                <p>CC Gate handles it silently if auto-accept is on, or shows a clear notification if it needs your input. No terminal switching required.</p>
+            </div>
+        </div>
 
         <div class="callout callout-info">
-            <strong>No hacks:</strong> The hook system is a first-party, officially supported Claude Code feature. CC Gate doesn't scrape terminal output, inject keystrokes, or use any unofficial APIs. The hook mechanism is documented by Anthropic and designed for exactly this kind of integration.
+            <strong>This is official:</strong> The hook uses a built-in, officially supported feature of Claude Code — not any workaround or hack. It's designed for exactly this kind of integration.
         </div>
 
-        <h2 id="how-it-works">How It Works</h2>
-        <p>Here is the exact sequence of events when Claude Code encounters a tool requiring permission:</p>
+        <h2 id="installing">Installing the hook</h2>
 
-        <div class="flow-diagram">
-            <div class="flow-step">
-                <div class="flow-step-icon">&#9889;</div>
-                <div class="flow-step-content">
-                    <h4>Claude Code triggers PermissionRequest</h4>
-                    <p>Claude Code wants to use a tool (e.g., <code>Bash</code> to run a command). Before proceeding, it invokes the registered PermissionRequest hook with the tool name and arguments as environment variables.</p>
-                </div>
-            </div>
-            <div class="flow-arrow">&#8595;</div>
-            <div class="flow-step">
-                <div class="flow-step-icon">&#128196;</div>
-                <div class="flow-step-content">
-                    <h4>Hook script reads config file</h4>
-                    <p>The hook script at <code>~/.claude/hooks/ccmanager-permissions.sh</code> reads <code>~/.claude/.ccmanager/auto-accept-config.json</code> directly from disk. This is a simple JSON file read — no network calls, no IPC, no waiting. It takes under 1ms.</p>
-                </div>
-            </div>
-            <div class="flow-arrow">&#8595;</div>
-            <div class="flow-step">
-                <div class="flow-step-icon">&#10067;</div>
-                <div class="flow-step-content">
-                    <h4>Check: is this tool's tier enabled?</h4>
-                    <p>The hook looks up the requested tool name in its internal tier mapping. If the tool belongs to Read, Write, Execute, or Plan tier and that tier is enabled in the config file, the decision is <code>allow</code>.</p>
-                </div>
-            </div>
-            <div class="flow-arrow">&#8595;</div>
-            <div class="flow-step">
-                <div class="flow-step-icon">&#10003;</div>
-                <div class="flow-step-content">
-                    <h4>Auto-accept: output allow decision</h4>
-                    <p>If the tier is enabled, the hook immediately outputs the JSON decision: <code>&#123;"hookSpecificOutput":&#123;"hookEventName":"PermissionRequest","decision":&#123;"behavior":"allow"&#125;&#125;&#125;</code>. Claude Code receives this and proceeds without any user interaction.</p>
-                </div>
-            </div>
-            <div class="flow-arrow">&#8595; (if not auto-accepted)</div>
-            <div class="flow-step">
-                <div class="flow-step-icon">&#128276;</div>
-                <div class="flow-step-content">
-                    <h4>Manual review: write question file</h4>
-                    <p>If the tier is disabled or the tool is unknown, the hook writes a question JSON file to <code>~/.claude/.ccmanager/questions/</code>. CC Gate's QuestionWatcher detects this new file within 2 seconds and displays the question in the Questions window for your manual approval or denial.</p>
-                </div>
-            </div>
-            <div class="flow-arrow">&#8595;</div>
-            <div class="flow-step">
-                <div class="flow-step-icon">&#128221;</div>
-                <div class="flow-step-content">
-                    <h4>Answer written, hook returns</h4>
-                    <p>When you click Approve or Deny in the CC Gate Questions window, CC Gate writes the answer to <code>~/.claude/.ccmanager/answers/</code>. The hook is polling for this answer file. When it appears, the hook reads it and outputs the corresponding allow or deny decision to Claude Code.</p>
-                </div>
-            </div>
-        </div>
+        <img src="../../assets/screenshots/docs/settings-hook.png" alt="CC Gate Hook settings tab showing the Install hook button and Installed status" class="screenshot">
 
-        <h3>Key files involved</h3>
-        <div class="file-paths">
-            <div class="file-path-item">
-                <div class="file-path-icon">&#128196;</div>
-                <div class="file-path-details">
-                    <code>~/.claude/hooks/ccmanager-permissions.sh</code>
-                    <p>The hook script itself. Generated by CC Gate's <code>HookInstaller</code>. Contains a version comment like <code># CCManager Permission Hook v9.0.0</code>. Do not edit manually.</p>
-                </div>
-            </div>
-            <div class="file-path-item">
-                <div class="file-path-icon">&#128196;</div>
-                <div class="file-path-details">
-                    <code>~/.claude/settings.json</code>
-                    <p>Claude Code's global settings file. CC Gate registers the hook here under <code>hooks.PermissionRequest</code> with an empty <code>matcher</code> (matches all tools) and a 3600-second timeout.</p>
-                </div>
-            </div>
-            <div class="file-path-item">
-                <div class="file-path-icon">&#128196;</div>
-                <div class="file-path-details">
-                    <code>~/.claude/.ccmanager/auto-accept-config.json</code>
-                    <p>The auto-accept configuration file read by the hook. Updated by CC Gate every time you toggle a tier. Format: <code>&#123;"read": true, "write": false, "execute": false, "plan": false&#125;</code></p>
-                </div>
-            </div>
-            <div class="file-path-item">
-                <div class="file-path-icon">&#128196;</div>
-                <div class="file-path-details">
-                    <code>~/.claude/.ccmanager/hook.log</code>
-                    <p>The hook's own log file. Contains one line per permission request showing the tool name, tier lookup result, and decision made. Useful for debugging unexpected behavior.</p>
-                </div>
-            </div>
-            <div class="file-path-item">
-                <div class="file-path-icon">&#128193;</div>
-                <div class="file-path-details">
-                    <code>~/.claude/.ccmanager/questions/</code>
-                    <p>Directory where the hook writes question JSON files for tools that need manual approval. CC Gate polls this directory every 2 seconds.</p>
-                </div>
-            </div>
-            <div class="file-path-item">
-                <div class="file-path-icon">&#128193;</div>
-                <div class="file-path-details">
-                    <code>~/.claude/.ccmanager/answers/</code>
-                    <p>Directory where CC Gate writes answer JSON files after you click Approve or Deny. The hook polls for answer files matching the question ID.</p>
-                </div>
-            </div>
-        </div>
-
-        <h2 id="installing">Installing the Hook</h2>
-        <p>The hook is installed from Settings in CC Gate:</p>
         <ol>
-            <li>Click the CC Gate icon in the menu bar.</li>
-            <li>Open <strong>Settings</strong> (gear icon).</li>
+            <li>Open CC Gate and click <strong>Settings</strong> in the popup.</li>
             <li>Click the <strong>Hook</strong> tab.</li>
-            <li>Click <strong>Install Hook</strong>.</li>
+            <li>Click <strong>Install hook</strong>.</li>
+            <li>The status changes to a green <span class="status-badge status-installed">&#9679; Installed</span> badge.</li>
         </ol>
-
-        <img src="../../assets/screenshots/docs/settings-hook.png" alt="CC Gate Hook settings tab showing install button and green Installed status badge" class="screenshot">
-
-        <p>After installation, the status badge on the Hook tab changes to <span class="status-badge status-installed">&#9679; Installed</span>. The Hook tab also shows the current hook version and the path where it was installed.</p>
-
-        <p>CC Gate performs the following steps during installation:</p>
-        <ol>
-            <li>Generates the hook script content from the current template in <code>HookInstaller.generateHookScript()</code>.</li>
-            <li>Writes the script to <code>~/.claude/hooks/ccmanager-permissions.sh</code>.</li>
-            <li>Sets the file permissions to <code>755</code> (executable).</li>
-            <li>Reads <code>~/.claude/settings.json</code>, adds or updates the <code>hooks.PermissionRequest</code> entry, and writes it back.</li>
-            <li>Writes the initial <code>auto-accept-config.json</code> file reflecting your current tier settings.</li>
-        </ol>
-
-        <h2 id="auto-repair">Auto-Repair</h2>
-        <p>Claude Code occasionally overwrites <code>~/.claude/settings.json</code> during certain operations — for example, when you run <code>/doctor</code> or when Claude Code performs a self-update. This can remove the hook registration entry, causing the hook to stop being called even though the script file still exists on disk.</p>
-        <p>CC Gate detects this situation automatically. On each refresh cycle (every 15 seconds by default), CC Gate reads <code>~/.claude/settings.json</code> and checks whether the hook registration is present. If the hook script exists but the registration is missing, CC Gate silently re-adds the registration entry and saves the file.</p>
-        <p>You do not need to do anything — the auto-repair happens transparently in the background. The Hook tab status badge continues showing <span class="status-badge status-installed">&#9679; Installed</span> correctly.</p>
-
-        <div class="callout callout-info">
-            <strong>Note:</strong> Auto-repair only fixes the settings.json registration. If the hook script file itself is deleted (e.g., someone ran <code>rm ~/.claude/hooks/ccmanager-permissions.sh</code>), auto-repair does not recreate it. In that case, open Settings &rarr; Hook and click <strong>Install Hook</strong> to reinstall.
-        </div>
-
-        <h2 id="auto-upgrade">Auto-Upgrade</h2>
-        <p>When CC Gate is updated to a new version that includes hook script changes, the installed hook may be outdated. An outdated hook can miss new tier mappings, have bugs that were fixed, or lack new features.</p>
-        <p>On each app startup, CC Gate reads the version comment from the installed hook script and compares it to the current expected version. If they differ, CC Gate automatically reinstalls the hook with the new script, showing a brief notification banner in the CC Gate popup to let you know the upgrade happened.</p>
-        <p>The upgrade process is identical to a fresh install — it overwrites the script file and verifies the settings.json registration. The process takes less than a second and requires no user interaction.</p>
 
         <div class="callout callout-warn">
-            <strong>Important:</strong> After a hook upgrade, any existing Claude Code sessions will continue using the old hook version until they are restarted. The hook script is read once per Claude Code session at session startup — mid-session hook changes are only picked up on a new session. Open a new terminal window and start a fresh <code>claude</code> session to use the upgraded hook immediately.
+            <strong>Heads up:</strong> You need to restart any Claude Code sessions that were already running — the hook only applies to new sessions. Open a fresh terminal window and start Claude Code again, or type <code>/clear</code> in an existing session.
         </div>
 
-        <h2 id="uninstalling">Uninstalling the Hook</h2>
-        <p>To remove the CC Gate hook:</p>
-        <ol>
-            <li>Open <strong>Settings</strong> &rarr; <strong>Hook</strong> tab.</li>
-            <li>Click <strong>Uninstall Hook</strong>.</li>
-        </ol>
-        <p>Uninstalling removes the hook script file from <code>~/.claude/hooks/</code> and removes the <code>PermissionRequest</code> registration from <code>~/.claude/settings.json</code>. After uninstalling, Claude Code falls back to its built-in terminal prompt for all permission requests.</p>
-        <p>The auto-accept config file and question/answer directories are left in place — they are not removed during uninstall. This means your tier settings are preserved if you reinstall the hook later.</p>
+        <h2 id="status">Hook status indicators</h2>
 
-        <h2 id="important-notes">Important Notes</h2>
-        <ul>
-            <li><strong>Hook applies only to new sessions.</strong> Existing Claude Code terminal sessions that were started before hook installation do not pick up the hook. You must start a new <code>claude</code> session (new terminal window, or type <code>exit</code> and relaunch) to activate the hook.</li>
-            <li><strong>Safe commands may bypass the hook.</strong> Claude Code has its own internal judgment about which commands are low-risk enough to execute without a permission prompt. Simple read-only commands like <code>echo</code>, <code>pwd</code>, <code>ls</code>, and <code>git status</code> may not trigger <code>PermissionRequest</code> at all, meaning CC Gate never sees them. This is expected and intentional — Claude Code is being conservative about what it considers permission-worthy.</li>
-            <li><strong>Hook timeout is 3600 seconds.</strong> The hook registration specifies a 3600-second (1 hour) timeout for each PermissionRequest. This is intentionally long to ensure that manual approval prompts in the CC Gate Questions window don't time out while you step away from your computer. Claude Code will wait up to 1 hour for a manual decision.</li>
-            <li><strong>AskUserQuestion is never intercepted.</strong> The hook intentionally passes through <code>AskUserQuestion</code> events. These are genuine questions where Claude needs your input, not just permission to use a tool. They are handled by Claude Code's native terminal prompt.</li>
-        </ul>
+        <p>The Hook tab in Settings always shows you the current state at a glance.</p>
 
-        <h2 id="troubleshooting">Troubleshooting</h2>
+        <div class="status-grid">
+            <div class="status-row">
+                <div class="status-row-badge">
+                    <span class="status-badge status-installed">&#9679; Installed</span>
+                </div>
+                <div class="status-row-desc">
+                    <strong>Everything is working.</strong>
+                    CC Gate is connected to Claude Code and ready to handle permission requests.
+                </div>
+            </div>
+            <div class="status-row">
+                <div class="status-row-badge">
+                    <span class="status-badge status-outdated">&#9679; Outdated</span>
+                </div>
+                <div class="status-row-desc">
+                    <strong>A newer version is available.</strong>
+                    CC Gate will update the hook automatically on the next app launch. You don't need to do anything.
+                </div>
+            </div>
+            <div class="status-row">
+                <div class="status-row-badge">
+                    <span class="status-badge status-not-installed">&#9679; Not installed</span>
+                </div>
+                <div class="status-row-desc">
+                    <strong>The hook is not set up yet.</strong>
+                    Click Install hook to get started.
+                </div>
+            </div>
+        </div>
 
-        <h3>Hook tab shows "Not Installed" after app update</h3>
-        <p>If the hook version changed in a CC Gate update, the Hook tab may briefly show the hook as outdated or not installed before auto-upgrade runs. Wait a few seconds for CC Gate to complete startup, then check again. If the problem persists, manually click <strong>Install Hook</strong>.</p>
+        <h2 id="maintenance">Automatic maintenance</h2>
 
-        <h3>Questions are not appearing in the CC Gate window</h3>
-        <p>Check the following in order:</p>
-        <ol>
-            <li>Confirm the hook is installed — Hook tab should show <span class="status-badge status-installed">&#9679; Installed</span>.</li>
-            <li>Confirm you started a <em>new</em> Claude Code session after installing the hook. Existing sessions don't pick up the hook.</li>
-            <li>Check <code>~/.claude/.ccmanager/hook.log</code> — if the hook is being called, you'll see log lines appearing when Claude Code requests permissions.</li>
-            <li>If the log shows no activity, verify that <code>~/.claude/settings.json</code> contains the PermissionRequest hook registration.</li>
-        </ol>
+        <p>Once you install the hook, CC Gate takes care of keeping it healthy. You don't need to manage it yourself.</p>
 
-        <h3>Hook shows "outdated" error message</h3>
-        <p>This means the installed hook script is an older version. CC Gate should auto-upgrade on startup, but if it doesn't, open Settings &rarr; Hook and click <strong>Uninstall Hook</strong>, then <strong>Install Hook</strong> to force a fresh install.</p>
+        <div class="maintenance-list">
+            <div class="maintenance-item">
+                <div class="maintenance-icon">&#128295;</div>
+                <div>
+                    <h4>Self-repairing</h4>
+                    <p>Occasionally, Claude Code can overwrite its own settings and accidentally remove the hook registration. CC Gate detects this automatically and quietly fixes it in the background within seconds. You'll never notice it happened.</p>
+                </div>
+            </div>
+            <div class="maintenance-item">
+                <div class="maintenance-icon">&#128640;</div>
+                <div>
+                    <h4>Auto-updating</h4>
+                    <p>When you update CC Gate and the hook changes, CC Gate upgrades it automatically on the next launch. A brief notice appears in the popup letting you know. You don't need to reinstall anything manually.</p>
+                </div>
+            </div>
+        </div>
 
-        <h3>Auto-accept is not working even with tiers enabled</h3>
-        <p>Verify the auto-accept config file exists and has the correct content:</p>
-        <pre><code>cat ~/.claude/.ccmanager/auto-accept-config.json</code></pre>
-        <p>The output should be a JSON object with boolean values for each tier. If the file is missing, toggle any tier in the CC Gate Questions window to force it to be written. If the file has unexpected content, try toggling tiers off and back on.</p>
+        <h2 id="uninstalling">Uninstalling</h2>
 
-        <h3>Viewing the hook log</h3>
-        <p>The hook writes a log entry for every permission request it processes. This is the most reliable way to verify the hook is running:</p>
-        <pre><code>tail -f ~/.claude/.ccmanager/hook.log</code></pre>
-        <p>Run this in a terminal, then trigger a permission-requiring action in Claude Code. You should see a new log line within a second or two.</p>
+        <p>If you ever want to remove the CC Gate connection: go to <strong>Settings</strong> &rarr; <strong>Hook</strong> tab &rarr; click <strong>Uninstall</strong>.</p>
+
+        <p>Claude Code will go back to its normal behaviour — asking in the terminal like it did before CC Gate was involved. Your Auto-Accept settings are saved, so if you reinstall the hook later, your preferences will still be there.</p>
+
     </main>
 </div>
 

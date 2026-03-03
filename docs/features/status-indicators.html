@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Status Indicators — CC Gate Documentation</title>
-    <meta name="description" content="Reference guide for all CC Gate status indicators — active, waiting, idle, and outdated session states. Understand how CC Gate determines project status and configures refresh intervals.">
+    <title>Project Status — CC Gate</title>
+    <meta name="description" content="Understand what the colored dots next to each project mean in CC Gate.">
     <meta name="author" content="AI Fresh">
     <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/features/status-indicators.html">
-    <meta property="og:title" content="Status Indicators — CC Gate Documentation">
-    <meta property="og:description" content="Reference guide for CC Gate status indicators — active, waiting, idle, outdated session states and how they are determined.">
+    <meta property="og:title" content="Project Status — CC Gate">
+    <meta property="og:description" content="Understand what the colored dots next to each project mean in CC Gate.">
     <meta property="og:url" content="https://ai-fresh.github.io/ccgate/docs/features/status-indicators.html">
     <link rel="icon" type="image/png" href="../../assets/icon.png">
     <style>
@@ -119,7 +119,6 @@
         .status-dot-active { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
         .status-dot-waiting { background: var(--orange); }
         .status-dot-idle { background: #444c56; }
-        .status-dot-outdated { background: var(--orange); opacity: 0.6; }
 
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(63,185,80,0.4); }
@@ -147,7 +146,7 @@
         .refresh-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
         .refresh-table th, .refresh-table td { padding: 11px 16px; text-align: left; border-bottom: 1px solid var(--border); }
         .refresh-table th { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
-        .refresh-table td { font-size: 14px; }
+        .refresh-table td { font-size: 14px; color: var(--text-muted); }
         .energy-low { color: var(--green); }
         .energy-med { color: var(--orange); }
         .energy-high { color: var(--red); }
@@ -202,19 +201,18 @@
         <div class="sidebar-section">
             <div class="sidebar-label">Getting Started</div>
             <a href="../getting-started.html">Installation</a>
-            <a href="../getting-started.html#first-run">First Run</a>
-            <a href="../getting-started.html#hook">Install Hook</a>
+            <a href="../getting-started.html#hook">Connect to Claude Code</a>
         </div>
         <div class="sidebar-section">
             <div class="sidebar-label">Features</div>
             <a href="auto-accept.html">Auto-Accept</a>
-            <a href="hook-system.html">Hook System</a>
+            <a href="hook-system.html">Connection to Claude Code</a>
             <a href="git-worktrees.html">Git Worktrees</a>
             <a href="ai-commits.html">AI Commits</a>
             <a href="github-integration.html">GitHub</a>
             <a href="release-pipeline.html">Release Pipeline</a>
             <a href="test-runner.html">Test Runner</a>
-            <a href="status-indicators.html" class="active">Status Indicators</a>
+            <a href="status-indicators.html" class="active">Projects &amp; Status</a>
         </div>
         <div class="sidebar-section">
             <div class="sidebar-label">Reference</div>
@@ -223,202 +221,146 @@
         </div>
         <div class="sidebar-section">
             <div class="sidebar-label">On this page</div>
-            <a href="#overview">Overview</a>
-            <a href="#states">Status States</a>
-            <a href="#how-determined">How Status is Determined</a>
-            <a href="#session-info">Session File Info</a>
-            <a href="#refresh-rate">Refresh Rate</a>
-            <a href="#menu-bar-icon">Menu Bar Icon</a>
+            <a href="#how-projects-appear">How projects appear</a>
+            <a href="#status-dots">Status dots</a>
+            <a href="#what-each-project-shows">What each project shows</a>
+            <a href="#adding">Adding a project</a>
+            <a href="#removing">Removing a project</a>
+            <a href="#search">Searching projects</a>
+            <a href="#refresh-rate">Refresh rate</a>
         </div>
     </aside>
 
     <main class="docs-content">
-        <h1>Status Indicators</h1>
-        <p class="page-intro">CC Gate shows live status for every Claude Code project in the main popup. This reference explains what each status state means, how it is determined from session files, and how to configure the refresh rate for your workflow.</p>
+        <h1>Projects &amp; Status</h1>
+        <p class="page-intro">When you open CC Gate, you see a list of all your projects. Here's what everything means.</p>
 
-        <h2 id="overview">Overview</h2>
-        <p>The CC Gate popup provides at-a-glance visibility into all your Claude Code projects without needing to switch to any terminal window. Each project card shows a status indicator reflecting the current state of Claude Code sessions in that directory.</p>
+        <img src="../../assets/screenshots/docs/popup-projects.png" alt="CC Gate popup showing a list of projects with colored status dots" class="screenshot">
 
-        <img src="../../assets/screenshots/docs/popup-projects.png" alt="CC Gate main popup showing project list with status indicators including green active and gray idle states" class="screenshot">
+        <h2 id="how-projects-appear">How projects appear automatically</h2>
 
-        <p>Status is determined by reading and parsing the session files that Claude Code writes to <code>~/.claude/projects/</code>. CC Gate does this on a configurable timer, refreshing status for all projects at once. No background processes are monitored and no system calls like <code>ps</code> or <code>lsof</code> are used — status is inferred entirely from filesystem timestamps and session file content.</p>
+        <p>CC Gate keeps track of every folder where you've ever run Claude Code. As soon as you use Claude in a new folder, that folder shows up in CC Gate automatically — no setup needed, no adding projects manually.</p>
 
-        <h2 id="states">Status States</h2>
-        <p>There are four possible states for a project. Each has a distinct visual appearance:</p>
+        <p>The list refreshes every few seconds in the background, so new projects appear quickly and status dots stay current. You can adjust how often CC Gate checks for updates in Settings if you want to save battery.</p>
+
+        <h2 id="status-dots">Status dots — what the colors mean</h2>
+
+        <p>Each project has a small colored dot on the left. It tells you at a glance what Claude is doing right now in that project.</p>
 
         <div class="status-cards">
 
             <div class="status-card">
                 <div class="status-dot-large status-dot-active"></div>
                 <div class="status-card-content">
-                    <h3>Active</h3>
-                    <div class="status-card-meta">Green pulsing dot &mdash; Claude Code is currently running a task</div>
-                    <p>The Active state means a Claude Code process is running in this project directory and is actively doing work. The dot pulses with a subtle glow animation to draw your attention. You'll see this state while Claude is thinking, planning, or executing tool calls. A project may stay in Active state for extended periods during long-running tasks like large refactors, test runs, or multi-file edits.</p>
+                    <h3>Green (pulsing) — Claude is working</h3>
+                    <div class="status-card-meta">Claude Code is actively running a task in this project</div>
+                    <p>The dot pulses gently to show activity. You'll see this while Claude is thinking, writing code, running searches, or doing anything at all. It might stay green for a while during long tasks like large refactors or test runs — that's normal.</p>
                 </div>
             </div>
 
             <div class="status-card">
                 <div class="status-dot-large status-dot-waiting"></div>
                 <div class="status-card-content">
-                    <h3>Waiting</h3>
-                    <div class="status-card-meta">Orange dot &mdash; Claude Code is waiting for your input or permission</div>
-                    <p>The Waiting state means Claude Code has paused and is expecting something from you. This includes two scenarios: a tool permission request waiting for your approval (which CC Gate can handle automatically with <a href="auto-accept.html">Auto-Accept</a>), or a direct question from Claude that requires your input. The orange color is intentionally attention-grabbing — something needs your response before Claude can continue.</p>
+                    <h3>Orange — Claude is waiting for you</h3>
+                    <div class="status-card-meta">Claude has paused and needs your input or permission</div>
+                    <p>This means Claude has stopped and is waiting for something from you. It could be a permission request (like "can I run this command?") or a question Claude is asking you directly. If you have <a href="auto-accept.html">Auto-Accept</a> turned on for that type of action, CC Gate will handle it automatically and the dot will go back to green.</p>
                 </div>
             </div>
 
             <div class="status-card">
                 <div class="status-dot-large status-dot-idle"></div>
                 <div class="status-card-content">
-                    <h3>Idle</h3>
-                    <div class="status-card-meta">Gray dot &mdash; No active Claude Code process</div>
-                    <p>The Idle state means there is no running Claude Code process for this project. The project has session history (it appears in the list), but Claude Code is not currently running in that directory. This is the normal resting state of any project between sessions. You'll see all your projects in Idle state when Claude Code is not open in any terminal.</p>
-                </div>
-            </div>
-
-            <div class="status-card">
-                <div class="status-dot-large status-dot-outdated"></div>
-                <div class="status-card-content">
-                    <h3>Outdated</h3>
-                    <div class="status-card-meta">Faded orange dot &mdash; Session data is stale (older than 24 hours)</div>
-                    <p>The Outdated state appears when the most recent session file for a project was last modified more than 24 hours ago. This usually means you worked on the project yesterday or earlier but haven't opened Claude Code in it since. It's informational — not an error. The outdated indicator helps you distinguish freshly-used projects from ones that haven't been touched in a while.</p>
+                    <h3>Gray — no active session</h3>
+                    <div class="status-card-meta">Claude Code is not currently running in this project</div>
+                    <p>The project has history in CC Gate, but no Claude session is open right now. This is the normal state for most projects most of the time. You'll see all your projects go gray when you close Claude Code.</p>
                 </div>
             </div>
 
         </div>
 
-        <h2 id="how-determined">How Status is Determined</h2>
-        <p>CC Gate does not directly monitor running processes. Instead, it reads the session files that Claude Code maintains in <code>~/.claude/projects/</code> to infer the current state. Here is how each status is determined:</p>
-
-        <h3>Project discovery</h3>
-        <p>CC Gate's <code>ProjectScanner</code> reads <code>~/.claude/projects/</code> to find all projects. Each subdirectory in this folder corresponds to one project Claude Code has been used in. The folder name is an encoded form of the project's absolute path (encoded by Claude Code itself). CC Gate reads the <code>originalPath</code> field from session files to decode the actual path.</p>
-
-        <h3>Session file parsing</h3>
-        <p>Each project directory contains <code>.jsonl</code> (JSON Lines) session files. Claude Code appends one JSON object per line to these files as it works. Each line describes a message or event in the session. CC Gate's <code>SessionStatusChecker</code> reads the last few lines of the most recent <code>.jsonl</code> file for each project to determine:</p>
-        <ul>
-            <li><strong>Last message type</strong> — if the last message was an assistant message still in progress, the session is Active. If it was a permission request, it's Waiting. If it was a completion, it's Idle.</li>
-            <li><strong>File timestamp</strong> — how recently the session file was modified. If the last modification was more than 24 hours ago, the state becomes Outdated.</li>
-            <li><strong>Active process detection</strong> — CC Gate compares the modification time of the session file against the current time. A file modified within the last few seconds (adjusted for the refresh interval) indicates an actively running session.</li>
-        </ul>
-
-        <h3>Caching</h3>
-        <p>Session status is cached for 4 seconds by the <code>SessionStatusChecker</code>. This means rapid successive reads — such as when the popup is opened while a refresh is in progress — return the cached status rather than re-reading all session files from disk. The cache expires automatically, so the status shown is never more than 4 seconds stale within a refresh cycle.</p>
-
-        <h2 id="session-info">What the Popup Shows</h2>
-        <p>Each project card in the CC Gate popup shows additional information alongside the status indicator:</p>
+        <h2 id="what-each-project-shows">What each project shows</h2>
 
         <div class="info-grid">
             <div class="info-item">
-                <div class="info-label">Project Name</div>
+                <div class="info-label">Project name</div>
                 <div class="info-value">my-project</div>
-                <div class="info-desc">Derived from the last component of the project directory path. The full path is shown on hover.</div>
+                <div class="info-desc">The name of the folder where you ran Claude Code.</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Status Indicator</div>
-                <div class="info-value">Green / Orange / Gray</div>
-                <div class="info-desc">The colored dot described above — active, waiting, idle, or outdated.</div>
+                <div class="info-label">Last active</div>
+                <div class="info-value">2h ago</div>
+                <div class="info-desc">How long ago Claude last did something in this project. Updates automatically.</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Last Activity</div>
-                <div class="info-value">2 min ago</div>
-                <div class="info-desc">How long ago the most recent session file was modified. Updates on each refresh.</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">Session Count</div>
+                <div class="info-label">Sessions</div>
                 <div class="info-value">3 sessions</div>
-                <div class="info-desc">Total number of .jsonl session files for this project. Each claude session creates one.</div>
+                <div class="info-desc">How many Claude Code sessions have been started in this project total.</div>
             </div>
             <div class="info-item">
-                <div class="info-label">Git Worktrees</div>
-                <div class="info-value">&gt; expand</div>
-                <div class="info-desc">For git repositories, click the arrow to expand and see all worktrees with their individual statuses.</div>
+                <div class="info-label">Arrow (&gt;)</div>
+                <div class="info-value">Expand</div>
+                <div class="info-desc">Click to expand the project and see individual Claude instances or git worktrees running in parallel.</div>
             </div>
         </div>
 
-        <h2 id="refresh-rate">Refresh Rate</h2>
-        <p>CC Gate refreshes status on a configurable timer. The default is <strong>15 seconds</strong>, chosen as a balance between freshness and energy efficiency. You can adjust this in <strong>Settings &rarr; General &rarr; Monitoring</strong> using the "Częstotliwość odświeżania" (Refresh frequency) slider.</p>
+        <h2 id="adding">Adding a new project</h2>
+
+        <p>Click the <strong>+</strong> button in the top bar of the CC Gate popup. You'll be able to choose a folder — Claude Code will open there and the project will appear in the list right away.</p>
+
+        <img src="../../assets/screenshots/docs/popup-worktrees.png" alt="CC Gate popup showing the expanded project view with worktrees" class="screenshot">
+
+        <h2 id="removing">Removing a project</h2>
+
+        <p>Projects fade out on their own when all their session history is gone. You don't usually need to remove them manually.</p>
+
+        <p>If you want to remove a project yourself, right-click on it in the list and choose <strong>Remove</strong> if the option is available. You can also remove a project's history through Claude Code itself.</p>
+
+        <div class="callout callout-info">
+            <strong>Note:</strong> Removing a project from CC Gate only removes it from the list. Your actual code files are completely unaffected.
+        </div>
+
+        <h2 id="search">Searching projects</h2>
+
+        <p>If you have a lot of projects, use the search bar at the top of the CC Gate popup to filter by name. Just start typing and the list narrows down instantly.</p>
+
+        <h2 id="refresh-rate">Refresh rate</h2>
+
+        <p>CC Gate checks for changes every <strong>15 seconds</strong> by default. That's a good balance between staying up-to-date and not draining your battery. You can change it in Settings under the General tab.</p>
 
         <table class="refresh-table">
             <thead>
                 <tr>
                     <th>Interval</th>
-                    <th>Energy Impact</th>
-                    <th>Status Freshness</th>
-                    <th>Best For</th>
+                    <th>Battery impact</th>
+                    <th>Best for</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>5 seconds</td>
-                    <td class="energy-high">High CPU usage</td>
-                    <td>Very fresh (&le;5s delay)</td>
-                    <td>Active monitoring, plugged in</td>
+                    <td class="energy-high">Higher</td>
+                    <td>When you're actively watching Claude and want instant updates</td>
                 </tr>
                 <tr>
                     <td>15 seconds (default)</td>
                     <td class="energy-med">Balanced</td>
-                    <td>Fresh (&le;15s delay)</td>
-                    <td>Most workflows</td>
+                    <td>Most people, most of the time</td>
                 </tr>
                 <tr>
                     <td>30 seconds</td>
-                    <td class="energy-low">Low energy</td>
-                    <td>Acceptable (&le;30s delay)</td>
-                    <td>Battery saving, background use</td>
+                    <td class="energy-low">Lower</td>
+                    <td>Laptop on battery, or if you don't need to watch status closely</td>
                 </tr>
                 <tr>
                     <td>60 seconds</td>
-                    <td class="energy-low">Minimal impact</td>
-                    <td>Coarse (&le;60s delay)</td>
-                    <td>Always-on overnight use</td>
+                    <td class="energy-low">Minimal</td>
+                    <td>Running CC Gate overnight or leaving it in the background all day</td>
                 </tr>
             </tbody>
         </table>
 
-        <p>The high energy impact at 5 seconds comes from the system calls involved in scanning session files. CC Gate uses <code>FileManager</code> APIs to list and read files in <code>~/.claude/projects/</code>, which triggers filesystem activity that macOS tracks as CPU usage. At 15 seconds, the impact is negligible in Activity Monitor.</p>
-
         <div class="callout callout-tip">
-            <strong>Tip:</strong> If you mostly work with one or two projects at a time and run CC Gate continuously in the background, consider using 30 or 60 seconds. The status will still update reliably — you'll just see it a bit later after changes occur.
-        </div>
-
-        <h3>Dynamic caching (v2.6.5+)</h3>
-        <p>CC Gate uses a dynamic caching system that adapts to your refresh interval:</p>
-        <ul>
-            <li><strong>ClaudeProcessDetector cache</strong> — expires at <code>refreshInterval - 1 second</code>. At 15s refresh, cache expires after 14s.</li>
-            <li><strong>QuestionWatcher polling</strong> — checks for new question files every 2 seconds, independently of the main refresh timer.</li>
-            <li><strong>SessionStatusChecker cache</strong> — 4 seconds, shared across all concurrent reads within a refresh cycle.</li>
-        </ul>
-        <p>This means that even at a 60-second refresh interval, new permission questions appearing in <code>~/.claude/.ccmanager/questions/</code> are still picked up within 2 seconds by the QuestionWatcher. The slower refresh only affects project status updates in the popup, not the responsiveness of the Questions window.</p>
-
-        <h2 id="menu-bar-icon">Menu Bar Icon</h2>
-        <p>The CC Gate icon in the macOS menu bar also reflects the overall state of all your projects:</p>
-
-        <div style="display:flex; gap:16px; flex-wrap:wrap; margin:16px 0;">
-            <div class="menubar-mockup">
-                <span class="menubar-icon">&#128196;</span>
-                <span class="menubar-text">CC Gate</span>
-            </div>
-            <div class="menubar-mockup">
-                <span class="menubar-icon">&#128196;</span>
-                <span class="menubar-text">CC Gate</span>
-                <span class="menubar-badge">2</span>
-            </div>
-            <div class="menubar-mockup">
-                <span class="menubar-icon">&#128196;</span>
-                <span class="menubar-text">CC Gate</span>
-                <span class="menubar-badge menubar-badge-orange">!</span>
-            </div>
-        </div>
-
-        <ul>
-            <li><strong>Default icon (no badge)</strong> — All projects are Idle or Outdated. No Claude Code sessions are active.</li>
-            <li><strong>Green badge with count</strong> — One or more projects have Active sessions. The number shows how many projects are currently active.</li>
-            <li><strong>Orange badge with exclamation</strong> — One or more projects are in Waiting state, meaning Claude Code is paused and needs your attention. This badge has higher priority than the Active badge.</li>
-        </ul>
-
-        <p>The badge makes it easy to notice when Claude Code has stopped and is waiting for your approval — even when you're in a different app. You don't need to keep checking the popup; the menu bar icon alerts you when action is needed.</p>
-
-        <div class="callout callout-info">
-            <strong>Note:</strong> If you use the <a href="auto-accept.html">Auto-Accept</a> feature with appropriate tiers enabled, the Waiting state should be rare in practice — most permission requests are handled automatically before reaching you. You'll primarily see the orange badge for <code>AskUserQuestion</code> prompts and unknown tools that require manual approval.
+            <strong>Tip:</strong> Even at 60 seconds, CC Gate still picks up permission requests almost instantly — the slow refresh only affects how quickly status dots update. Questions and permission prompts are checked separately and much more often.
         </div>
 
     </main>

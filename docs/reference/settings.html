@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings Reference — CC Gate Docs</title>
-    <meta name="description" content="Complete reference for every CC Gate settings tab: General, Permissions, Hook, AI, GitHub, Pro, and About.">
+    <title>Settings — CC Gate</title>
+    <meta name="description" content="A plain-English guide to every setting in CC Gate.">
     <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/reference/settings.html">
     <style>
         :root {
@@ -62,34 +62,13 @@
         .callout-info { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.25); }
         .callout-warn { background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.25); }
         .callout-tip { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); }
-        .callout-danger { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.25); }
         .callout strong { display: block; margin-bottom: 4px; }
-        .step-list { counter-reset: step; list-style: none; padding: 0; }
-        .step-list li { counter-increment: step; display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start; }
-        .step-list li::before { content: counter(step); display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; min-width: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; }
-        .step-list li > div { flex: 1; }
-        .step-list li strong { display: block; font-size: 15px; color: var(--text); margin-bottom: 4px; }
-        .step-list li p { margin: 0; font-size: 14px; }
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 24px 0; }
-        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-        .card h3 { font-size: 16px; margin-bottom: 8px; }
-        .card p { font-size: 14px; color: var(--text-muted); margin: 0; }
-        .tier-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 600; }
-        .tier-read { background: rgba(88,166,255,0.15); color: var(--accent); }
-        .tier-write { background: rgba(210,153,34,0.15); color: var(--orange); }
-        .tier-execute { background: rgba(248,81,73,0.15); color: var(--red); }
-        .tier-plan { background: rgba(188,140,255,0.15); color: var(--purple); }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
-        th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
-        td { color: var(--text-muted); }
-        td strong { color: var(--text); }
         .settings-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--border); }
         .settings-row:last-child { border-bottom: none; }
         .settings-row-label { flex: 1; }
         .settings-row-label strong { display: block; font-size: 15px; color: var(--text); margin-bottom: 3px; }
-        .settings-row-label span { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
-        .settings-default { font-size: 12px; background: rgba(110,118,129,0.15); color: var(--text-muted); padding: 2px 8px; border-radius: 4px; white-space: nowrap; margin-top: 4px; display: inline-block; }
+        .settings-row-label span { font-size: 13px; color: var(--text-muted); line-height: 1.5; display: block; }
+        .settings-default { font-size: 12px; background: rgba(110,118,129,0.15); color: var(--text-muted); padding: 2px 8px; border-radius: 4px; white-space: nowrap; margin-top: 6px; display: inline-block; }
         .tab-header { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; }
         .tab-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: rgba(88,166,255,0.1); }
         .tab-header h3 { font-size: 18px; margin: 0 0 2px; }
@@ -141,269 +120,244 @@
     </aside>
 
     <main class="docs-content">
-        <h1>Settings Reference</h1>
-        <p class="page-desc">Complete reference for every option in CC Gate's settings window, organized by tab.</p>
+        <h1>Settings</h1>
+        <p class="page-desc">Here's what every setting in CC Gate does.</p>
 
-        <p>Open Settings by clicking the CC Gate menu bar icon → the gear icon, or by pressing the keyboard shortcut shown in the menu. Settings are divided into tabs: General, Permissions, Hook, AI, GitHub, Pro, and About.</p>
+        <p>Open Settings by clicking the CC Gate icon in your menu bar, then clicking the gear icon. Settings are split into tabs along the top.</p>
 
-        <img src="../../assets/screenshots/docs/settings-general.png" alt="CC Gate Settings — General tab" class="screenshot-wide">
-
-        <h2>General Tab</h2>
+        <h2>General tab</h2>
 
         <div class="tab-header">
             <div class="tab-icon">&#9881;</div>
             <div>
                 <h3>General</h3>
-                <p>Startup behavior, project defaults, editor preferences, and monitoring frequency.</p>
+                <p>Startup, default folder, editor choice, and refresh speed.</p>
             </div>
         </div>
+
+        <img src="../../assets/screenshots/docs/settings-general.png" alt="CC Gate General settings tab" class="screenshot-wide">
 
         <div class="settings-row">
             <div class="settings-row-label">
                 <strong>Launch at Login</strong>
-                <span>Start CC Gate automatically when you log into macOS. CC Gate runs as a menu bar app with no Dock icon, so it stays out of the way.</span>
+                <span>CC Gate starts automatically when you turn on your Mac. Because it lives in the menu bar with no Dock icon, it stays out of the way.</span>
                 <span class="settings-default">Default: Off</span>
             </div>
         </div>
         <div class="settings-row">
             <div class="settings-row-label">
                 <strong>New Project Folder</strong>
-                <span>The default directory where CC Gate places new projects created via the Clone or New Project flow. You can always override per-project. Tap "Browse" to select a folder.</span>
-                <span class="settings-default">Default: ~/Documents</span>
+                <span>Where CC Gate puts new projects when you clone or create one. Click Browse to choose a different folder. You can always change the location per project.</span>
+                <span class="settings-default">Default: Documents</span>
             </div>
         </div>
         <div class="settings-row">
             <div class="settings-row-label">
                 <strong>Default Application</strong>
-                <span>Which editor or terminal to open when you click "Open" on a project. Options: VS Code, Cursor, Warp, iTerm2, Terminal. The selected app must be installed — CC Gate checks at launch and shows a warning if the selected app is not found.</span>
+                <span>Which editor or terminal opens when you click a project. Choose from VS Code, Cursor, Warp, iTerm2, or Terminal. CC Gate only shows options that are actually installed on your Mac.</span>
                 <span class="settings-default">Default: VS Code</span>
             </div>
         </div>
         <div class="settings-row">
             <div class="settings-row-label">
-                <strong>Monitoring — Refresh Interval</strong>
-                <span>How often CC Gate scans <code>~/.claude/projects/</code> for project changes, session status updates, and active Claude Code processes. Set with a slider from 5 to 60 seconds. Lower values make the status display more responsive; higher values reduce CPU and battery usage.</span>
+                <strong>Refresh Interval</strong>
+                <span>How often CC Gate checks for updates — new projects, status changes, active Claude sessions. Lower = more responsive. Higher = saves battery. Use the slider to set it anywhere from 5 to 60 seconds.</span>
                 <span class="settings-default">Default: 15 seconds</span>
             </div>
         </div>
 
         <div class="callout callout-tip">
-            <strong>Battery tip</strong>
-            At the default 15s interval, CC Gate has minimal energy impact. If you are on battery or do not need real-time status, try 30s or 60s. At 5s, CC Gate runs frequent <code>ps</code> and file system calls which noticeably increase CPU usage.
+            <strong>Battery tip:</strong> At 15 seconds (the default), CC Gate barely uses any power. If you're on a laptop unplugged, try 30 or 60 seconds. At 5 seconds, it checks more often and uses noticeably more CPU.
         </div>
 
-        <h2>Permissions Tab</h2>
+        <h2>Permissions tab</h2>
 
         <div class="tab-header">
             <div class="tab-icon">&#128274;</div>
             <div>
                 <h3>Permissions</h3>
-                <p>macOS system permission required for sending keyboard input to terminal windows.</p>
+                <p>One macOS permission that CC Gate may need.</p>
             </div>
         </div>
 
-        <img src="../../assets/screenshots/docs/settings-permissions.png" alt="CC Gate Settings — Permissions tab" class="screenshot-wide">
+        <img src="../../assets/screenshots/docs/settings-permissions.png" alt="CC Gate Permissions settings tab" class="screenshot-wide">
 
         <div class="settings-row">
             <div class="settings-row-label">
                 <strong>Accessibility Access</strong>
-                <span>CC Gate needs Accessibility permission to send keyboard input to terminal windows when you answer a Claude Code question manually (for questions that are not auto-accepted). Without this, the "Answer" button in the Questions window will not be able to type your response into the terminal.</span>
+                <span>This lets CC Gate type answers into your terminal on your behalf. You only need it if you plan to answer Claude's questions manually using CC Gate's interface. If you always use auto-accept, you can skip this. Grant it in System Settings when the button turns red.</span>
             </div>
         </div>
         <div class="settings-row">
             <div class="settings-row-label">
                 <strong>Grant button</strong>
-                <span>Opens System Settings → Privacy &amp; Security → Accessibility. Find CC Gate in the list and enable the toggle. macOS may require your administrator password.</span>
+                <span>Opens the Accessibility section of macOS System Settings. Find CC Gate in the list and flip the toggle. You may need to enter your Mac's password.</span>
             </div>
         </div>
         <div class="settings-row">
             <div class="settings-row-label">
                 <strong>Restart App</strong>
-                <span>After granting Accessibility permission, click "Restart App" to reload CC Gate. The permission takes effect only after restart.</span>
+                <span>After granting access, click this to restart CC Gate. The permission only takes effect after a restart.</span>
             </div>
         </div>
 
-        <div class="callout callout-info">
-            <strong>Auto-Accept users</strong>
-            If you use CC Gate exclusively in auto-accept mode and never manually answer questions from the CC Gate UI, Accessibility permission is not required.
-        </div>
-
-        <h2>Hook Tab</h2>
+        <h2>Hook tab</h2>
 
         <div class="tab-header">
             <div class="tab-icon">&#128279;</div>
             <div>
                 <h3>Hook</h3>
-                <p>Install and manage the permission hook that connects Claude Code to CC Gate.</p>
+                <p>The connection between CC Gate and Claude Code.</p>
             </div>
         </div>
 
-        <img src="../../assets/screenshots/docs/settings-hook.png" alt="CC Gate Settings — Hook tab" class="screenshot-wide">
+        <img src="../../assets/screenshots/docs/settings-hook.png" alt="CC Gate Hook settings tab" class="screenshot-wide">
 
         <div class="settings-row">
             <div class="settings-row-label">
-                <strong>Status badge</strong>
-                <span>Shows the current hook state. Green "Installed" means the hook is present and the version matches. Yellow "Outdated" means a newer hook version is available and the hook should be reinstalled. Red "Not installed" means the hook file or registration is missing.</span>
-            </div>
-        </div>
-        <div class="settings-row">
-            <div class="settings-row-label">
-                <strong>Install / Uninstall button</strong>
-                <span>Install writes <code>~/.claude/hooks/ccmanager-permissions.sh</code> and registers it in <code>~/.claude/settings.json</code> under <code>hooks.PermissionRequest</code>. Uninstall removes both the file and the registration entry. Always use this button — never edit the hook file or settings.json directly.</span>
-            </div>
-        </div>
-        <div class="settings-row">
-            <div class="settings-row-label">
-                <strong>Auto-repair</strong>
-                <span>If Claude Code resets or overwrites <code>settings.json</code> and removes the hook registration, CC Gate detects this on the next refresh cycle and automatically re-adds the registration entry. The hook file itself is not affected.</span>
-            </div>
-        </div>
-
-        <h2>AI Tab</h2>
-
-        <div class="tab-header">
-            <div class="tab-icon">&#10024;</div>
-            <div>
-                <h3>AI</h3>
-                <p>Configure the Anthropic API key used for AI Commit Message generation.</p>
-            </div>
-        </div>
-
-        <img src="../../assets/screenshots/docs/settings-ai.png" alt="CC Gate Settings — AI tab" class="screenshot-wide">
-
-        <div class="settings-row">
-            <div class="settings-row-label">
-                <strong>Enable AI commit messages</strong>
-                <span>Master toggle for the AI Commit Messages feature. Requires a Pro plan. When disabled, CommitSheet shows a manual commit message field only.</span>
-                <span class="settings-default">Default: Off (requires Pro)</span>
-            </div>
-        </div>
-        <div class="settings-row">
-            <div class="settings-row-label">
-                <strong>API Key</strong>
-                <span>Your Anthropic API key from <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>. Stored in macOS Keychain, never written to disk. Starts with <code>sk-ant-</code>.</span>
-            </div>
-        </div>
-        <div class="settings-row">
-            <div class="settings-row-label">
-                <strong>Test button</strong>
-                <span>Sends a minimal test request to the Anthropic API to verify the key is valid and has sufficient credits. Shows a green checkmark on success or an error message on failure.</span>
-            </div>
-        </div>
-        <div class="settings-row">
-            <div class="settings-row-label">
-                <strong>Model</strong>
-                <span>Which Claude model to use for generating commit messages. Default: Claude Haiku for diff summarization chunks (fast and cheap), Claude Sonnet for the final combined message (higher quality). Both are configurable.</span>
-                <span class="settings-default">Default: Haiku for chunks, Sonnet for final</span>
-            </div>
-        </div>
-        <div class="settings-row">
-            <div class="settings-row-label">
-                <strong>Privacy</strong>
-                <span>CC Gate sends only the git diff and session context to the Anthropic API. No data is stored on Anthropic servers beyond the time required to process the request. Your code is not used for model training.</span>
-            </div>
-        </div>
-
-        <h2>GitHub Tab</h2>
-
-        <div class="tab-header">
-            <div class="tab-icon">&#128025;</div>
-            <div>
-                <h3>GitHub</h3>
-                <p>Personal Access Token for GitHub REST API operations: push, fork, clone, and view commits.</p>
-            </div>
-        </div>
-
-        <img src="../../assets/screenshots/docs/settings-github.png" alt="CC Gate Settings — GitHub tab" class="screenshot-wide">
-
-        <div class="settings-row">
-            <div class="settings-row-label">
-                <strong>Personal Access Token</strong>
-                <span>A GitHub Personal Access Token (classic) with <code>repo</code> scope. Required for push, fork, clone, and GitHub Release creation. Stored in macOS Keychain. Generate one at <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a>.</span>
-            </div>
-        </div>
-        <div class="settings-row">
-            <div class="settings-row-label">
-                <strong>Save token / Clear</strong>
-                <span>Save adds the token to Keychain and shows a connected status. Clear removes the token from Keychain. CC Gate will show "Not connected" after clearing until a new token is saved.</span>
+                <strong>Install hook</strong>
+                <span>This connects CC Gate to Claude Code so it can intercept permission requests and apply your auto-accept settings. You need this for auto-accept to work. Click Install — it takes a second.</span>
             </div>
         </div>
         <div class="settings-row">
             <div class="settings-row-label">
                 <strong>Status</strong>
-                <span>Shows "Connected" with a green indicator when a valid token is saved, or "Not connected" with a gray indicator when no token is present.</span>
+                <span>Green means everything is working. Yellow means the hook is installed but a newer version is available — CC Gate will update it automatically. Red means the hook isn't installed yet.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Uninstall</strong>
+                <span>Removes the connection between CC Gate and Claude Code. Claude will go back to asking you directly in the terminal for all permission requests.</span>
             </div>
         </div>
 
-        <h2>Pro Tab</h2>
+        <h2>AI tab</h2>
+
+        <div class="tab-header">
+            <div class="tab-icon">&#10024;</div>
+            <div>
+                <h3>AI</h3>
+                <p>Settings for AI-powered commit message generation.</p>
+            </div>
+        </div>
+
+        <img src="../../assets/screenshots/docs/settings-ai.png" alt="CC Gate AI settings tab" class="screenshot-wide">
+
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Enable AI commit messages</strong>
+                <span>Turns on the feature that writes your commit messages for you. Requires a Pro plan — see the Pro tab.</span>
+                <span class="settings-default">Default: Off (Pro required)</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>API Key</strong>
+                <span>Your key from <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>. It's stored securely in your Mac's Keychain — never in a file, never sent anywhere except Anthropic's servers when generating a commit message.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Test</strong>
+                <span>Click this to check whether your API key is valid and has credits. A green checkmark means it's working. A red error means the key needs to be replaced.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Model</strong>
+                <span>Which AI model writes your commit messages. Haiku is faster and cheaper. Sonnet is more thoughtful and produces better results for complex changes. By default, CC Gate uses both — Haiku for large diffs, Sonnet for the final message.</span>
+            </div>
+        </div>
+
+        <h2>GitHub tab</h2>
+
+        <div class="tab-header">
+            <div class="tab-icon">&#128025;</div>
+            <div>
+                <h3>GitHub</h3>
+                <p>Connect to GitHub for push, fork, and clone.</p>
+            </div>
+        </div>
+
+        <img src="../../assets/screenshots/docs/settings-github.png" alt="CC Gate GitHub settings tab" class="screenshot-wide">
+
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Personal Access Token</strong>
+                <span>A special password for apps — you generate it on GitHub and paste it here. CC Gate uses it to push commits, fork repos, and clone projects. See <a href="../features/github-integration.html">GitHub Integration</a> for step-by-step instructions.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Save token</strong>
+                <span>Saves your token to your Mac's Keychain. It is never written to a plain text file. The status badge turns green once saved successfully.</span>
+            </div>
+        </div>
+        <div class="settings-row">
+            <div class="settings-row-label">
+                <strong>Status</strong>
+                <span>Green means CC Gate is connected to GitHub. Gray means no token has been saved yet.</span>
+            </div>
+        </div>
+
+        <h2>Pro tab</h2>
 
         <div class="tab-header">
             <div class="tab-icon">&#11088;</div>
             <div>
                 <h3>Pro</h3>
-                <p>Manage your CC Gate Pro subscription and configure Pro features.</p>
+                <p>Your plan status and Pro features.</p>
             </div>
         </div>
 
-        <img src="../../assets/screenshots/docs/settings-pro.png" alt="CC Gate Settings — Pro tab" class="screenshot-wide">
+        <img src="../../assets/screenshots/docs/settings-pro.png" alt="CC Gate Pro settings tab" class="screenshot-wide">
 
         <div class="settings-row">
             <div class="settings-row-label">
                 <strong>Plan status</strong>
-                <span>Shows your current plan: Free or Pro. Includes subscription renewal date for Pro subscribers.</span>
+                <span>Shows whether you're on the Free or Pro plan. Pro subscribers also see their renewal date here.</span>
             </div>
         </div>
         <div class="settings-row">
             <div class="settings-row-label">
                 <strong>AI Commit Messages</strong>
-                <span>Pro feature card. When on Pro plan, shows a "Configure" button that links to the AI tab for API key entry. When on Free plan, shows an upgrade prompt.</span>
+                <span>The main Pro feature right now. On a Pro plan, a Configure button takes you to the AI tab to enter your API key. On the Free plan, you'll see an option to upgrade.</span>
             </div>
         </div>
         <div class="settings-row">
             <div class="settings-row-label">
-                <strong>More Pro features coming soon</strong>
-                <span>Additional Pro-exclusive features are in development. Current Pro users will receive them automatically as updates are released.</span>
+                <strong>More features coming</strong>
+                <span>More Pro features are on the way. If you're already on Pro, you'll get them automatically when they're released.</span>
             </div>
         </div>
 
-        <h2>About / Info Tab</h2>
+        <h2>About (Info tab)</h2>
 
         <div class="tab-header">
             <div class="tab-icon">&#8505;</div>
             <div>
                 <h3>About</h3>
-                <p>Version info, build details, links, and the Developer Mode easter egg.</p>
+                <p>Version info and a hidden bonus.</p>
             </div>
         </div>
 
         <div class="settings-row">
             <div class="settings-row-label">
                 <strong>Version number</strong>
-                <span>Current CC Gate version (e.g. "CC Gate 2.11.12"). Tap this label 7 times rapidly to unlock Developer Mode, which exposes the Test Runner and other experimental features. A "Developer Mode" checkmark appears after the 7th tap.</span>
+                <span>The current CC Gate version. Always include this when reporting a bug. Click the version number seven times quickly to unlock Developer Mode, which gives you access to the Background Test Runner and other experimental features.</span>
             </div>
         </div>
         <div class="settings-row">
             <div class="settings-row-label">
                 <strong>Build number</strong>
-                <span>Internal build identifier used when reporting bugs. Always include this in bug reports.</span>
+                <span>A more detailed version identifier. Include this in bug reports too.</span>
             </div>
         </div>
         <div class="settings-row">
             <div class="settings-row-label">
-                <strong>GitHub link</strong>
-                <span>Opens the public CC Gate repository and landing page at <a href="https://github.com/ai-fresh/ccgate" target="_blank" rel="noopener">github.com/ai-fresh/ccgate</a>.</span>
-            </div>
-        </div>
-        <div class="settings-row">
-            <div class="settings-row-label">
-                <strong>Release notes</strong>
-                <span>Opens the GitHub Releases page where you can read the full changelog for each version.</span>
-            </div>
-        </div>
-        <div class="settings-row">
-            <div class="settings-row-label">
-                <strong>Support / Report issue</strong>
-                <span>Opens the GitHub Issues page to file a bug report or feature request.</span>
+                <strong>Links</strong>
+                <span>Shortcuts to the GitHub page, release notes, and the issue tracker for bug reports.</span>
             </div>
         </div>
     </main>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Commit Messages — CC Gate Docs</title>
-    <meta name="description" content="CC Gate analyzes your Claude Code session and git diff to generate semantically accurate Conventional Commit messages automatically.">
+    <title>AI Commit Messages — CC Gate</title>
+    <meta name="description" content="CC Gate reads what Claude Code was doing and writes your commit message for you. No more guessing what to write.">
     <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/features/ai-commits.html">
     <style>
         :root {
@@ -74,11 +74,6 @@
         .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
         .card h3 { font-size: 16px; margin-bottom: 8px; }
         .card p { font-size: 14px; color: var(--text-muted); margin: 0; }
-        .tier-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 600; }
-        .tier-read { background: rgba(88,166,255,0.15); color: var(--accent); }
-        .tier-write { background: rgba(210,153,34,0.15); color: var(--orange); }
-        .tier-execute { background: rgba(248,81,73,0.15); color: var(--red); }
-        .tier-plan { background: rgba(188,140,255,0.15); color: var(--purple); }
         table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
         th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
         th { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
@@ -132,129 +127,107 @@
 
     <main class="docs-content">
         <h1>AI Commit Messages</h1>
-        <p class="page-desc">Generate semantically accurate Conventional Commit messages from your Claude Code session context and git diff — no manual description required.</p>
+        <p class="page-desc">After Claude Code finishes working on your project, CC Gate can automatically write a commit message that describes exactly what changed — based on what Claude actually did.</p>
 
-        <h2>Overview</h2>
-        <p>CC Gate's AI Commit Messages feature analyzes your Claude Code session context and git diff to generate semantically accurate commit messages — without you having to describe your changes manually. Instead of writing "fixed some stuff" or trying to recall what you built over the last hour, CC Gate reads what Claude Code actually did and produces a precise, structured commit message in seconds.</p>
+        <h2>What you need</h2>
+        <p>Three things need to be in place before AI Commits will work:</p>
 
-        <div class="callout callout-info">
-            <strong>Pro Feature</strong>
-            AI Commit Messages requires a CC Gate Pro plan and an Anthropic API key. See Settings → Pro to upgrade, and Settings → AI to enter your key.
+        <div class="card-grid">
+            <div class="card">
+                <h3>CC Gate Pro</h3>
+                <p>AI Commits is a Pro feature. Activate your plan in Settings → Pro.</p>
+            </div>
+            <div class="card">
+                <h3>Anthropic API key</h3>
+                <p>Get one at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a> — free to start. Enter it in Settings → AI.</p>
+            </div>
+            <div class="card">
+                <h3>A recent Claude session</h3>
+                <p>Claude must have worked on the project recently so CC Gate knows what changed.</p>
+            </div>
         </div>
-
-        <h2>Requirements</h2>
-        <ul>
-            <li><strong>Pro plan</strong> — AI Commits is a Pro feature (Settings → Pro)</li>
-            <li><strong>Anthropic API key</strong> — Settings → AI → enter your key from <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a></li>
-            <li><strong>Claude Code session</strong> — an active or recent <code>.jsonl</code> session file for the project</li>
-            <li><strong>GitHub token</strong> (optional) — needed for the push workflow after committing</li>
-        </ul>
 
         <div style="display:flex; gap:16px; flex-wrap:wrap; margin: 24px 0;">
-            <img src="../../assets/screenshots/docs/settings-pro.png" alt="Pro plan settings" class="screenshot">
-            <img src="../../assets/screenshots/docs/settings-ai.png" alt="AI API key settings" class="screenshot">
+            <img src="../../assets/screenshots/docs/settings-pro.png" alt="Pro settings tab" class="screenshot">
+            <img src="../../assets/screenshots/docs/settings-ai.png" alt="AI settings tab with API key field" class="screenshot">
         </div>
 
-        <h2>How It Works</h2>
-        <p>When you open CommitSheet for a project, CC Gate kicks off a multi-step pipeline to build the most accurate commit message possible with the fewest tokens.</p>
-
+        <h2>How to use it</h2>
         <ol class="step-list">
             <li>
                 <div>
-                    <strong>Opening CommitSheet</strong>
-                    <p>Right-click a worktree and choose "Commit changes", or click the commit button in a project card. CommitSheet opens with the staged diff loaded and generation begins automatically.</p>
+                    <strong>Open the commit panel</strong>
+                    <p>Right-click a worktree (or project) and choose <strong>Commit Changes...</strong></p>
                 </div>
             </li>
             <li>
                 <div>
-                    <strong>DELTA Logic — only new messages since last commit</strong>
-                    <p>CC Gate reads the timestamp of your last git commit, then filters the <code>.jsonl</code> session file to include only Claude Code messages that occurred after that commit. This avoids re-analyzing old context, saves tokens, and keeps the generated message focused on what actually changed in this work session.</p>
+                    <strong>Wait a moment</strong>
+                    <p>CC Gate analyzes what changed and what Claude was doing. This takes a few seconds.</p>
                 </div>
             </li>
             <li>
                 <div>
-                    <strong>Session Context Extraction</strong>
-                    <p>The filtered session messages are parsed: assistant messages (what Claude did) and user messages (what you asked) are combined into a structured conversation summary. Tool calls like <code>Edit</code>, <code>Write</code>, and <code>Bash</code> are extracted to identify which files were touched and what operations were performed.</p>
+                    <strong>Read the suggested message</strong>
+                    <p>A commit message appears automatically. It describes what Claude actually did — not just which files changed.</p>
                 </div>
             </li>
             <li>
                 <div>
-                    <strong>Fallback for Projects Without Sessions</strong>
-                    <p>If no active session file is found, CC Gate looks for a <code>CLAUDE.md</code> or <code>README.md</code> in the project root and uses that as project context instead. The diff alone is used to generate the message.</p>
-                </div>
-            </li>
-            <li>
-                <div>
-                    <strong>Large Diff Chunking</strong>
-                    <p>Diffs exceeding 20,000 tokens are automatically split into chunks. Each chunk is summarized individually using Claude Haiku (fast and cheap), then all summaries are combined and passed to Claude Sonnet for the final commit message. This keeps costs low even on large refactors.</p>
-                </div>
-            </li>
-            <li>
-                <div>
-                    <strong>Refinement Loop</strong>
-                    <p>After the message is generated, you can edit it directly in CommitSheet. You can also add a short note — for example, "I was working on fixing the auth timeout" — and CC Gate will refine the message using that hint without regenerating from scratch. This is much faster and cheaper than a full regeneration.</p>
+                    <strong>Edit if needed, then commit</strong>
+                    <p>The message is yours to change. When you're happy with it, click <strong>Commit</strong>.</p>
                 </div>
             </li>
         </ol>
 
-        <h2>Conventional Commits Format</h2>
-        <p>CommitSheet uses structured <a href="https://www.conventionalcommits.org" target="_blank" rel="noopener">Conventional Commits</a> format. Every generated message follows this structure:</p>
+        <p>If you want a different message, click <strong>Refine</strong> and add a note like "I was fixing the login bug" — CC Gate will adjust the message using your hint.</p>
 
-        <pre><code>type(scope): short imperative description
+        <div class="callout callout-tip">
+            <strong>Tip:</strong> The Refine button is faster and cheaper than regenerating from scratch. Use it whenever the first message doesn't quite capture what you were working on.
+        </div>
 
-Optional longer body explaining the why and how.
-Can span multiple lines, 72 chars wide.</code></pre>
+        <h2>How it decides what to write</h2>
+        <p>CC Gate looks at two things: the code that actually changed (the diff between your last commit and now) and what Claude Code was doing during the session. It only looks at the work done since your last commit — not older history.</p>
+        <p>For very large changes, it breaks the work into chunks, summarizes each one, and combines the results into a single message. You don't need to do anything differently for this to work.</p>
+
+        <h2>Commit format</h2>
+        <p>CC Gate uses a standard format called <a href="https://www.conventionalcommits.org" target="_blank" rel="noopener">Conventional Commits</a>: <code>type(scope): description</code>.</p>
 
         <table>
             <thead>
                 <tr>
-                    <th>Field</th>
-                    <th>Options</th>
-                    <th>Description</th>
+                    <th>Example</th>
+                    <th>What it means</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><strong>Type</strong></td>
-                    <td><code>feat</code>, <code>fix</code>, <code>docs</code>, <code>refactor</code>, <code>test</code>, <code>chore</code>, <code>style</code>, <code>perf</code>, <code>ci</code></td>
-                    <td>Nature of the change</td>
+                    <td><code>feat(ui): add dark mode toggle</code></td>
+                    <td>A new feature in the UI</td>
                 </tr>
                 <tr>
-                    <td><strong>Scope</strong></td>
-                    <td>optional — e.g. <code>git</code>, <code>hook</code>, <code>ui</code>, <code>auth</code></td>
-                    <td>Which part of the codebase</td>
+                    <td><code>fix(auth): handle expired tokens</code></td>
+                    <td>A bug fix in authentication</td>
                 </tr>
                 <tr>
-                    <td><strong>Description</strong></td>
-                    <td>max ~72 chars, imperative mood</td>
-                    <td>Short summary of the change</td>
-                </tr>
-                <tr>
-                    <td><strong>Body</strong></td>
-                    <td>optional multi-line</td>
-                    <td>Detailed explanation of why and how</td>
+                    <td><code>refactor(api): simplify request handling</code></td>
+                    <td>Code cleanup with no behaviour change</td>
                 </tr>
             </tbody>
         </table>
 
-        <div class="callout callout-tip">
-            <strong>Tip: Refine without regenerating</strong>
-            Add a note in the refinement field (e.g. "focus on the performance improvements") and click Refine. This costs a fraction of a full regeneration and usually produces a better result than starting over.
-        </div>
+        <p>You can change the type and scope in the commit panel before clicking Commit.</p>
 
-        <h2>Troubleshooting</h2>
+        <h2>If something goes wrong</h2>
 
         <h3>"No session found"</h3>
-        <p>Make sure Claude Code has processed at least one message for this project. The session file must exist in <code>~/.claude/projects/</code>. Open the project in Claude Code and send a message, then try again.</p>
-
-        <h3>Empty diff</h3>
-        <p>CommitSheet detected no staged or unstaged changes. Make sure you have modified files before opening CommitSheet. Run <code>git status</code> in terminal to verify.</p>
+        <p>Run Claude Code in the project first, then open the commit panel and try again. CC Gate needs to see recent Claude activity to generate a message.</p>
 
         <h3>API key error</h3>
-        <p>Verify your Anthropic API key in Settings → AI → Test button. If the test fails, the key may be invalid, revoked, or have insufficient credits. Regenerate at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>.</p>
+        <p>Go to Settings → AI and click the <strong>Test</strong> button next to your key. If the test fails, the key may be invalid or out of credits. Get a new one at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>.</p>
 
-        <h3>Token limit / chunking failure</h3>
-        <p>Large diffs are automatically chunked. If you see errors even with chunking enabled, the diff may be extremely large (over 500 KB). Consider using <code>.gitignore</code> to exclude large generated files (e.g. <code>package-lock.json</code>, compiled assets, database files) from tracking.</p>
+        <h3>Message looks too generic</h3>
+        <p>Add a note in the "What were you working on?" field and click <strong>Refine</strong>. A short description like "adding dark mode" gives CC Gate enough context to write a much more specific message.</p>
     </main>
 </div>
 

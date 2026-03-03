@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Git Worktrees — CC Gate Documentation</title>
-    <meta name="description" content="Create and manage Git worktrees from CC Gate's menu bar popup. Run parallel Claude Code sessions on separate branches, commit changes, merge branches, and diagnose git issues.">
+    <title>Git Worktrees — CC Gate</title>
+    <meta name="description" content="Work on multiple branches at the same time. CC Gate makes creating, committing, and merging git worktrees easy.">
     <meta name="author" content="AI Fresh">
     <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/features/git-worktrees.html">
-    <meta property="og:title" content="Git Worktrees — CC Gate Documentation">
-    <meta property="og:description" content="Create and manage Git worktrees from CC Gate's menu bar popup. Run parallel Claude Code sessions on separate branches.">
+    <meta property="og:title" content="Git Worktrees — CC Gate">
+    <meta property="og:description" content="Work on multiple branches at the same time. CC Gate makes creating, committing, and merging git worktrees easy.">
     <meta property="og:url" content="https://ai-fresh.github.io/ccgate/docs/features/git-worktrees.html">
     <link rel="icon" type="image/png" href="../../assets/icon.png">
     <style>
@@ -84,6 +84,7 @@
         .docs-content p { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
         .docs-content ul, .docs-content ol { padding-left: 20px; color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
         .docs-content li { margin-bottom: 6px; }
+        .docs-content strong { color: var(--text); font-weight: 600; }
         .docs-content code { background: rgba(110,118,129,0.2); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', SFMono-Regular, Menlo, monospace; }
         .docs-content pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
         .docs-content pre code { background: none; padding: 0; font-size: 14px; color: var(--text); }
@@ -126,22 +127,6 @@
         }
         .context-menu-item .item-icon { font-size: 15px; width: 20px; text-align: center; }
         .context-menu-item.destructive { color: var(--red); }
-
-        /* Worktree diagram */
-        .worktree-diagram {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            margin: 20px 0;
-            font-family: 'SF Mono', SFMono-Regular, Menlo, monospace;
-            font-size: 13px;
-            line-height: 1.8;
-        }
-        .wt-branch { color: var(--accent); }
-        .wt-path { color: var(--text-muted); }
-        .wt-commit { color: var(--green); }
-        .wt-arrow { color: var(--text-muted); }
 
         /* Feature grid */
         .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin: 20px 0; }
@@ -209,74 +194,49 @@
         </div>
         <div class="sidebar-section">
             <div class="sidebar-label">On this page</div>
-            <a href="#what-are">What are Worktrees?</a>
-            <a href="#viewing">Viewing Worktrees</a>
-            <a href="#creating">Creating a Worktree</a>
-            <a href="#context-menu">Context Menu</a>
-            <a href="#committing">Committing Changes</a>
-            <a href="#merging">Merging to Main</a>
-            <a href="#deleting">Deleting a Worktree</a>
-            <a href="#health">Git Health Checker</a>
+            <a href="#what-are">What's a worktree?</a>
+            <a href="#viewing">Seeing your worktrees</a>
+            <a href="#creating">Creating a worktree</a>
+            <a href="#context-menu">Right-click menu</a>
+            <a href="#committing">Committing changes</a>
+            <a href="#merging">Merging to main</a>
+            <a href="#deleting">Deleting a worktree</a>
             <a href="#troubleshooting">Troubleshooting</a>
         </div>
     </aside>
 
     <main class="docs-content">
         <h1>Git Worktrees</h1>
-        <p class="page-intro">Git worktrees let you check out multiple branches of the same repository into separate directories simultaneously. CC Gate makes creating, managing, and working across these worktrees seamless directly from your menu bar.</p>
+        <p class="page-intro">Worktrees let you work on multiple branches of the same project at the same time — each in its own folder. CC Gate makes them easy to create and manage without using the terminal.</p>
 
-        <h2 id="what-are">What are Git Worktrees?</h2>
-        <p>A Git worktree is an additional working directory linked to the same repository. Unlike cloning the repository a second time, worktrees share the same <code>.git</code> folder — so they see the same branches, history, and remote configuration, but each has its own checked-out branch and working tree state.</p>
+        <h2 id="what-are">What's a worktree?</h2>
+        <p>Normally, when you work on a project, you can only be on one branch at a time. If you want to switch branches, you have to stop what you're doing and switch over.</p>
+        <p>A worktree is a second (or third) copy of your project on a different branch, sitting in its own separate folder. Both copies exist at the same time. You can work in one while Claude Code works in the other — they won't interfere with each other.</p>
+        <p>This is especially useful when you want to run two Claude Code sessions on the same project. One can be polishing the main branch while another works on a new feature. No waiting, no branch switching.</p>
 
-        <p>The primary use case with CC Gate is running <strong>parallel Claude Code sessions</strong>: one Claude instance working on a feature branch while another maintains the main branch, without either session interfering with the other's working directory.</p>
+        <h2 id="viewing">Seeing your worktrees</h2>
+        <p>Click the <strong>&gt;</strong> arrow next to a project in the CC Gate popup to expand it. You'll see a list of active worktrees, each showing its branch name and last commit.</p>
 
-        <div class="worktree-diagram">
-            <div><span class="wt-path">~/projects/my-app/</span> <span class="wt-arrow">←</span> <span class="wt-branch">main</span> <span class="wt-commit">[a1b2c3d]</span></div>
-            <div><span class="wt-path">~/projects/my-app-worktrees/feature-auth/</span> <span class="wt-arrow">←</span> <span class="wt-branch">feature/auth</span> <span class="wt-commit">[e4f5g6h]</span></div>
-            <div><span class="wt-path">~/projects/my-app-worktrees/fix-bug-42/</span> <span class="wt-arrow">←</span> <span class="wt-branch">fix/bug-42</span> <span class="wt-commit">[i7j8k9l]</span></div>
-        </div>
+        <img src="../../assets/screenshots/docs/popup-worktrees.png" alt="CC Gate popup showing a project expanded with a list of git worktrees" class="screenshot">
 
-        <p>Each directory in the diagram above is a fully functional checkout. You can open a terminal in any of them, run <code>claude</code>, and have independent Claude Code sessions working simultaneously. CC Gate shows all three in the popup as separate worktree rows under the project card.</p>
+        <p>Each worktree row shows the branch it's on, a short commit ID so you can see where it is in history, and a status dot that reflects whether Claude Code is active in that folder.</p>
 
-        <div class="callout callout-info">
-            <strong>Git requirement:</strong> Worktrees require Git 2.5 or later. Run <code>git --version</code> to check. macOS ships with git, but you can also install a newer version via Homebrew with <code>brew install git</code>.
-        </div>
-
-        <h2 id="viewing">Viewing Worktrees</h2>
-        <p>In the CC Gate main popup, each project card shows a disclosure arrow (<strong>&gt;</strong>) on the right side if the project is a git repository with worktrees. Click the arrow to expand the worktree section.</p>
-
-        <img src="../../assets/screenshots/docs/popup-worktrees.png" alt="CC Gate popup showing expanded project with worktrees list including branch names and status dots" class="screenshot">
-
-        <p>Each worktree row in the expanded view shows:</p>
-        <ul>
-            <li><strong>Branch name</strong> — the currently checked-out branch in that worktree directory.</li>
-            <li><strong>Commit hash prefix</strong> — the short hash of the HEAD commit (e.g., <code>a1b2c3d</code>), useful for identifying what state each worktree is in at a glance.</li>
-            <li><strong>Status dot</strong> — the same colored status indicator used for the project overall, but scoped to Claude Code sessions running inside that specific worktree directory.</li>
-            <li><strong>Dirty indicator</strong> — a badge appears if the worktree has uncommitted changes (modified or untracked files).</li>
-        </ul>
-
-        <p>The main project card row always represents the primary worktree (the original repository checkout, usually on <code>main</code> or <code>master</code>). All additional worktrees are listed below it in the expanded section.</p>
-
-        <h2 id="creating">Creating a Worktree</h2>
-        <p>To create a new worktree from CC Gate:</p>
+        <h2 id="creating">Creating a worktree</h2>
         <ol>
-            <li>In the main popup, expand a project card by clicking the <strong>&gt;</strong> arrow.</li>
-            <li>Click the <strong>+</strong> button in the worktree section header.</li>
-            <li>The <strong>Create Worktree</strong> sheet opens.</li>
-            <li>Enter a <strong>branch name</strong> for the new worktree (e.g., <code>feature/my-new-feature</code>).</li>
-            <li>Select the <strong>base branch</strong> from the dropdown — this is what the new branch will be based on. Defaults to <code>main</code>.</li>
-            <li>The <strong>worktree path</strong> is calculated automatically based on your repository location and branch name. You can optionally customize it.</li>
+            <li>Click the <strong>&gt;</strong> arrow on a project to expand it.</li>
+            <li>Click the <strong>+</strong> button in the worktree section.</li>
+            <li>Type a branch name — for example, <code>feature/dark-mode</code>.</li>
+            <li>Choose what to base it on (usually <strong>main</strong>).</li>
             <li>Click <strong>Create</strong>.</li>
         </ol>
-
-        <p>CC Gate runs <code>git worktree add -b &lt;branch&gt; &lt;path&gt; &lt;base&gt;</code> in the background. The new worktree directory is created immediately. A success notification confirms the location.</p>
+        <p>CC Gate creates the new folder and checks out the branch for you. It opens automatically in your default editor.</p>
 
         <div class="callout callout-tip">
-            <strong>Tip:</strong> Use a consistent naming convention for your worktrees. A good pattern is <code>feature/description</code>, <code>fix/issue-number</code>, or <code>experiment/name</code>. The branch name directly determines the worktree directory name, so keep it concise and filesystem-friendly (no spaces).
+            <strong>Naming tip:</strong> Use names like <code>feature/description</code> or <code>fix/issue-name</code>. Keep them short and avoid spaces — the branch name becomes the folder name.
         </div>
 
-        <h2 id="context-menu">Worktree Context Menu</h2>
-        <p>Right-clicking any worktree row in the expanded project card opens a context menu with actions for that specific worktree:</p>
+        <h2 id="context-menu">Right-click menu</h2>
+        <p>Right-click any worktree row to open a menu with everything you need:</p>
 
         <div class="context-menu">
             <div class="context-menu-item"><span class="item-icon">&#128187;</span> Open in VS Code</div>
@@ -294,102 +254,49 @@
             <div class="context-menu-item destructive"><span class="item-icon">&#128465;</span> Delete Worktree...</div>
         </div>
 
-        <h3>Open in Editor / Terminal</h3>
-        <p>The editor and terminal options open the worktree directory directly in the selected application. CC Gate detects which editors and terminals you have installed and only shows available options. Supported editors: <strong>VS Code</strong>, <strong>Cursor</strong>. Supported terminals: <strong>Warp</strong>, <strong>iTerm2</strong>, <strong>Terminal.app</strong>.</p>
+        <p>CC Gate only shows the editors and terminals that are actually installed on your Mac.</p>
 
-        <h3>Show in Finder / Copy Path</h3>
-        <p><strong>Show in Finder</strong> opens a Finder window with the worktree directory selected. <strong>Copy Path</strong> copies the absolute filesystem path to your clipboard — useful for <code>cd</code> commands or sharing the location with a team member.</p>
-
-        <h2 id="committing">Committing Changes</h2>
-        <p>When a worktree has uncommitted changes (shown by the dirty indicator), you can commit directly from CC Gate without opening a terminal:</p>
+        <h2 id="committing">Committing changes</h2>
+        <p>When a worktree has unsaved changes, you can commit them right from CC Gate — no terminal needed.</p>
         <ol>
-            <li>Right-click the worktree row and choose <strong>Commit Changes...</strong></li>
-            <li>The <strong>Commit Sheet</strong> opens, showing a summary of changed files and a diff preview.</li>
-            <li>Enter a <strong>commit message</strong> in the text field. If you have <a href="ai-commits.html">AI Commit Messages</a> configured, click <strong>Generate</strong> to create a conventional commit message from the diff automatically.</li>
-            <li>Review the auto-generated or manually written message and edit as needed.</li>
-            <li>Click <strong>Commit</strong>.</li>
+            <li>Right-click the worktree and choose <strong>Commit Changes...</strong></li>
+            <li>A panel opens showing what changed.</li>
+            <li>If you have <a href="ai-commits.html">AI Commits</a> turned on, CC Gate writes the commit message for you automatically.</li>
+            <li>Read the message, edit it if you want, then click <strong>Commit</strong>.</li>
         </ol>
 
-        <p>CC Gate runs <code>git add -A &amp;&amp; git commit -m "&lt;message&gt;"</code> in the worktree directory. The commit hash and success confirmation appear in the sheet after the operation completes.</p>
-
-        <div class="callout callout-info">
-            <strong>Conventional commits:</strong> The commit message field supports the conventional commits format — <code>type(scope): description</code>. The AI commit message generator always produces conventional commit format messages. Examples: <code>feat(auth): add OAuth2 login flow</code>, <code>fix(api): handle rate limit errors gracefully</code>.
-        </div>
-
-        <h2 id="merging">Merging to Main</h2>
-        <p>When your work in a worktree is ready to be integrated back into the main branch:</p>
+        <h2 id="merging">Merging back to main</h2>
+        <p>When your work is ready to go into the main branch:</p>
         <ol>
-            <li>Make sure all changes in the worktree are committed (no dirty indicator).</li>
-            <li>Right-click the worktree row and choose <strong>Merge to main...</strong></li>
-            <li>The <strong>Merge Sheet</strong> opens, showing the commits that will be merged and the target branch (defaulting to <code>main</code>).</li>
-            <li>Confirm the merge options and click <strong>Merge</strong>.</li>
+            <li>Make sure all your changes are committed first (no unsaved changes).</li>
+            <li>Right-click the worktree and choose <strong>Merge to main...</strong></li>
+            <li>Review the summary and click <strong>Merge</strong>.</li>
         </ol>
-
-        <p>CC Gate switches to the main branch, runs <code>git merge &lt;branch&gt;</code>, and switches back. The merge result — fast-forward, merge commit, or conflict notification — is displayed in the sheet.</p>
 
         <div class="callout callout-warn">
-            <strong>Merge conflicts:</strong> If the merge produces conflicts, CC Gate will notify you and abort the merge. You must resolve conflicts manually in a terminal or editor. Open the main worktree in your preferred editor via the context menu, resolve the conflicts, and run <code>git merge --continue</code> in the terminal.
+            <strong>Merge conflicts:</strong> If the merge can't happen automatically, CC Gate will let you know. Open the project in your editor, find and fix the conflicting lines, then commit the resolved files before trying again.
         </div>
 
-        <h2 id="deleting">Deleting a Worktree</h2>
-        <p>To remove a worktree that is no longer needed:</p>
+        <h2 id="deleting">Deleting a worktree</h2>
         <ol>
-            <li>Right-click the worktree row and choose <strong>Delete Worktree...</strong></li>
-            <li>A confirmation dialog appears, warning that the working directory and any uncommitted changes will be permanently lost.</li>
-            <li>Confirm the deletion.</li>
+            <li>Right-click the worktree and choose <strong>Delete Worktree...</strong></li>
+            <li>Confirm in the dialog that appears.</li>
         </ol>
-
-        <p>CC Gate runs <code>git worktree remove --force &lt;path&gt;</code>, which removes the working directory and deregisters the worktree from git. The branch itself is <strong>not deleted</strong> — it remains in the repository and can be checked out again later.</p>
-
-        <div class="callout callout-warn">
-            <strong>Warning:</strong> Deleting a worktree is irreversible if you have uncommitted changes. Always commit or stash your work before deleting. The confirmation dialog shows a list of uncommitted files if any exist, giving you a final chance to save your work before proceeding.
-        </div>
-
-        <h2 id="health">Git Health Checker</h2>
-        <p>CC Gate includes a Git Health diagnostic tool (introduced in v2.11.12) that can identify and help remediate common git repository issues that might prevent normal worktree operations.</p>
-
-        <h3>What it checks</h3>
-        <div class="feature-grid">
-            <div class="feature-item">
-                <div class="fi-icon">&#128270;</div>
-                <h4>Stuck merge state</h4>
-                <p>Detects in-progress merges that were never completed or aborted, which block new merges from starting.</p>
-            </div>
-            <div class="feature-item">
-                <div class="fi-icon">&#128270;</div>
-                <h4>Broken refs</h4>
-                <p>Finds corrupt or missing branch references that can cause git operations to fail unexpectedly.</p>
-            </div>
-            <div class="feature-item">
-                <div class="fi-icon">&#128270;</div>
-                <h4>Detached worktrees</h4>
-                <p>Identifies worktree registrations pointing to directories that no longer exist on disk.</p>
-            </div>
-            <div class="feature-item">
-                <div class="fi-icon">&#128270;</div>
-                <h4>Lock files</h4>
-                <p>Detects stale <code>.git/index.lock</code> files left behind by crashed git processes that block all operations.</p>
-            </div>
-        </div>
-
-        <h3>Running the health check</h3>
-        <p>The health check can be triggered from the context menu of any project card in the CC Gate popup. When issues are found, CC Gate presents each one with a description of what it means and a one-click <strong>Fix</strong> button that applies the remediation automatically (e.g., removing a stale lock file or running <code>git worktree prune</code>).</p>
+        <p>This removes the folder from your Mac. Your branch history stays in git — you haven't lost any committed work. Only uncommitted changes in that folder would be gone, so make sure you've committed everything you want to keep before deleting.</p>
 
         <h2 id="troubleshooting">Troubleshooting</h2>
 
-        <h3>Merge conflicts must be resolved manually</h3>
-        <p>CC Gate cannot resolve merge conflicts on your behalf. When a merge fails due to conflicts, open the project in your editor, look for conflict markers (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>), resolve them, stage the resolved files, and run <code>git merge --continue</code> or <code>git commit</code>.</p>
+        <h3>Worktree won't delete</h3>
+        <p>Make sure all files in that worktree are committed or stashed first. If the folder was deleted manually outside of CC Gate, use the Git Health check (right-click the project card) to clean up the leftover reference.</p>
 
-        <h3>Worktree shows as "stuck" or doesn't appear</h3>
-        <p>If a worktree directory was deleted manually (outside CC Gate) without properly removing it from git, the worktree will be listed by git but have no corresponding directory. Run the Git Health Checker to detect and prune these orphaned registrations, or run <code>git worktree prune</code> in a terminal.</p>
+        <h3>Merge conflict</h3>
+        <p>Open the project in your editor. Look for sections marked with conflict indicators, fix them, then commit the changes. After that, the merge can proceed.</p>
 
-        <h3>Push rejected after creating worktree</h3>
-        <p>When pushing a new branch to a remote for the first time, git requires you to set the upstream tracking branch. Open the worktree directory in a terminal and run:</p>
-        <pre><code>git push --set-upstream origin &lt;branch-name&gt;</code></pre>
-        <p>If you have the <a href="github-integration.html">GitHub integration</a> configured, CC Gate can handle this automatically when you commit and push from the Commit Sheet.</p>
+        <h3>Branch already exists</h3>
+        <p>Choose a different name when creating the worktree. Every worktree needs a unique branch name.</p>
 
-        <h3>Cannot delete worktree — "is checked out"</h3>
-        <p>Git prevents deleting a worktree if another process has the directory locked or if the branch is currently checked out in another worktree. Make sure no terminal sessions are running in the worktree directory and try again. If the problem persists, close any editors pointing to that directory and retry.</p>
+        <h3>Worktree not showing up</h3>
+        <p>CC Gate checks for worktrees on each refresh. Wait a few seconds, or increase the refresh rate in Settings → General if you need faster updates.</p>
     </main>
 </div>
 

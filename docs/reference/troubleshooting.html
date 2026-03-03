@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Troubleshooting — CC Gate Docs</title>
-    <meta name="description" content="Solutions for common CC Gate issues: hook problems, auto-accept, project display, git worktrees, AI commits, GitHub integration, and performance.">
+    <title>Troubleshooting — CC Gate</title>
+    <meta name="description" content="Something not working? Find quick fixes for the most common CC Gate issues.">
     <link rel="canonical" href="https://ai-fresh.github.io/ccgate/docs/reference/troubleshooting.html">
     <style>
         :root {
@@ -45,56 +45,64 @@
         .docs-sidebar a.active { background: rgba(88,166,255,0.1); color: var(--accent); font-weight: 500; }
         .docs-content h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
         .docs-content .page-desc { font-size: 18px; color: var(--text-muted); margin-bottom: 40px; }
-        .docs-content h2 { font-size: 22px; font-weight: 700; margin: 48px 0 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .docs-content h2 { font-size: 22px; font-weight: 700; margin: 48px 0 16px; padding-top: 16px; border-top: 1px solid var(--border); }
         .docs-content h2:first-of-type { border-top: none; margin-top: 32px; }
-        .docs-content h3 { font-size: 16px; font-weight: 600; margin: 24px 0 8px; color: var(--text); }
         .docs-content p { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 16px; }
         .docs-content ul, .docs-content ol { padding-left: 24px; color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
         .docs-content li { margin-bottom: 6px; }
         .docs-content strong { color: var(--text); font-weight: 600; }
         code { background: rgba(110,118,129,0.2); padding: 2px 6px; border-radius: 4px; font-size: 13px; font-family: 'SF Mono', SFMono-Regular, Menlo, monospace; color: var(--text); }
-        pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto; margin: 16px 0; }
-        pre code { background: none; padding: 0; font-size: 14px; color: var(--text); }
         .docs-content img { max-width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.3); margin: 16px 0; display: block; }
-        .screenshot { max-width: 380px; }
-        .screenshot-wide { max-width: 580px; }
         .callout { padding: 16px 20px; border-radius: 10px; margin: 20px 0; font-size: 14px; line-height: 1.6; color: var(--text); }
         .callout-info { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.25); }
         .callout-warn { background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.25); }
         .callout-tip { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); }
-        .callout-danger { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.25); }
         .callout strong { display: block; margin-bottom: 4px; }
-        .step-list { counter-reset: step; list-style: none; padding: 0; }
-        .step-list li { counter-increment: step; display: flex; gap: 16px; margin-bottom: 24px; align-items: flex-start; }
-        .step-list li::before { content: counter(step); display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; min-width: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; }
-        .step-list li > div { flex: 1; }
-        .step-list li strong { display: block; font-size: 15px; color: var(--text); margin-bottom: 4px; }
-        .step-list li p { margin: 0; font-size: 14px; }
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 24px 0; }
-        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-        .card h3 { font-size: 16px; margin-bottom: 8px; }
-        .card p { font-size: 14px; color: var(--text-muted); margin: 0; }
-        .tier-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 13px; font-weight: 600; }
-        .tier-read { background: rgba(88,166,255,0.15); color: var(--accent); }
-        .tier-write { background: rgba(210,153,34,0.15); color: var(--orange); }
-        .tier-execute { background: rgba(248,81,73,0.15); color: var(--red); }
-        .tier-plan { background: rgba(188,140,255,0.15); color: var(--purple); }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
-        th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
-        td { color: var(--text-muted); }
-        td strong { color: var(--text); }
-        .issue-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 12px; }
-        .issue-block h3 { font-size: 15px; color: var(--text); margin: 0 0 10px; font-weight: 600; }
-        .issue-block p { font-size: 14px; color: var(--text-muted); margin: 0; line-height: 1.6; }
-        .issue-block p + p { margin-top: 8px; }
-        .issue-label { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 4px; margin-bottom: 10px; background: rgba(248,81,73,0.1); color: var(--red); border: 1px solid rgba(248,81,73,0.2); }
-        .issue-label.expected { background: rgba(63,185,80,0.08); color: var(--green); border-color: rgba(63,185,80,0.2); }
-        .toc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin: 24px 0; }
-        .toc h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .toc ul { padding-left: 0; list-style: none; margin: 0; }
-        .toc ul li { margin-bottom: 6px; }
-        .toc ul li a { font-size: 14px; color: var(--accent); }
+        /* FAQ accordion */
+        details {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        details[open] { border-color: rgba(88,166,255,0.3); }
+        summary {
+            padding: 16px 20px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            user-select: none;
+        }
+        summary::-webkit-details-marker { display: none; }
+        summary::after {
+            content: '+';
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        details[open] summary::after { content: '−'; }
+        summary:hover { background: var(--bg-card-hover); }
+        .details-body {
+            padding: 0 20px 18px;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 0;
+        }
+        .details-body p { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.7; }
+        .details-body p:last-child { margin-bottom: 0; }
+        .details-body strong { color: var(--text); }
         footer { text-align: center; padding: 40px 24px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px; margin-top: 60px; }
         footer .links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
         @media(max-width:768px) { .docs-layout { grid-template-columns: 1fr; } .docs-sidebar { display: none; } .docs-content h1 { font-size: 28px; } }
@@ -143,201 +151,123 @@
 
     <main class="docs-content">
         <h1>Troubleshooting</h1>
-        <p class="page-desc">Solutions for common issues organized by category. Check the debug logs section at the bottom for advanced diagnostics.</p>
+        <p class="page-desc">Something not working? Find quick fixes for the most common CC Gate issues.</p>
 
-        <div class="toc">
-            <h3>Jump to section</h3>
-            <ul>
-                <li><a href="#hook-issues">Hook Issues</a></li>
-                <li><a href="#auto-accept-issues">Auto-Accept Issues</a></li>
-                <li><a href="#project-display-issues">Project Display Issues</a></li>
-                <li><a href="#git-worktree-issues">Git Worktree Issues</a></li>
-                <li><a href="#ai-commits-issues">AI Commits Issues</a></li>
-                <li><a href="#github-integration-issues">GitHub Integration Issues</a></li>
-                <li><a href="#app-performance-issues">App / Performance Issues</a></li>
-                <li><a href="#debug-logs">Debug Logs</a></li>
-            </ul>
-        </div>
+        <h2>The hook / connection to Claude Code</h2>
 
-        <h2 id="hook-issues">Hook Issues</h2>
+        <details>
+            <summary>Auto-accept isn't working even though I turned it on</summary>
+            <div class="details-body">
+                <p>The hook needs to be installed first. Go to <strong>Settings → Hook</strong> and click <strong>Install</strong> if the status isn't green.</p>
+                <p>Also check which auto-accept tiers are enabled. Each action belongs to a tier — if you've only enabled Read, then Bash commands (which are Execute tier) will still ask for approval. Open the Questions window and check your tier settings.</p>
+                <p>One more thing: any Claude Code sessions that were already running before you installed the hook won't be affected. Open a new session and try again.</p>
+            </div>
+        </details>
 
-        <div class="issue-block">
-            <h3>Hook shows "Not installed"</h3>
-            <p>Go to Settings → Hook → click the Install button. CC Gate will write the hook script to <code>~/.claude/hooks/ccmanager-permissions.sh</code> and register it in <code>~/.claude/settings.json</code>.</p>
-            <p>If installation fails, verify that the <code>~/.claude/</code> directory exists. If it does not, open Claude Code at least once to create it, then retry the installation.</p>
-        </div>
+        <details>
+            <summary>I installed the hook but Claude Code still asks me in the terminal</summary>
+            <div class="details-body">
+                <p>Restart your Claude Code session. The connection between CC Gate and Claude only applies to sessions that started after the hook was installed. Close your current Claude session, open a new one, and the hook will be active.</p>
+            </div>
+        </details>
 
-        <div class="issue-block">
-            <h3>Hook shows "Outdated"</h3>
-            <p>CC Gate detected that the installed hook file version does not match the current expected version. Uninstall the hook (Settings → Hook → Uninstall), then reinstall (Install). The new hook takes effect for new Claude Code sessions.</p>
-        </div>
+        <details>
+            <summary>It says "Hook outdated"</summary>
+            <div class="details-body">
+                <p>This means CC Gate has a newer version of the hook than what's currently installed. CC Gate will usually update it automatically. If it doesn't, go to <strong>Settings → Hook</strong> → click <strong>Uninstall</strong>, then click <strong>Install</strong> again. Start a new Claude Code session afterwards.</p>
+            </div>
+        </details>
 
-        <div class="issue-block">
-            <h3>Questions not appearing after installing hook</h3>
-            <p>The hook only applies to <strong>new</strong> Claude Code sessions. Claude Code snapshots hook configuration when a session starts. Close your current Claude Code session and open a new one. If using <code>/continue</code>, exit fully and restart.</p>
-        </div>
+        <h2>Projects</h2>
 
-        <div class="issue-block">
-            <h3>Claude Code overwrites settings.json</h3>
-            <p>This can happen when Claude Code updates or resets its configuration. CC Gate detects this on the next refresh cycle and automatically re-adds the hook registration entry. If auto-repair does not trigger, go to Settings → Hook → Uninstall → Install to force a fresh registration.</p>
-        </div>
+        <details>
+            <summary>A project isn't showing up in CC Gate</summary>
+            <div class="details-body">
+                <p>You need to have opened that folder in Claude Code at least once. CC Gate discovers projects by looking at Claude Code's session history — if you've never run Claude Code in that folder, CC Gate doesn't know it exists yet.</p>
+                <p>Open Claude Code in the project folder, send one message, then come back to CC Gate. It will appear on the next refresh.</p>
+            </div>
+        </details>
 
-        <div class="issue-block">
-            <h3>Safe commands bypass the hook</h3>
-            <span class="issue-label expected">Expected behavior</span>
-            <p>Commands like <code>echo</code>, <code>ls</code>, <code>git status</code>, and other read-only operations may not trigger a <code>PermissionRequest</code> event. Claude Code only fires <code>PermissionRequest</code> for operations it considers potentially sensitive. This is by Claude Code's design and is expected behavior — CC Gate cannot intercept operations that Claude Code does not send permission requests for.</p>
-        </div>
+        <details>
+            <summary>I see duplicate projects</summary>
+            <div class="details-body">
+                <p>This can happen if the same folder was accessed through different paths — for example, once directly and once through a symlink, or if you have two separate copies checked out in different places. Both entries work fine. They're genuinely different entries from Claude Code's point of view.</p>
+            </div>
+        </details>
 
-        <h2 id="auto-accept-issues">Auto-Accept Issues</h2>
+        <details>
+            <summary>A project shows as "Idle" but Claude is running</summary>
+            <div class="details-body">
+                <p>CC Gate updates on a schedule. By default it checks every 15 seconds, so the status can be up to 15 seconds behind. If you want faster updates, go to <strong>Settings → General → Refresh Interval</strong> and set it to 5 seconds.</p>
+            </div>
+        </details>
 
-        <div class="issue-block">
-            <h3>Questions not being auto-accepted</h3>
-            <p>Open the Questions window (bell icon in the CC Gate menu) and check which tiers are enabled. The auto-accept tier must match the tool being requested. For example, if only Read tier is enabled, Bash commands (Execute tier) will still require manual approval.</p>
-            <p>Also confirm the hook is installed and the current Claude Code session started <em>after</em> the hook was installed.</p>
-        </div>
+        <h2>Auto-accept</h2>
 
-        <div class="issue-block">
-            <h3>Wrong tier level shown for a tool</h3>
-            <p>Verify which tier a tool belongs to in the <a href="../features/auto-accept.html">Auto-Accept documentation</a>. Unknown tools (those not in CC Gate's tier map) always require manual approval regardless of which tiers are enabled. This is intentional for safety.</p>
-        </div>
+        <details>
+            <summary>CC Gate isn't auto-accepting a specific action</summary>
+            <div class="details-body">
+                <p>Some tools are in categories that CC Gate doesn't recognise, and those always require manual approval — this is intentional for safety. If you know which tier the action belongs to, make sure that tier is enabled in the Questions window.</p>
+                <p>If the action never appears in CC Gate at all, it may be one that Claude Code handles without going through the permission system — like simple read-only commands.</p>
+            </div>
+        </details>
 
-        <div class="issue-block">
-            <h3>Auto-accept stopped working after app update</h3>
-            <p>A CC Gate update may have changed the hook version. Check Settings → Hook — if it shows "Outdated", reinstall the hook. Then start a new Claude Code session so the updated hook is picked up.</p>
-        </div>
+        <details>
+            <summary>Claude is asking for permission in the terminal, not in CC Gate</summary>
+            <div class="details-body">
+                <p>The hook isn't installed, or the current Claude session started before you installed it. Check <strong>Settings → Hook</strong> — the status should be green. If it is, start a new Claude Code session.</p>
+            </div>
+        </details>
 
-        <div class="issue-block">
-            <h3>Auto-accept tiers reset to Off after restart</h3>
-            <p>This was a known bug fixed in v9.0 (the <code>@Published</code> didSet in init issue). If you are seeing this on v9.0 or later, ensure you are running the latest version. Download from <a href="https://github.com/ai-fresh/ccgate/releases" target="_blank" rel="noopener">GitHub Releases</a> and reinstall.</p>
-        </div>
+        <h2>AI Commits</h2>
 
-        <h2 id="project-display-issues">Project Display Issues</h2>
+        <details>
+            <summary>"No session found" error</summary>
+            <div class="details-body">
+                <p>CC Gate needs to see recent Claude Code activity in the project to generate a commit message. Run Claude Code in the project — even just send one message — then open the commit panel and try again.</p>
+            </div>
+        </details>
 
-        <div class="issue-block">
-            <h3>Projects show "Unknown" status</h3>
-            <span class="issue-label expected">Expected for old projects</span>
-            <p>Older Claude Code sessions do not include an <code>originalPath</code> field in their session data. CC Gate cannot resolve the path for these projects and shows "Unknown" status. This is expected for projects created before CC Gate started tracking them. The project will show correctly once a new Claude Code session is started for it.</p>
-        </div>
+        <details>
+            <summary>The generated message doesn't match what Claude did</summary>
+            <div class="details-body">
+                <p>Add a short note in the "What were you working on?" field — something like "fixing the login bug" or "adding dark mode" — and click <strong>Refine</strong>. CC Gate will use your hint to write a more accurate message without starting over from scratch.</p>
+            </div>
+        </details>
 
-        <div class="issue-block">
-            <h3>Duplicate projects in the list</h3>
-            <p>CC Gate deduplicates projects by <code>originalPath</code>. If you see apparent duplicates, they likely have different resolved paths (e.g. one via symlink and one via absolute path, or two separate checkouts in different directories). They are genuinely different entries.</p>
-        </div>
+        <h2>Performance</h2>
 
-        <div class="issue-block">
-            <h3>A project is not showing in the list</h3>
-            <p>The project must have at least one session file in <code>~/.claude/projects/</code>. Open Claude Code in the project directory and send at least one message to create a session. CC Gate will pick it up on the next refresh cycle.</p>
-        </div>
+        <details>
+            <summary>CC Gate uses too much CPU or battery</summary>
+            <div class="details-body">
+                <p>Go to <strong>Settings → General → Refresh Interval</strong> and increase it. At 5 seconds, CC Gate runs frequent checks that use more power. Try 30 seconds or 60 seconds if you're on a laptop running on battery — you'll barely notice the difference in practice.</p>
+            </div>
+        </details>
 
-        <div class="issue-block">
-            <h3>Project status appears outdated for an active session</h3>
-            <p>CC Gate refreshes at the configured interval (default 15 seconds). If the status looks stale, wait for the next refresh, or increase the refresh frequency in Settings → General → Monitoring. The minimum is 5 seconds.</p>
-        </div>
+        <h2>General</h2>
 
-        <h2 id="git-worktree-issues">Git Worktree Issues</h2>
+        <details>
+            <summary>CC Gate won't launch / macOS blocked it</summary>
+            <div class="details-body">
+                <p>macOS sometimes blocks apps downloaded from the internet, especially if they're new to your Mac. To open CC Gate anyway:</p>
+                <p>Find CC Gate in your Applications folder. Right-click it and choose <strong>Open</strong> (don't just double-click). A dialog will appear asking if you're sure — click <strong>Open</strong>. You only need to do this once. After that, it opens normally.</p>
+            </div>
+        </details>
 
-        <div class="issue-block">
-            <h3>Worktree stuck after a failed merge or operation</h3>
-            <p>Run <code>git worktree prune</code> in terminal from the main repository directory. This removes references to worktrees whose directories no longer exist. If the worktree directory is still present but broken, delete it manually: <code>rm -rf /path/to/worktree</code>, then run <code>git worktree prune</code> again.</p>
-        </div>
+        <details>
+            <summary>The CC Gate icon isn't in my menu bar</summary>
+            <div class="details-body">
+                <p>CC Gate lives only in the menu bar — it has no Dock icon. If you don't see it, the app may not be running. Open Finder → Applications → double-click CC Gate to launch it.</p>
+                <p>If you launched it and still don't see the icon, your menu bar might be full. On Macs with a notch, some icons get hidden. Try using a menu bar manager like Bartender to make room, or check the Control Centre for hidden icons.</p>
+            </div>
+        </details>
 
-        <div class="issue-block">
-            <h3>Merge conflict in a worktree</h3>
-            <p>Resolve conflicts manually in the worktree directory using your editor or git command line tools. After resolving all conflicts, run <code>git add .</code> and <code>git commit</code> in the worktree directory. Then return to CC Gate — it will detect the resolved state on the next refresh.</p>
-        </div>
-
-        <div class="issue-block">
-            <h3>Push from worktree rejected</h3>
-            <p>Pull the latest changes in the worktree: <code>cd /path/to/worktree && git pull origin main</code> (or the relevant branch). Resolve any merge conflicts, then retry the push from CC Gate.</p>
-        </div>
-
-        <div class="issue-block">
-            <h3>Worktree not appearing in CC Gate</h3>
-            <p>CC Gate reads worktrees via <code>git worktree list</code> for each tracked project. If a worktree does not appear, ensure it was created with <code>git worktree add</code> from within the project repository (not a copy of the repo). CC Gate will pick it up on the next refresh.</p>
-        </div>
-
-        <h2 id="ai-commits-issues">AI Commits Issues</h2>
-
-        <div class="issue-block">
-            <h3>"No session found"</h3>
-            <p>A Claude Code session file must exist for the project in <code>~/.claude/projects/</code>. Open the project in Claude Code and send at least one message. The session file is created on the first message. Then return to CC Gate's CommitSheet and try again.</p>
-        </div>
-
-        <div class="issue-block">
-            <h3>Empty or generic commit message generated</h3>
-            <p>This usually means the session context was empty (no messages since the last commit) or the diff was empty. Ensure you have staged or unstaged changes. Try adding a refinement note describing what you worked on — CC Gate will use it to generate a more specific message.</p>
-        </div>
-
-        <div class="issue-block">
-            <h3>API key error</h3>
-            <p>Go to Settings → AI → Test. If the test fails, the key may be invalid or have zero remaining credits. Regenerate your key at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>, paste the new key into Settings → AI, and test again.</p>
-        </div>
-
-        <div class="issue-block">
-            <h3>Diff too large / chunking errors</h3>
-            <p>Large diffs are automatically chunked. If errors persist even after chunking, the diff may be extremely large (over 500 KB). Add large generated files to <code>.gitignore</code> — common culprits include <code>package-lock.json</code>, <code>yarn.lock</code>, compiled output, database dumps, and binary assets. Use <code>git diff --stat</code> to identify the largest contributors.</p>
-        </div>
-
-        <h2 id="github-integration-issues">GitHub Integration Issues</h2>
-
-        <div class="issue-block">
-            <h3>"Not connected" / token not recognized</h3>
-            <p>Add or re-enter your GitHub Personal Access Token in Settings → GitHub. The token must have <code>repo</code> scope. After saving, the status badge should turn green. If it stays gray, the token may be malformed — copy it directly from the GitHub token page.</p>
-        </div>
-
-        <div class="issue-block">
-            <h3>Push rejected by GitHub</h3>
-            <p>The remote branch has commits that are not in your local branch. Run <code>git pull origin main</code> (or the relevant branch name) in terminal, resolve any conflicts, then retry the push from CC Gate's CommitSheet.</p>
-        </div>
-
-        <div class="issue-block">
-            <h3>Fork operation failed — fork already exists</h3>
-            <p>GitHub's API returns an error if a fork of the repository already exists under your account. Navigate directly to <code>github.com/your-username/repo-name</code>. CC Gate cannot overwrite or merge an existing fork.</p>
-        </div>
-
-        <div class="issue-block">
-            <h3>Token expired</h3>
-            <p>GitHub Personal Access Tokens with a set expiration date stop working after the expiration date. Generate a new token at <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a>, then update it in Settings → GitHub → paste new token → Save token.</p>
-        </div>
-
-        <h2 id="app-performance-issues">App / Performance Issues</h2>
-
-        <div class="issue-block">
-            <h3>High CPU or battery usage</h3>
-            <p>Increase the refresh interval in Settings → General → Monitoring. The default is 15 seconds. At 5 seconds, CC Gate runs frequent <code>ps</code> and file system scans which noticeably increase CPU usage. Try 30 seconds or 60 seconds if you are on battery.</p>
-        </div>
-
-        <div class="issue-block">
-            <h3>App not launching / blocked by Gatekeeper</h3>
-            <p>If macOS blocks CC Gate at launch, open System Settings → Privacy &amp; Security. Scroll to the Security section — you should see a message about CC Gate being blocked. Click "Open Anyway". CC Gate is signed and notarized with a Developer ID certificate, so this prompt should appear only on first launch after download.</p>
-        </div>
-
-        <div class="issue-block">
-            <h3>Menu bar icon missing</h3>
-            <p>CC Gate runs exclusively as a menu bar app with no Dock icon. If the icon is not visible, the app may not be running. Open Finder → Applications → CC Gate.app and double-click to launch. If you see no icon after launch, check if menu bar icon hiding is enabled in macOS (System Settings → Control Centre → Menu Bar Only section).</p>
-        </div>
-
-        <div class="issue-block">
-            <h3>Settings window does not open</h3>
-            <p>Click the CC Gate menu bar icon, then click the gear icon in the popup. If the window opens behind other windows, check Mission Control or click the gear icon again. On macOS 15+, the settings window may open in the background — look for it in the Dock or use Command+Tab.</p>
-        </div>
-
-        <h2 id="debug-logs">Debug Logs</h2>
-
-        <p>CC Gate writes structured debug logs to a persistent file. Always include both logs when filing a bug report.</p>
-
-        <h3>CC Gate application log</h3>
-        <pre><code>tail -f /tmp/ccmanager-debug.log</code></pre>
-
-        <h3>Hook log</h3>
-        <pre><code>tail -f ~/.claude/.ccmanager/hook.log</code></pre>
-
-        <p>The app log uses prefixed tags to identify the source of each entry: <code>[Scanner]</code> for project scanning, <code>[AutoAccept]</code> for tier decisions, <code>[ViewModel]</code> for state changes, and <code>[HookInstaller]</code> for hook operations.</p>
-
-        <div class="callout callout-info">
-            <strong>Filing a bug report</strong>
-            Include your CC Gate version (Settings → About), macOS version, and both log files. Report issues at <a href="https://github.com/ai-fresh/ccgate/issues" target="_blank" rel="noopener">github.com/ai-fresh/ccgate/issues</a>. Paste the relevant log lines rather than attaching the full file if possible, to make it easier to identify the relevant section.
-        </div>
+        <details>
+            <summary>Where can I report a bug?</summary>
+            <div class="details-body">
+                <p>Open a report at <a href="https://github.com/ai-fresh/ccgate/issues" target="_blank" rel="noopener">GitHub Issues</a>. Include your CC Gate version (Settings → About), your macOS version, and a short description of what happened and what you expected to happen instead. The more detail, the faster we can help.</p>
+            </div>
+        </details>
     </main>
 </div>
 
