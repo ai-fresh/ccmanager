@@ -262,13 +262,17 @@
                 <div class="status-dot-large status-dot-waiting"></div>
                 <div class="status-card-content">
                     <h3>Orange — Idle</h3>
-                    <div class="status-card-meta">Claude Code session is open, but nothing is running right now</div>
-                    <p>A Claude Code session is active in this project, but Claude is not doing anything at the moment. This is the resting state between tasks — you'll see it after Claude finishes a task and is waiting for your next message.</p>
+                    <div class="status-card-meta">Claude Code session is open but idle, or the session is closed</div>
+                    <p>Either a Claude Code session is open in this project but not doing anything right now, or there is no active session at all. This is the resting state between tasks — you'll see it after Claude finishes a task and is waiting for your next message, or when Claude Code is not running.</p>
                 </div>
             </div>
 
             <div class="status-card">
-                <div style="width:20px;height:20px;flex-shrink:0;margin-top:4px;display:flex;align-items:center;justify-content:center;font-size:18px;">🔔</div>
+                <div style="width:20px;height:20px;flex-shrink:0;margin-top:4px;display:flex;align-items:center;justify-content:center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="var(--red)" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.64-5.64-4.5-6.32V4a1.5 1.5 0 0 0-3 0v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                    </svg>
+                </div>
                 <div class="status-card-content">
                     <h3>Red bell — waiting for your approval</h3>
                     <div class="status-card-meta">Claude needs you to approve something before it can continue</div>
