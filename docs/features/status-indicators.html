@@ -261,18 +261,18 @@
             <div class="status-card">
                 <div class="status-dot-large status-dot-waiting"></div>
                 <div class="status-card-content">
-                    <h3>Orange — Claude is waiting for you</h3>
-                    <div class="status-card-meta">Claude has paused and needs your input or permission</div>
-                    <p>This means Claude has stopped and is waiting for something from you. It could be a permission request (like "can I run this command?") or a question Claude is asking you directly. If you have <a href="auto-accept.html">Auto-Accept</a> turned on for that type of action, CC Gate will handle it automatically and the dot will go back to green.</p>
+                    <h3>Orange — Idle</h3>
+                    <div class="status-card-meta">Claude Code session is open, but nothing is running right now</div>
+                    <p>A Claude Code session is active in this project, but Claude is not doing anything at the moment. This is the resting state between tasks — you'll see it after Claude finishes a task and is waiting for your next message.</p>
                 </div>
             </div>
 
             <div class="status-card">
-                <div class="status-dot-large status-dot-idle"></div>
+                <div style="width:20px;height:20px;flex-shrink:0;margin-top:4px;display:flex;align-items:center;justify-content:center;font-size:18px;">🔔</div>
                 <div class="status-card-content">
-                    <h3>Gray — no active session</h3>
-                    <div class="status-card-meta">Claude Code is not currently running in this project</div>
-                    <p>The project has history in CC Gate, but no Claude session is open right now. This is the normal state for most projects most of the time. You'll see all your projects go gray when you close Claude Code.</p>
+                    <h3>Red bell — waiting for your approval</h3>
+                    <div class="status-card-meta">Claude needs you to approve something before it can continue</div>
+                    <p>A red notification bell appears when Claude is blocked waiting for your response — for example a permission request ("can I run this command?"), a plan that needs your sign-off, or a direct question. Click the project to see the pending request and respond. If you have <a href="auto-accept.html">Auto-Accept</a> enabled for that action type, CC Gate handles it automatically.</p>
                 </div>
             </div>
 
