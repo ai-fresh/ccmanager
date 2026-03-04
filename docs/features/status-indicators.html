@@ -309,18 +309,27 @@
 
         <h2 id="adding">Adding a new project</h2>
 
-        <p>Click the <strong>+</strong> button in the top bar of the CC Gate popup. You'll be able to choose a folder — Claude Code will open there and the project will appear in the list right away.</p>
+        <p>Click the <strong>+</strong> button in the top bar of the CC Gate popup. Type a name for the new project — CC Gate will create the folder inside your configured projects directory and open Claude Code there. The project appears in the list right away.</p>
 
-        <img src="../../assets/screenshots/docs/popup-worktrees.png" alt="CC Gate popup showing the expanded project view with worktrees" class="screenshot">
+        <img src="../../assets/screenshots/docs/popup-new-project.png" alt="CC Gate popup showing the New Project dialog with a name input and Create button" class="screenshot" style="max-width:100%;">
 
         <h2 id="removing">Removing a project</h2>
 
         <p>Projects fade out on their own when all their session history is gone. You don't usually need to remove them manually.</p>
 
-        <p>If you want to remove a project yourself, right-click on it in the list and choose <strong>Remove</strong> if the option is available. You can also remove a project's history through Claude Code itself.</p>
+        <p>If you want to remove a project yourself, right-click on it in the list and choose <strong>Remove</strong>.</p>
 
-        <div class="callout callout-info">
-            <strong>Note:</strong> Removing a project from CC Gate only removes it from the list. Your actual code files are completely unaffected.
+        <h3>What gets deleted — and what doesn't</h3>
+
+        <p>CC Gate applies a safety rule before deleting anything:</p>
+
+        <ul>
+            <li><strong>Project inside your configured directory</strong> — the project folder and its files are deleted. This only applies to projects that CC Gate itself created inside the folder you defined in Settings.</li>
+            <li><strong>Project outside your configured directory</strong> — CC Gate will <em>not</em> delete any files. Instead it informs you about the situation and removes only the project entry from the list.</li>
+        </ul>
+
+        <div class="callout callout-warn">
+            <strong>Why this exists:</strong> This safety check prevents CC Gate from accidentally deleting files in folders you opened manually from elsewhere on your disk — only folders it created in its own workspace can be removed automatically.
         </div>
 
         <h2 id="search">Searching projects</h2>
