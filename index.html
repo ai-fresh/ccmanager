@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CC Gate — Manage Claude Code Sessions from Your Menu Bar</title>
+    <title>CC Gate — Claude Code Project Manager for macOS</title>
 
     <!-- Google Search Console -->
     <meta name="google-site-verification" content="xxxxx">
 
     <!-- SEO -->
-    <meta name="description" content="CC Gate is a free macOS menu bar app for monitoring Claude Code sessions, auto-approving tool permissions, and managing questions. 4-tier auto-accept, live status, native UI.">
-    <meta name="keywords" content="CC Gate, Claude Code, macOS, menu bar, auto-accept, permissions, AI tools, developer tools, Claude, Anthropic, SwiftUI, productivity">
+    <meta name="description" content="CC Gate is a free macOS menu bar app for managing all your Claude Code projects. Monitor sessions, manage Git worktrees, track activity, and handle permissions — all from one place.">
+    <meta name="keywords" content="CC Gate, Claude Code, macOS, menu bar, project manager, sessions, git worktrees, AI tools, developer tools, Claude, Anthropic, SwiftUI, productivity">
     <meta name="author" content="AI Fresh">
     <link rel="canonical" href="https://ai-fresh.github.io/ccgate/">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="CC Gate — Manage Claude Code Sessions from Your Menu Bar">
-    <meta property="og:description" content="Free macOS menu bar app for monitoring Claude Code sessions, auto-approving tool permissions, and managing questions.">
+    <meta property="og:title" content="CC Gate — Claude Code Project Manager for macOS">
+    <meta property="og:description" content="Free macOS menu bar app for managing all your Claude Code projects. Monitor sessions, worktrees, permissions — all in one place.">
     <meta property="og:image" content="https://ai-fresh.github.io/ccgate/assets/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -26,8 +26,8 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="CC Gate — Manage Claude Code Sessions from Your Menu Bar">
-    <meta name="twitter:description" content="Free macOS menu bar app for monitoring Claude Code sessions, auto-approving tool permissions, and managing questions.">
+    <meta name="twitter:title" content="CC Gate — Claude Code Project Manager for macOS">
+    <meta name="twitter:description" content="Free macOS menu bar app for managing all your Claude Code projects. Monitor sessions, worktrees, permissions — all in one place.">
     <meta name="twitter:image" content="https://ai-fresh.github.io/ccgate/assets/og-image.png">
 
     <!-- Structured Data -->
@@ -36,7 +36,7 @@
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
         "name": "CC Gate",
-        "description": "macOS menu bar application for monitoring and managing Claude Code sessions with 4-tier auto-accept permissions, live session status, and native question management UI.",
+        "description": "macOS menu bar application for managing Claude Code projects — live session monitoring, Git worktrees, permission handling, AI commit messages, and multi-editor support.",
         "applicationCategory": "DeveloperApplication",
         "operatingSystem": "macOS 13.0+",
         "url": "https://ai-fresh.github.io/ccgate/",
@@ -108,7 +108,7 @@
         .hero .tagline {
             font-size: 20px;
             color: var(--text-muted);
-            max-width: 600px;
+            max-width: 620px;
             margin: 0 auto 32px;
         }
         .hero-buttons {
@@ -160,55 +160,6 @@
             font-weight: 500;
             border: 1px solid var(--border);
             color: var(--text-muted);
-        }
-        .hero-notice {
-            max-width: 700px;
-            margin: 24px auto 0;
-            padding: 16px 20px;
-            background: rgba(88,166,255,0.1);
-            border: 1px solid rgba(88,166,255,0.3);
-            border-radius: 12px;
-            font-size: 14px;
-            line-height: 1.6;
-            color: var(--text);
-        }
-        .hero-notice strong {
-            color: var(--accent);
-            font-weight: 600;
-        }
-        .hero-notice a {
-            color: var(--accent);
-            text-decoration: underline;
-            font-weight: 500;
-        }
-        .hero-notice a:hover {
-            color: var(--accent-hover);
-        }
-        .code-block-wrapper {
-            position: relative;
-            margin: 12px 0 8px;
-        }
-        .copy-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(88,166,255,0.15);
-            border: 1px solid rgba(88,166,255,0.4);
-            color: var(--accent);
-            padding: 4px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.2s;
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-        }
-        .copy-btn:hover {
-            background: rgba(88,166,255,0.25);
-            border-color: var(--accent);
-        }
-        .copy-btn:active {
-            transform: scale(0.95);
         }
 
         /* Screenshots */
@@ -370,6 +321,22 @@
             color: var(--text);
         }
 
+        /* Info banner */
+        .info-banner {
+            background: rgba(63,185,80,0.08);
+            border: 1px solid rgba(63,185,80,0.25);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 40px;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+        .info-banner strong {
+            color: var(--green);
+            font-weight: 600;
+        }
+
         /* FAQ */
         .faq-list { margin-top: 24px; }
         .faq-item {
@@ -431,7 +398,7 @@
 <header class="hero">
     <img src="assets/logo.png" alt="CC Gate Logo" class="hero-logo" width="96" height="96">
     <h1>CC Gate</h1>
-    <p class="tagline">Monitor and manage Claude Code sessions from your macOS menu bar. Auto-approve tool permissions, track active sessions, and handle questions — without leaving your workflow.</p>
+    <p class="tagline">Your Claude Code project manager — right in the macOS menu bar. Monitor sessions, manage Git worktrees, and stay in control of all your AI-assisted projects without switching windows.</p>
     <div class="hero-buttons">
         <a href="https://github.com/ai-fresh/ccgate/releases/download/v2.11.12/CC.Gate-2.11.12.dmg" class="btn btn-primary">Download DMG for macOS</a>
         <a href="docs/" class="btn btn-secondary">Documentation</a>
@@ -442,7 +409,6 @@
         <span class="badge">Swift 5.9</span>
         <span class="badge">Free</span>
     </div>
-
 </header>
 
 <!-- Screenshots -->
@@ -454,7 +420,7 @@
         </div>
         <div class="screenshot-item">
             <img src="assets/screenshots/questions-window.png" alt="CC Gate questions window with 4-tier auto-accept control" width="350">
-            <p class="caption">Questions window — 4-tier auto-accept and stats</p>
+            <p class="caption">Questions window — permission management and stats</p>
         </div>
     </div>
 </div>
@@ -463,47 +429,52 @@
 <section>
     <div class="container">
         <h2>Features</h2>
-        <p class="subtitle">Everything you need to manage Claude Code without leaving your flow.</p>
+        <p class="subtitle">Everything you need to manage Claude Code projects without leaving your flow.</p>
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">&#9679;</div>
                 <h3>Live Session Monitoring</h3>
-                <p>Real-time status for every Claude Code project — active, waiting for input, or idle. Session counts, last activity time, and instant search.</p>
+                <p>Real-time status for every Claude Code project — active, waiting for input, or idle. Session counts, last activity timestamps, and instant search across all projects.</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">&#9889;</div>
-                <h3>4-Tier Auto-Accept</h3>
-                <p>Granular permission control: Read, Write, Execute, Plan. Each tier independently toggleable. Unknown tools always require manual approval.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">&#128276;</div>
-                <h3>Question Management</h3>
-                <p>When Claude asks for permission, CC Gate shows it instantly. One-click approve/deny, auto-accept stats, and history with timestamps.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">&#128268;</div>
-                <h3>Hook-Based Architecture</h3>
-                <p>Integrates via Claude Code's native PermissionRequest hook. No hacks, no terminal scraping. Installed and managed from the app UI.</p>
+                <div class="feature-icon">&#127808;</div>
+                <h3>Git Worktrees</h3>
+                <p>Run multiple Claude Code sessions on separate branches of the same repo. Create, switch, merge, and delete worktrees without leaving the menu bar.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">&#128187;</div>
                 <h3>Multi-Editor Support</h3>
-                <p>Open projects in Terminal, VS Code, Cursor, iTerm, or Warp. Create new Claude Code projects directly from the menu bar.</p>
+                <p>Open any project directly in Terminal, VS Code, Cursor, iTerm, or Warp. Start new Claude Code sessions with one click from the menu bar.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#128276;</div>
+                <h3>Permission Management</h3>
+                <p>When Claude asks for permission, CC Gate shows it in a native macOS UI. One-click approve or deny, with a full history of past decisions and timestamps.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">&#9889;</div>
+                <h3>Advanced Auto-Accept</h3>
+                <p>4-tier permission control — Read, Write, Execute, Plan — giving you finer-grained control than Claude Code's built-in auto-accept. Unknown tools always require manual approval.</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">&#127760;</div>
                 <h3>Auto-Update & Localization</h3>
-                <p>Get notified when new versions are available. Full English and Polish localization. Floating windows that stay on top.</p>
+                <p>Get notified when new versions are available. Full English and Polish localization. Floating windows that stay on top of your workspace.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Auto-Accept Tiers -->
+<!-- Auto-Accept -->
 <section>
     <div class="container">
-        <h2>Auto-Accept Tiers</h2>
-        <p class="subtitle">Control what Claude can do without asking. Each tier is independent.</p>
+        <h2>Advanced Auto-Accept</h2>
+        <p class="subtitle">Go beyond Claude Code's built-in settings with 4 independent permission tiers.</p>
+
+        <div class="info-banner">
+            <strong>Note:</strong> Claude Code now includes native auto-accept functionality. CC Gate extends this with a more granular 4-tier system — letting you allow reads but block writes, or allow writes but require manual approval for shell commands. Each tier is toggled independently from a native macOS UI.
+        </div>
+
         <table class="tiers-table">
             <thead>
                 <tr>
@@ -569,20 +540,20 @@
         <h2>FAQ</h2>
         <div class="faq-list">
             <details class="faq-item" open>
-                <summary>Is it safe to auto-accept Execute (Bash)?</summary>
-                <p>The Execute tier gives Claude full terminal access. Only enable it if you trust the codebase and Claude's judgment. For most workflows, Read + Write is a good balance.</p>
+                <summary>How is CC Gate different from Claude Code's built-in features?</summary>
+                <p>Claude Code is a command-line tool — it runs in a terminal window per project. CC Gate sits in your menu bar and gives you a unified view across all your projects at once. It also adds Git worktree management, multi-editor integration, and a more granular auto-accept system on top of what Claude Code provides natively.</p>
             </details>
             <details class="faq-item">
                 <summary>Does CC Gate work with multiple projects?</summary>
-                <p>Yes. CC Gate monitors all sessions in <code>~/.claude/projects/</code> and displays them in a single list with per-project status.</p>
+                <p>Yes. CC Gate monitors all sessions in <code>~/.claude/projects/</code> and displays them in a single list with per-project status, activity time, and worktree information.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Do I need to use the auto-accept feature?</summary>
+                <p>No. You can keep all auto-accept tiers disabled and use CC Gate purely as a project dashboard, session monitor, and question management UI.</p>
             </details>
             <details class="faq-item">
                 <summary>What happens if CC Gate is closed?</summary>
-                <p>Claude Code falls back to its default behavior — asking in the terminal. CC Gate is purely additive; closing it changes nothing.</p>
-            </details>
-            <details class="faq-item">
-                <summary>Can I use it without auto-accept?</summary>
-                <p>Absolutely. Keep all tiers disabled and use CC Gate purely as a session monitor and question management UI.</p>
+                <p>Claude Code falls back to its default behavior — asking in the terminal. CC Gate is purely additive; closing it changes nothing about how Claude Code works.</p>
             </details>
             <details class="faq-item">
                 <summary>What data does CC Gate collect?</summary>
@@ -605,7 +576,6 @@
 
 <!-- Dynamic Version Fetching -->
 <script>
-// Automatically fetch and update latest release info from GitHub API
 (function() {
   const REPO = 'ai-fresh/ccgate';
   const API_URL = `https://api.github.com/repos/${REPO}/releases/latest`;
@@ -617,17 +587,14 @@
       const pkgAsset = data.assets.find(a => a.name.endsWith('.pkg'));
       const dmgAsset = data.assets.find(a => a.name.endsWith('.dmg'));
 
-      // Update all version displays
       document.querySelectorAll('.version, [data-version]').forEach(el => {
         el.textContent = version;
       });
 
-      // Update download links - CRITICAL for preventing 404s
       if (pkgAsset) {
         document.querySelectorAll('a[href*="releases/download"]').forEach(link => {
           if (link.href.includes('.pkg')) {
             link.href = pkgAsset.browser_download_url;
-            // Update link text if it contains version number
             if (link.textContent.match(/\d+\.\d+\.\d+/)) {
               link.textContent = link.textContent.replace(/\d+\.\d+\.\d+/, version);
             }
@@ -643,7 +610,6 @@
         });
       }
 
-      // Update JSON-LD structured data
       const ldScript = document.querySelector('script[type="application/ld+json"]');
       if (ldScript) {
         try {
@@ -660,11 +626,9 @@
     })
     .catch(err => {
       console.warn('⚠️ Failed to fetch latest release:', err);
-      // Graceful fallback - links still work via /releases/latest redirect
     });
 })();
 </script>
-
 
 </body>
 </html>
