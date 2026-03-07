@@ -30,9 +30,9 @@
 ---
 
 <p align="center">
-  <img src="assets/screenshots/main-window.png" width="420" alt="CC Gate — Project dashboard with live session status and Git worktrees">
+  <img src="assets/screenshots/main-window.png" width="310" alt="CC Gate — Project dashboard with live session status and Git worktrees">
   &nbsp;&nbsp;&nbsp;
-  <img src="assets/screenshots/questions-window.png" width="420" alt="CC Gate — 6-tier auto-accept control and permission management">
+  <img src="assets/screenshots/questions-window.png" width="310" alt="CC Gate — 6-tier auto-accept control and permission management">
 </p>
 
 <p align="center">
